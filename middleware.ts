@@ -5,6 +5,7 @@ import { getStoreByCustomDomain } from '@/lib/store';
 // Define your main domain
 const MAIN_DOMAIN = 'tiangge.shop';
 const LOCALHOST_DOMAINS = ['localhost', '127.0.0.1'];
+const NETLIFY_DOMAINS = ['tiangge-v2.netlify.app', 'netlify.app']; // Add your Netlify domains
 
 export async function middleware(request: NextRequest) {
   const hostname = request.nextUrl.hostname;
@@ -24,8 +25,9 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // If the hostname is the main domain or localhost, let Next.js handle it normally
-  if (hostname === MAIN_DOMAIN || LOCALHOST_DOMAINS.includes(hostname)) {
+  // If the hostname is the main domain, localhost, or Netlify domain, let Next.js handle it normally
+  if (hostname === MAIN_DOMAIN || LOCALHOST_DOMAINS.includes(hostname) || 
+      NETLIFY_DOMAINS.some(domain => hostname.includes(domain))) {
     return NextResponse.next();
   }
 
