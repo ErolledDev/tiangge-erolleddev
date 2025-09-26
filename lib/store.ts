@@ -957,18 +957,16 @@ export const checkCustomDomainAvailability = async (domain: string): Promise<boo
     const normalizedDomain = domain.toLowerCase().trim();
     console.log('🔍 Domain Availability Check - Normalized domain:', normalizedDomain);
     
+    // Check for ANY existing domain configuration (regardless of verification or enabled status)
+    // This prevents conflicts and ensures domain uniqueness
     const storesQuery = query(
       collectionGroup(db, 'stores'),
-      where('customDomain', '==', normalizedDomain),
-      where('domainVerified', '==', true),
-      where('customDomainEnabled', '==', true)
+      where('customDomain', '==', normalizedDomain)
     );
     
     console.log('🔍 Domain Availability Check - Query conditions:');
     console.log('  - Collection Group: stores');
     console.log('  - customDomain ==', normalizedDomain);
-    console.log('  - domainVerified == true');
-    console.log('  - customDomainEnabled == true');
     
     console.log('🔍 Domain Availability Check - Executing query...');
     const querySnapshot = await getDocs(storesQuery);
@@ -994,17 +992,12 @@ export const checkCustomDomainAvailability = async (domain: string): Promise<boo
           createdAt: data.createdAt,
           updatedAt: data.updatedAt
         });
-        console.log(`  Document ${index + 1} - Field types:`, {
-          customDomainType: typeof data.customDomain,
-          domainVerifiedType: typeof data.domainVerified,
-          customDomainEnabledType: typeof data.customDomainEnabled
-        });
       });
     } else {
       console.log('🔍 Domain Availability Check - No matching documents found');
     }
     
-    // Domain is available if no verified and enabled stores are using it
+    // Domain is available if NO stores are using it (regardless of status)
     const isAvailable = querySnapshot.empty;
     console.log('🔍 Domain Availability Check - Final result: Domain is', isAvailable ? 'AVAILABLE' : 'NOT AVAILABLE');
     
@@ -1033,6 +1026,23 @@ export const addCustomDomain = async (userId: string, domain: string): Promise<{
     // Normalize domain consistently
     const normalizedDomain = domain.toLowerCase().trim();
     console.log('🏗️ Add Custom Domain - Normalized domain:', normalizedDomain);
+    
+    // First, check if this user already has a custom domain configured
+    const userStoreRef = doc(db, 'users', userId, 'stores', userId);
+    const userStoreSnap = await getDoc(userStoreRef);
+    
+    if (userStoreSnap.exists()) {
+      const storeData = userStoreSnap.data();
+      if (storeData.customDomain && storeData.customDomain !== normalizedDomain) {
+        throw new Error('You already have a custom domain configured. Please remove it first before adding a new one.');
+      }
+      
+      // If trying to add the same domain that's already configured, just return the existing verification code
+      if (storeData.customDomain === normalizedDomain && storeData.domainVerificationCode) {
+        console.log('🏗️ Add Custom Domain - Domain already configured, returning existing verification code');
+        return { verificationCode: storeData.domainVerificationCode };
+      }
+    }
     
     // Check if domain is already in use by another store
     console.log('🏗️ Add Custom Domain - Checking availability...');
