@@ -25,10 +25,21 @@ export async function getFirebaseAdminApp() {
       }
 
       // Clean and validate the private key
-      const cleanPrivateKey = privateKey.replace(/\\n/g, '\n').trim();
+      const cleanPrivateKey = privateKey.replace(/\\n/g, '\n');
+      
+      // Find the end marker and truncate any content after it
+      const endMarker = '-----END PRIVATE KEY-----';
+      const endIndex = cleanPrivateKey.indexOf(endMarker);
+      
+      if (endIndex === -1) {
+        throw new Error('Invalid private key format. Missing END PRIVATE KEY marker.');
+      }
+      
+      // Extract only the PEM block and ensure it ends with exactly one newline
+      const pemBlock = cleanPrivateKey.substring(0, endIndex + endMarker.length).trim() + '\n';
       
       // Validate private key format
-      if (!cleanPrivateKey.includes('-----BEGIN PRIVATE KEY-----') || !cleanPrivateKey.includes('-----END PRIVATE KEY-----')) {
+      if (!pemBlock.includes('-----BEGIN PRIVATE KEY-----') || !pemBlock.includes('-----END PRIVATE KEY-----')) {
         throw new Error('Invalid private key format. Please ensure the private key includes the BEGIN and END markers.');
       }
 
@@ -37,7 +48,7 @@ export async function getFirebaseAdminApp() {
         credential: admin.credential.cert({
           projectId: projectId,
           clientEmail: clientEmail,
-          privateKey: cleanPrivateKey,
+          privateKey: pemBlock,
         }),
         storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
       });
