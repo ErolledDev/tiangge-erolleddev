@@ -947,27 +947,76 @@ export const checkCustomDomainAvailability = async (domain: string): Promise<boo
   try {
     if (!db) return false;
     
-    console.log('Checking domain availability in Firestore for:', domain);
+    console.log('🔍 Domain Availability Check - Starting check for:', domain);
+    console.log('🔍 Domain Availability Check - Database instance:', !!db);
+    console.log('🔍 Domain Availability Check - Domain type:', typeof domain);
+    console.log('🔍 Domain Availability Check - Domain length:', domain.length);
+    console.log('🔍 Domain Availability Check - Domain trimmed:', domain.trim());
+    
+    // Normalize domain for consistent checking
+    const normalizedDomain = domain.toLowerCase().trim();
+    console.log('🔍 Domain Availability Check - Normalized domain:', normalizedDomain);
     
     const storesQuery = query(
       collectionGroup(db, 'stores'),
-      where('customDomain', '==', domain),
+      where('customDomain', '==', normalizedDomain),
       where('domainVerified', '==', true),
       where('customDomainEnabled', '==', true)
     );
     
+    console.log('🔍 Domain Availability Check - Query conditions:');
+    console.log('  - Collection Group: stores');
+    console.log('  - customDomain ==', normalizedDomain);
+    console.log('  - domainVerified == true');
+    console.log('  - customDomainEnabled == true');
+    
+    console.log('🔍 Domain Availability Check - Executing query...');
     const querySnapshot = await getDocs(storesQuery);
-    console.log('Query snapshot size:', querySnapshot.size);
-    console.log('Domain is available:', querySnapshot.empty);
+    
+    console.log('🔍 Domain Availability Check - Query results:');
+    console.log('  - Snapshot size:', querySnapshot.size);
+    console.log('  - Snapshot empty:', querySnapshot.empty);
+    console.log('  - Documents found:', querySnapshot.docs.length);
+    
+    // Log details of any matching documents
+    if (!querySnapshot.empty) {
+      console.log('🔍 Domain Availability Check - Found matching documents:');
+      querySnapshot.docs.forEach((doc, index) => {
+        const data = doc.data();
+        console.log(`  Document ${index + 1}:`, {
+          id: doc.id,
+          customDomain: data.customDomain,
+          domainVerified: data.domainVerified,
+          customDomainEnabled: data.customDomainEnabled,
+          ownerId: data.ownerId,
+          name: data.name,
+          slug: data.slug,
+          createdAt: data.createdAt,
+          updatedAt: data.updatedAt
+        });
+        console.log(`  Document ${index + 1} - Field types:`, {
+          customDomainType: typeof data.customDomain,
+          domainVerifiedType: typeof data.domainVerified,
+          customDomainEnabledType: typeof data.customDomainEnabled
+        });
+      });
+    } else {
+      console.log('🔍 Domain Availability Check - No matching documents found');
+    }
     
     // Domain is available if no verified and enabled stores are using it
-    return querySnapshot.empty;
+    const isAvailable = querySnapshot.empty;
+    console.log('🔍 Domain Availability Check - Final result: Domain is', isAvailable ? 'AVAILABLE' : 'NOT AVAILABLE');
+    
+    return isAvailable;
   } catch (error) {
-    console.error('Error checking custom domain availability:', error);
-    console.error('Error details:', {
+    console.error('🔍 Domain Availability Check - ERROR occurred:', error);
+    console.error('🔍 Domain Availability Check - Error details:', {
       name: error.name,
       message: error.message,
-      stack: error.stack
+      stack: error.stack,
+      domain: domain,
+      normalizedDomain: domain.toLowerCase().trim()
     });
     return false;
   }
@@ -977,24 +1026,33 @@ export const addCustomDomain = async (userId: string, domain: string): Promise<{
   try {
     if (!db) throw new Error('Firebase not initialized');
 
-    console.log('Checking domain availability for:', domain);
+    console.log('🏗️ Add Custom Domain - Starting process for user:', userId);
+    console.log('🏗️ Add Custom Domain - Original domain:', domain);
+    console.log('🏗️ Add Custom Domain - Domain type:', typeof domain);
+    
+    // Normalize domain consistently
+    const normalizedDomain = domain.toLowerCase().trim();
+    console.log('🏗️ Add Custom Domain - Normalized domain:', normalizedDomain);
+    
     // Check if domain is already in use by another store
-    const isAvailable = await checkCustomDomainAvailability(domain);
-    console.log('Domain availability:', isAvailable);
+    console.log('🏗️ Add Custom Domain - Checking availability...');
+    const isAvailable = await checkCustomDomainAvailability(normalizedDomain);
+    console.log('🏗️ Add Custom Domain - Availability result:', isAvailable);
     
     if (!isAvailable) {
+      console.log('🏗️ Add Custom Domain - Domain not available, throwing error');
       throw new Error('This custom domain is already in use by another store.');
     }
 
     const verificationCode = `bolt-verify-${Math.random().toString(36).substring(2, 15)}`;
-    console.log('Generated verification code:', verificationCode);
+    console.log('🏗️ Add Custom Domain - Generated verification code:', verificationCode);
     
     const storeRef = doc(db, 'users', userId, 'stores', userId);
-    console.log('Store reference path:', `users/${userId}/stores/${userId}`);
+    console.log('🏗️ Add Custom Domain - Store reference path:', `users/${userId}/stores/${userId}`);
 
-    console.log('Updating store with custom domain data...');
+    console.log('🏗️ Add Custom Domain - Updating store with custom domain data...');
     await updateDoc(storeRef, {
-      customDomain: domain,
+      customDomain: normalizedDomain,
       domainVerificationCode: verificationCode,
       domainVerified: false,
       domainVerificationAttempts: 0,
@@ -1003,15 +1061,18 @@ export const addCustomDomain = async (userId: string, domain: string): Promise<{
       customDomainEnabled: false,
       updatedAt: new Date()
     });
-    console.log('Store updated successfully');
+    console.log('🏗️ Add Custom Domain - Store updated successfully');
 
     return { verificationCode };
   } catch (error) {
-    console.error('Error adding custom domain:', error);
-    console.error('Error details:', {
+    console.error('🏗️ Add Custom Domain - ERROR occurred:', error);
+    console.error('🏗️ Add Custom Domain - Error details:', {
       name: error.name,
       message: error.message,
-      stack: error.stack
+      stack: error.stack,
+      userId: userId,
+      domain: domain,
+      normalizedDomain: domain.toLowerCase().trim()
     });
     throw error;
   }
