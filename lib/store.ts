@@ -951,13 +951,16 @@ export const checkCustomDomainAvailability = async (domain: string): Promise<boo
     
     const storesQuery = query(
       collectionGroup(db, 'stores'),
-      where('customDomain', '==', domain)
+      where('customDomain', '==', domain),
+      where('domainVerified', '==', true),
+      where('customDomainEnabled', '==', true)
     );
     
     const querySnapshot = await getDocs(storesQuery);
     console.log('Query snapshot size:', querySnapshot.size);
     console.log('Domain is available:', querySnapshot.empty);
     
+    // Domain is available if no verified and enabled stores are using it
     return querySnapshot.empty;
   } catch (error) {
     console.error('Error checking custom domain availability:', error);
