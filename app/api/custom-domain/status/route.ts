@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getUserStore } from '@/lib/store';
-import { getFirebaseAdminApp } from '@/lib/firebase-admin';
 
 export async function GET(req: NextRequest) {
   try {
@@ -10,31 +9,40 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ success: false, message: 'Unauthorized.' }, { status: 401 });
     }
 
-    const admin = await getFirebaseAdminApp();
-    const decodedToken = await admin.auth().verifyIdToken(idToken);
-    const userId = decodedToken.uid;
+    try {
+      const { getFirebaseAdminApp } = await import('@/lib/firebase-admin');
+      const admin = await getFirebaseAdminApp();
+      const decodedToken = await admin.auth().verifyIdToken(idToken);
+      const userId = decodedToken.uid;
 
-    const userStore = await getUserStore(userId);
+      const userStore = await getUserStore(userId);
 
-    if (!userStore || !userStore.customDomain) {
-      return NextResponse.json({ success: true, message: 'No custom domain configured.', status: null });
-    }
-
-    return NextResponse.json({
-      success: true,
-      message: 'Custom domain status retrieved.',
-      status: {
-        customDomain: userStore.customDomain,
-        domainVerificationCode: userStore.domainVerificationCode,
-        domainVerified: userStore.domainVerified,
-        sslStatus: userStore.sslStatus,
-        customDomainEnabled: userStore.customDomainEnabled,
-        dnsInstructions: userStore.domainVerified ? [
-          { type: 'A', name: '@', value: '75.2.60.5' },
-          { type: 'CNAME', name: 'www', value: process.env.NEXT_PUBLIC_NETLIFY_SITE_NAME || 'your-netlify-site.netlify.app' }
-        ] : []
+      if (!userStore || !userStore.customDomain) {
+        return NextResponse.json({ success: true, message: 'No custom domain configured.', status: null });
       }
-    });
+
+      return NextResponse.json({
+        success: true,
+        message: 'Custom domain status retrieved.',
+        status: {
+          customDomain: userStore.customDomain,
+          domainVerificationCode: userStore.domainVerificationCode,
+          domainVerified: userStore.domainVerified,
+          sslStatus: userStore.sslStatus,
+          customDomainEnabled: userStore.customDomainEnabled,
+          dnsInstructions: userStore.domainVerified ? [
+            { type: 'A', name: '@', value: '75.2.60.5' },
+            { type: 'CNAME', name: 'www', value: process.env.NEXT_PUBLIC_NETLIFY_SITE_NAME || 'your-netlify-site.netlify.app' }
+          ] : []
+        }
+      });
+    } catch (adminError) {
+      console.error('Firebase Admin Error in status:', adminError);
+      return NextResponse.json({ 
+        success: false, 
+        message: 'Server configuration issue. Please try again or contact support.' 
+      }, { status: 500 });
+    }
   } catch (error: any) {
     console.error('API Error getting custom domain status:', error);
     return NextResponse.json({ success: false, message: error.message || 'Failed to get custom domain status.' }, { status: 500 });

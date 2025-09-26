@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { updateStore } from '@/lib/store';
-import { getFirebaseAdminApp } from '@/lib/firebase-admin';
 
 export async function PUT(req: NextRequest) {
   try {
@@ -12,25 +11,34 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ success: false, message: 'Unauthorized.' }, { status: 401 });
     }
 
-    const admin = await getFirebaseAdminApp();
-    const decodedToken = await admin.auth().verifyIdToken(idToken);
-    const userId = decodedToken.uid;
+    try {
+      const { getFirebaseAdminApp } = await import('@/lib/firebase-admin');
+      const admin = await getFirebaseAdminApp();
+      const decodedToken = await admin.auth().verifyIdToken(idToken);
+      const userId = decodedToken.uid;
 
-    // For custom domain enabled toggle, check premium status
-    if ('customDomainEnabled' in updates) {
-      const db = admin.firestore();
-      const userDoc = await db.collection('users').doc(userId).get();
-      if (!userDoc.exists || !userDoc.data()?.isPremium) {
-        return NextResponse.json({ success: false, message: 'Premium subscription required for custom domains.' }, { status: 403 });
+      // For custom domain enabled toggle, check premium status
+      if ('customDomainEnabled' in updates) {
+        const db = admin.firestore();
+        const userDoc = await db.collection('users').doc(userId).get();
+        if (!userDoc.exists || (!userDoc.data()?.isPremium && userDoc.data()?.role !== 'admin')) {
+          return NextResponse.json({ success: false, message: 'Premium subscription required for custom domains.' }, { status: 403 });
+        }
       }
+
+      await updateStore(userId, updates);
+
+      return NextResponse.json({
+        success: true,
+        message: 'Store updated successfully.'
+      });
+    } catch (adminError) {
+      console.error('Firebase Admin Error in store update:', adminError);
+      return NextResponse.json({ 
+        success: false, 
+        message: 'Server configuration issue. Please try again or contact support.' 
+      }, { status: 500 });
     }
-
-    await updateStore(userId, updates);
-
-    return NextResponse.json({
-      success: true,
-      message: 'Store updated successfully.'
-    });
   } catch (error: any) {
     console.error('API Error updating store:', error);
     return NextResponse.json({ success: false, message: error.message || 'Failed to update store.' }, { status: 500 });

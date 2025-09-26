@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { removeCustomDomain } from '@/lib/store';
-import { getFirebaseAdminApp } from '@/lib/firebase-admin';
 
 export async function DELETE(req: NextRequest) {
   try {
@@ -10,23 +9,32 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ success: false, message: 'Unauthorized.' }, { status: 401 });
     }
 
-    const admin = await getFirebaseAdminApp();
-    const decodedToken = await admin.auth().verifyIdToken(idToken);
-    const userId = decodedToken.uid;
+    try {
+      const { getFirebaseAdminApp } = await import('@/lib/firebase-admin');
+      const admin = await getFirebaseAdminApp();
+      const decodedToken = await admin.auth().verifyIdToken(idToken);
+      const userId = decodedToken.uid;
 
-    // Check if user is premium
-    const db = admin.firestore();
-    const userDoc = await db.collection('users').doc(userId).get();
-    if (!userDoc.exists || !userDoc.data()?.isPremium) {
-      return NextResponse.json({ success: false, message: 'Premium subscription required for custom domains.' }, { status: 403 });
+      // Check if user is premium
+      const db = admin.firestore();
+      const userDoc = await db.collection('users').doc(userId).get();
+      if (!userDoc.exists || (!userDoc.data()?.isPremium && userDoc.data()?.role !== 'admin')) {
+        return NextResponse.json({ success: false, message: 'Premium subscription required for custom domains.' }, { status: 403 });
+      }
+
+      await removeCustomDomain(userId);
+
+      return NextResponse.json({
+        success: true,
+        message: 'Custom domain removed successfully.'
+      });
+    } catch (adminError) {
+      console.error('Firebase Admin Error in remove:', adminError);
+      return NextResponse.json({ 
+        success: false, 
+        message: 'Server configuration issue. Please try again or contact support.' 
+      }, { status: 500 });
     }
-
-    await removeCustomDomain(userId);
-
-    return NextResponse.json({
-      success: true,
-      message: 'Custom domain removed successfully.'
-    });
   } catch (error: any) {
     console.error('API Error removing custom domain:', error);
     return NextResponse.json({ success: false, message: error.message || 'Failed to remove custom domain.' }, { status: 500 });
