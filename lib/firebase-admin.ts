@@ -54,6 +54,12 @@ export async function getFirebaseAdminApp() {
       // Extract the complete PEM block
       const pemBlock = cleanPrivateKey.substring(beginIndex, endIndex + endMarker.length);
       
+      console.log('DEBUG: Firebase Admin PEM Block (first 50 chars):', pemBlock.substring(0, 50)); // Log only a portion for security
+      console.log('DEBUG: Firebase Admin PEM Block (last 50 chars):', pemBlock.substring(pemBlock.length - 50)); // Log only a portion for security
+      console.log('DEBUG: PEM Block length:', pemBlock.length);
+      console.log('DEBUG: Project ID:', projectId);
+      console.log('DEBUG: Client Email:', clientEmail);
+      
       // Initialize with proper credential object
       adminApp = admin.initializeApp({
         credential: admin.credential.cert({
