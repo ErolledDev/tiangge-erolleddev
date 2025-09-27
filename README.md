@@ -6,8 +6,8 @@ This is a [Next.js](https://nextjs.org/) project for building affiliate stores. 
 
 ### 👥 User Roles & Permissions
 The platform supports three distinct user roles with different access levels:
-- **Standard Users**: Full access to store creation, product management (up to 30 products), and analytics
-- **Premium Users**: Additional access to unlimited products, bulk import, and data export features  
+- **Standard Users**: Core store functionality with product management (up to 30 products), basic customization, and analytics
+- **Premium Users**: Advanced features including unlimited products, bulk import, enhanced promotional tools, and data export
 - **Administrators**: Complete platform control including user management, sponsored products, and global broadcast system
 
 For detailed information about user roles and their specific permissions, see [User Roles Documentation](role-users.md).
@@ -30,8 +30,8 @@ For detailed information about user roles and their specific permissions, see [U
 
 ### 🎨 Promotional Features
 - **Slider Management**: Create promotional slides to highlight featured products or offers
-- **Floating Widget**: Engage visitors with customizable floating widgets
-- **Pop-up Banner**: Promotional banners with custom images and descriptions
+- **Floating Widget**: Engage visitors with customizable floating widgets (Premium feature)
+- **Pop-up Banner**: Promotional banners with custom images and descriptions (Premium feature)
 - **Auto-advancing Slideshow**: Slides automatically advance with manual navigation options
 
 ### 📊 Analytics & Insights
@@ -70,7 +70,7 @@ For detailed information about user roles and their specific permissions, see [U
 2. **Customize Store**: Set up your store branding, colors, and layout preferences
 3. **Add Products**: Add affiliate products manually or use the bulk import feature (Premium)
 4. **Create Content**: Design promotional slides and add custom HTML sections
-5. **Configure Features**: Enable widgets, banners, and subscription forms
+5. **Configure Features**: Enable widgets, banners, and subscription forms (Premium features)
 6. **Share Your Store**: Share your unique store URL to start earning commissions
 7. **Monitor Performance**: Use analytics to track visitor behavior and optimize conversions
 
@@ -110,7 +110,7 @@ When visitors interact with your store:
 
 ### 📦 Product & Content Management
 - **Products**: Full CRUD operations with image optimization
-- **Categories**: Auto-generated from products with filtering
+- **Categories**: Auto-generated from products with filtering capabilities
 - **Slides**: Promotional carousel with click tracking
 - **Product Scraping**: Auto-fill product details from URLs
 - **Bulk Import**: CSV import for premium users with validation
@@ -209,9 +209,10 @@ The application is configured for Netlify deployment:
 ## Premium Features
 
 - **Unlimited Products**: No product limits for premium users
-- **Advanced Analytics**: Detailed user behavior tracking and insights
-- **Bulk Import**: CSV import for hundreds of products at once
+- **Advanced Promotional Tools**: Floating widgets and pop-up banners
+- **Bulk Operations**: CSV import for hundreds of products at once
 - **Data Export**: Export subscribers and analytics to CSV
+- **Enhanced Customization**: Additional display options and controls
 - **Priority Support**: Enhanced support for premium users
 
 ## Admin Features
@@ -221,13 +222,77 @@ The application is configured for Netlify deployment:
 - **Sponsored Products**: Manage products that appear in user stores
 - **System Analytics**: Platform-wide usage and performance metrics
 
+## Development Guidelines
+
+### Code Organization
+- **Modular Architecture**: Each component focuses on a single responsibility
+- **File Structure**: Organized by feature with clear separation of concerns
+- **TypeScript**: Strict typing throughout the application
+- **Component Reusability**: Shared components for common functionality
+
+### Key Directories
+```
+app/                    # Next.js app router pages
+├── auth/              # Authentication pages
+├── dashboard/         # Protected dashboard pages
+├── [storeSlug]/       # Public store pages
+└── system-management/ # Admin-only pages
+
+components/            # Reusable React components
+├── AdminRoute.tsx     # Admin access control
+├── PremiumFeatureGate.tsx # Premium feature gating
+├── StoreTemplate.tsx  # Main store display
+└── ...
+
+lib/                   # Core business logic
+├── auth.ts           # Authentication functions
+├── store.ts          # Store and product management
+├── analytics.ts      # Analytics tracking
+└── firebase.ts       # Firebase configuration
+
+hooks/                 # Custom React hooks
+├── useAuth.ts        # Authentication hook
+└── useToast.ts       # Toast notification hook
+```
+
+### Security Implementation
+- **Firestore Rules**: Comprehensive row-level security
+- **Authentication**: Firebase Auth with strong password requirements
+- **Input Validation**: Client and server-side validation
+- **HTML Sanitization**: DOMPurify for custom HTML content
+- **Role-based Access**: Component-level access control
+
+### Performance Considerations
+- **Image Optimization**: Automatic WebP conversion and compression
+- **Lazy Loading**: Components and images loaded on demand
+- **Efficient Queries**: Optimized Firestore operations
+- **Bundle Optimization**: Code splitting and tree shaking
+
 ## Contributing
 
+### Development Setup
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+3. Follow the existing code patterns and TypeScript conventions
+4. Test your changes thoroughly
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
+
+### Code Standards
+- Use TypeScript for all new code
+- Follow the existing component structure
+- Implement proper error handling
+- Add appropriate loading states
+- Include user feedback via toast notifications
+- Maintain responsive design principles
+
+### Testing Guidelines
+- Test all user flows thoroughly
+- Verify premium feature gating works correctly
+- Ensure admin features are properly protected
+- Test image upload and optimization
+- Validate form submissions and error handling
 
 ## License
 

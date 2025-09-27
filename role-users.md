@@ -4,9 +4,9 @@ This document outlines the different user roles within the Affiliate Store Build
 
 ## 1. Standard User (User Role)
 
-Standard users are the primary users of the platform, responsible for creating and managing their own affiliate stores.
+Standard users are the primary users of the platform, responsible for creating and managing their own affiliate stores. They have access to core functionality needed to build and operate a successful affiliate store.
 
-### Core Features:
+### Core Features Available:
 
 #### 🔐 Authentication & Account Management
 - Sign up, sign in, and log out of their account
@@ -17,8 +17,7 @@ Standard users are the primary users of the platform, responsible for creating a
 - **Store Branding**: Personalize store name, description, avatar, and background images
 - **Social Integration**: Configure social media links across multiple platforms
 - **Layout Options**: Choose header layouts (left-right, right-left, centered)
-- **Feature Controls**: Enable/disable floating widgets, pop-up banners, and email subscription forms
-- **Content Management**: Enable/disable promotional slides and control product price display
+- **Basic Feature Controls**: Enable/disable promotional slides and control product price display
 - **Custom HTML**: Add custom HTML content sections (sanitized for security)
 
 #### 🎨 Advanced Theming & Design
@@ -32,13 +31,11 @@ Standard users are the primary users of the platform, responsible for creating a
 - **Product Limit**: A standard user can have a maximum of 30 products in their store
 - Auto-fill product details by scraping product URLs using external API
 - Upload or link product images with automatic optimization (WebP conversion, compression)
-- Manage product categories (auto-generated with filtering capabilities)
+- Manage product categories (auto-generated, but category display toggle is premium-only)
 - Track product performance with click analytics
 
 #### 🎨 Promotional Content
 - Create, edit, and delete promotional slides with images, descriptions, and affiliate links
-- Configure floating widgets with custom images and links
-- Set up pop-up banners with images, descriptions, and links
 - Auto-advancing slideshow with manual navigation
 
 #### 💬 Customer Engagement
@@ -55,7 +52,6 @@ Standard users are the primary users of the platform, responsible for creating a
   - Social link clicks and platform engagement
   - Search queries and user intent analysis
   - Category filters and browsing behavior
-  - Widget and banner click tracking
   - Top performing products by click count
   - Most filtered categories
   - Most searched terms
@@ -66,14 +62,34 @@ Standard users are the primary users of the platform, responsible for creating a
 - Smart resizing based on image type (avatars: 200px, products/slides: 1200px)
 - Significant reduction in storage costs and faster loading times
 
+### ⚠️ Standard User Restrictions:
+
+#### 📦 Product Limitations
+- **30 Product Limit**: Cannot add more than 30 products to their store
+- **No Bulk Import**: Cannot use CSV import functionality for adding multiple products
+
+#### 🎨 Promotional Tool Restrictions
+- **No Floating Widget**: Cannot enable or configure floating widgets on their store
+- **No Pop-up Banner**: Cannot create promotional pop-up banners for visitors
+- **Category Display Control**: Cannot toggle the visibility of the category section (categories are generated but always shown)
+
+#### 📊 Data & Analytics Restrictions
+- **No Data Export**: Cannot export subscriber lists or analytics data to CSV files
+- **Basic Analytics Only**: Access to analytics dashboard but no export capabilities
+
 ## 2. Premium User (Premium Status)
 
 Premium users have access to all Standard User features, plus advanced capabilities for deeper insights and operational efficiency.
 
 ### Additional Features (beyond Standard User):
 
-#### 📦 Product Management
-- **Product Limit**: A premium user can have an unlimited number of products in their store
+#### 🏪 Enhanced Store Management
+- **Floating Widget**: Enable and customize floating widgets with images and links
+- **Pop-up Banner**: Create promotional banners with custom images, descriptions, and links
+- **Category Display Control**: Toggle the visibility of the category filtering section
+
+#### 📦 Advanced Product Management
+- **Unlimited Products**: No restrictions on the number of products in their store
 - **Bulk Operations**: Import hundreds of products at once using CSV files with validation
 - **Batch Processing**: Efficient handling of large product catalogs
 
@@ -130,19 +146,56 @@ Administrators have full control over the platform, including managing users, sy
 | Store Creation & Management | ✅ | ✅ | ✅ |
 | Product Management | ✅ | ✅ | ✅ |
 | **Product Limit** | **30 products** | **Unlimited** | **Unlimited** |
-| Promotional Content | ✅ | ✅ | ✅ |
+| Promotional Content (Slides) | ✅ | ✅ | ✅ |
+| **Floating Widget** | **❌** | **✅** | **✅** |
+| **Pop-up Banner** | **❌** | **✅** | **✅** |
+| **Category Display Toggle** | **❌** | **✅** | **✅** |
 | Basic Analytics | ✅ | ✅ | ✅ |
 | Email Subscribers | ✅ | ✅ | ✅ |
 | Image Optimization | ✅ | ✅ | ✅ |
 | Custom HTML Editor | ✅ | ✅ | ✅ |
 | Product URL Scraping | ✅ | ✅ | ✅ |
-| CSV Product Import | ❌ | ✅ | ✅ |
-| Data Export (CSV) | ❌ | ✅ | ✅ |
+| **CSV Product Import** | **❌** | **✅** | **✅** |
+| **Data Export (CSV)** | **❌** | **✅** | **✅** |
 | Priority Support | ❌ | ✅ | ✅ |
 | User Management | ❌ | ❌ | ✅ |
 | Global Broadcasts | ❌ | ❌ | ✅ |
 | Sponsored Products | ❌ | ❌ | ✅ |
 | System Analytics | ❌ | ❌ | ✅ |
+
+## Standard User Experience Assessment
+
+### What Standard Users CAN Do:
+- **Complete Store Setup**: Full branding, social links, and customization
+- **Product Management**: Add up to 30 products with scraping and optimization
+- **Content Creation**: Promotional slides and custom HTML sections
+- **Customer Engagement**: Email subscriptions and subscriber management
+- **Performance Tracking**: Comprehensive analytics dashboard
+- **Professional Appearance**: Advanced typography and color customization
+
+### What Standard Users CANNOT Do:
+- **Advanced Promotional Tools**: No floating widgets or pop-up banners
+- **Bulk Operations**: No CSV import for multiple products
+- **Data Export**: Cannot export data for external analysis
+- **Category Control**: Cannot toggle category section visibility
+- **Unlimited Growth**: 30-product limit may restrict larger catalogs
+
+### Is This "Too Harsh"?
+The current restrictions are **strategically balanced** for a freemium model:
+
+**✅ Reasonable Aspects:**
+- 30 products is sufficient for most new affiliate marketers
+- Core functionality remains fully accessible
+- Professional customization options available
+- Complete analytics and subscriber management included
+
+**⚠️ Potential Concerns:**
+- Floating widgets and pop-up banners are powerful conversion tools
+- Category display toggle affects user experience control
+- 30-product limit may be reached quickly by active users
+
+**💡 Recommendation:**
+Consider making floating widgets available to standard users as they significantly improve engagement and conversion rates, which benefits both users and the platform.
 
 ## Security & Access Control
 
