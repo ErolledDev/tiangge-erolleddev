@@ -24,6 +24,8 @@ import {
 } from 'firebase/storage';
 import { fromBlob } from 'image-resize-compress';
 
+import { isPremium, getUserProfile } from './auth';
+
 // Interfaces
 export interface Store {
   id: string;
@@ -210,6 +212,24 @@ export const getStoreBySlug = async (slug: string): Promise<Store | null> => {
 export const updateStore = async (userId: string, updates: Partial<Store>): Promise<void> => {
   try {
     if (!db) throw new Error('Firebase not initialized');
+    
+    // Get user profile to check premium status
+    const userProfile = await getUserProfile(userId);
+    const isUserPremium = isPremium(userProfile);
+    
+    // Enforce restrictions for standard users
+    if (!isUserPremium) {
+      // Override restricted features to false for standard users
+      if (updates.showCategories === true) {
+        updates.showCategories = false;
+      }
+      if (updates.bannerEnabled === true) {
+        updates.bannerEnabled = false;
+      }
+      if (updates.widgetEnabled === true) {
+        updates.widgetEnabled = false;
+      }
+    }
     
     const storeRef = doc(db, 'users', userId, 'stores', userId);
     await updateDoc(storeRef, {

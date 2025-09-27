@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/useToast';
+import { isPremium } from '@/lib/auth';
+import PremiumFeatureGate from '@/components/PremiumFeatureGate';
 import { 
   getUserStore, 
   updateStore, 
@@ -50,10 +52,14 @@ const HEADER_LAYOUTS = [
 
 export default function StoreSettingsPage() {
   const { user } = useAuth();
+  const { userProfile } = useAuth();
   const { showSuccess, showError } = useToast();
   const [store, setStore] = useState<Store | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  
+  // Check if user is premium
+  const isUserPremium = isPremium(userProfile);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -428,7 +434,24 @@ export default function StoreSettingsPage() {
             description="Display a floating widget on your store page to engage visitors."
             checked={formData.widgetEnabled}
             onChange={(checked) => handleInputChange('widgetEnabled', checked)}
+            disabled={!isUserPremium}
           />
+          
+          {!isUserPremium && (
+            <div className="ml-6 -mt-2">
+              <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg border border-yellow-200 p-4">
+                <div className="flex items-center space-x-2">
+                  <div className="w-5 h-5 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center text-white">
+                    <span className="text-xs">✨</span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-yellow-800">Premium Feature</p>
+                    <p className="text-xs text-yellow-700">Floating widgets are available for premium users only.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {formData.widgetEnabled && (
             <>
@@ -475,7 +498,24 @@ export default function StoreSettingsPage() {
             description="Show a promotional banner popup to visitors when they first visit your store."
             checked={formData.bannerEnabled}
             onChange={(checked) => handleInputChange('bannerEnabled', checked)}
+            disabled={!isUserPremium}
           />
+          
+          {!isUserPremium && (
+            <div className="ml-6 -mt-2">
+              <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg border border-yellow-200 p-4">
+                <div className="flex items-center space-x-2">
+                  <div className="w-5 h-5 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center text-white">
+                    <span className="text-xs">✨</span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-yellow-800">Premium Feature</p>
+                    <p className="text-xs text-yellow-700">Pop-up banners are available for premium users only.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {formData.bannerEnabled && (
             <>
@@ -572,7 +612,24 @@ export default function StoreSettingsPage() {
             description="Show the horizontal category filter section on your store page. When disabled, only the main products section will be visible."
             checked={formData.showCategories}
             onChange={(checked) => handleInputChange('showCategories', checked)}
+            disabled={!isUserPremium}
           />
+          
+          {!isUserPremium && (
+            <div className="ml-6 -mt-2">
+              <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg border border-yellow-200 p-4">
+                <div className="flex items-center space-x-2">
+                  <div className="w-5 h-5 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center text-white">
+                    <span className="text-xs">✨</span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-yellow-800">Premium Feature</p>
+                    <p className="text-xs text-yellow-700">Category display is available for premium users only.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
