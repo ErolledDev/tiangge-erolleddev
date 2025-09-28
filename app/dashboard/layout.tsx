@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import DashboardNav from '@/components/DashboardNav';
+import DashboardHeader from '@/components/DashboardHeader';
 import GlobalBannerDisplay from '@/components/GlobalBannerDisplay';
 
 export default function DashboardLayout({
@@ -15,7 +16,7 @@ export default function DashboardLayout({
   const router = useRouter();
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -43,18 +44,17 @@ export default function DashboardLayout({
   }
 
   const toggleSidebar = () => {
-    setIsSidebarCollapsed(!isSidebarCollapsed);
+    setIsSidebarOpen(!isSidebarOpen);
   };
 
   return (
     <div className="min-h-screen bg-white">
-      <DashboardNav isCollapsed={isSidebarCollapsed} toggleCollapse={toggleSidebar} />
+      <DashboardHeader isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+      <DashboardNav isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
       
       {/* Main Content */}
-      <main className={`transition-all duration-300 ease-in-out ${
-        isSidebarCollapsed ? 'md:ml-16' : 'md:ml-72'
-      }`}>
-        <div className="px-4 py-6 md:px-8 md:py-8 pt-20 md:pt-8">
+      <main className="pt-16">
+        <div className="px-4 py-6 md:px-8 md:py-8">
           <div className="max-w-7xl mx-auto">
             {children}
           </div>
@@ -63,6 +63,14 @@ export default function DashboardLayout({
       
       {/* Global Banner Display - Only shown in dashboard */}
       <GlobalBannerDisplay />
+      
+      {/* Sidebar Overlay for Mobile */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden"
+          onClick={toggleSidebar}
+        />
+      )}
     </div>
   );
 }
