@@ -28,13 +28,13 @@ export default function CustomToggle({
   };
 
   return (
-    <div className="flex items-start justify-between py-4">
-      <div className="flex-1 min-w-0 mr-4">
-        <label htmlFor={id} className="block text-sm font-medium text-gray-900 cursor-pointer">
+    <div className="flex items-start justify-between py-3 sm:py-4">
+      <div className="flex-1 min-w-0 mr-3 sm:mr-4">
+        <label htmlFor={id} className="block text-xs sm:text-sm font-medium text-gray-900 cursor-pointer">
           {label}
         </label>
         {description && (
-          <p className="mt-1 text-sm text-gray-500">{description}</p>
+          <p className="mt-1 text-xs sm:text-sm text-gray-500">{description}</p>
         )}
       </div>
       
@@ -47,23 +47,24 @@ export default function CustomToggle({
           onClick={handleToggle}
           disabled={disabled}
           className={`
-            relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent 
+            relative inline-flex h-5 w-9 sm:h-6 sm:w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent 
             transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2
+            min-h-[44px] min-w-[44px] items-center justify-center
             ${checked ? 'bg-primary-600' : 'bg-gray-200'}
             ${disabled ? 'opacity-30 cursor-not-allowed' : ''}
           `}
         >
           <span
             className={`
-              pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 
+              pointer-events-none inline-block h-4 w-4 sm:h-5 sm:w-5 transform rounded-full bg-white shadow ring-0 
               transition duration-200 ease-in-out
-              ${checked ? 'translate-x-5' : 'translate-x-0'}
+              ${checked ? 'translate-x-4 sm:translate-x-5' : 'translate-x-0'}
             `}
           />
         </button>
 
         {disabled && (
-          <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-800 text-white text-sm rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+          <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-800 text-white text-xs sm:text-sm rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
             {title || "This feature requires premium access"}
           </div>
         )}

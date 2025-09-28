@@ -136,20 +136,20 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-6xl min-h-[600px] flex shadow-2xl rounded-xl bg-white relative">
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-2 sm:p-4">
+      <div className="w-full max-w-6xl min-h-[500px] sm:min-h-[600px] flex flex-col lg:flex-row shadow-2xl rounded-xl bg-white relative overflow-hidden">
         
         {/* Left Side - Visual Showcase */}
-        <div className="hidden lg:flex flex-1 bg-gradient-to-br from-emerald-600 to-green-500 relative overflow-hidden flex-col items-center justify-center text-white p-8">
+        <div className="hidden lg:flex flex-1 bg-gradient-to-br from-emerald-600 to-green-500 relative overflow-hidden flex-col items-center justify-center text-white p-4 lg:p-8">
           
           {/* Background Elements */}
-          <div className="absolute top-[10%] left-[5%] w-[150px] h-[150px] bg-white bg-opacity-[0.08] rounded-full"></div>
-          <div className="absolute bottom-[-50px] right-[-50px] w-[300px] h-[300px] bg-white bg-opacity-[0.08] rounded-[120px] transform rotate-45"></div>
-          <div className="absolute top-[50%] right-[20%] w-[50px] h-[50px] bg-white bg-opacity-[0.08] rounded-full"></div>
+          <div className="absolute top-[10%] left-[5%] w-[100px] h-[100px] lg:w-[150px] lg:h-[150px] bg-white bg-opacity-[0.08] rounded-full"></div>
+          <div className="absolute bottom-[-50px] right-[-50px] w-[200px] h-[200px] lg:w-[300px] lg:h-[300px] bg-white bg-opacity-[0.08] rounded-[120px] transform rotate-45"></div>
+          <div className="absolute top-[50%] right-[20%] w-[30px] h-[30px] lg:w-[50px] lg:h-[50px] bg-white bg-opacity-[0.08] rounded-full"></div>
 
-          <div className="relative z-10 text-center w-full max-w-md">
-            <h2 className="text-white text-3xl font-bold mb-10 leading-snug">Tiangge</h2>
-            <h2 className="text-white text-3xl font-bold mb-10 leading-snug">
+          <div className="relative z-10 text-center w-full max-w-sm lg:max-w-md">
+            <h2 className="text-white text-2xl lg:text-3xl font-bold mb-6 lg:mb-10 leading-snug">Tiangge</h2>
+            <h2 className="text-white text-2xl lg:text-3xl font-bold mb-6 lg:mb-10 leading-snug">
               Create your Store,<br />
               Earn Now.
             </h2>
@@ -157,66 +157,66 @@ export default function AuthPage() {
             {/* Floating Metric Cards */}
             <div className="relative">
               {/* Store Visits - Top Right */}
-              <div className="absolute top-[-50px] right-[-50px] w-[110px] bg-white border border-emerald-600 rounded-md p-2 text-left shadow-lg z-10 animate-float-1">
-                <div className="flex items-center text-lg font-bold mb-1 text-green-500">
-                  <Store className="w-4 h-4 mr-2" />
+              <div className="absolute top-[-30px] lg:top-[-50px] right-[-30px] lg:right-[-50px] w-[80px] lg:w-[110px] bg-white border border-emerald-600 rounded-md p-1.5 lg:p-2 text-left shadow-lg z-10 animate-float-1">
+                <div className="flex items-center text-sm lg:text-lg font-bold mb-1 text-green-500">
+                  <Store className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
                   9,800
                 </div>
-                <div className="text-[10px] text-black">Store Visits</div>
+                <div className="text-[8px] lg:text-[10px] text-black">Store Visits</div>
               </div>
 
               {/* Total Clicks - Middle Left */}
-              <div className="absolute top-[80px] left-[-50px] w-[110px] bg-white border border-emerald-600 rounded-md p-2 text-left shadow-lg z-10 animate-float-2">
-                <div className="flex items-center text-lg font-bold mb-1 text-green-500">
-                  <MousePointer className="w-4 h-4 mr-2" />
+              <div className="absolute top-[50px] lg:top-[80px] left-[-30px] lg:left-[-50px] w-[80px] lg:w-[110px] bg-white border border-emerald-600 rounded-md p-1.5 lg:p-2 text-left shadow-lg z-10 animate-float-2">
+                <div className="flex items-center text-sm lg:text-lg font-bold mb-1 text-green-500">
+                  <MousePointer className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
                   3,450
                 </div>
-                <div className="text-[10px] text-black">Total Clicks</div>
+                <div className="text-[8px] lg:text-[10px] text-black">Total Clicks</div>
               </div>
 
               {/* Rating - Bottom Left */}
-              <div className="absolute bottom-[30px] left-[-50px] w-[110px] bg-white border border-emerald-600 rounded-md p-2 text-left shadow-lg z-10 animate-float-3">
+              <div className="absolute bottom-[20px] lg:bottom-[30px] left-[-30px] lg:left-[-50px] w-[80px] lg:w-[110px] bg-white border border-emerald-600 rounded-md p-1.5 lg:p-2 text-left shadow-lg z-10 animate-float-3">
                 <div className="flex items-center text-xs font-bold mb-1">
                   <div className="flex text-yellow-400 mr-2">
-                    <Star className="w-2 h-2 fill-current" />
-                    <Star className="w-2 h-2 fill-current" />
-                    <Star className="w-2 h-2 fill-current" />
-                    <Star className="w-2 h-2 fill-current" />
-                    <StarHalf className="w-2 h-2 fill-current" />
+                    <Star className="w-1.5 h-1.5 lg:w-2 lg:h-2 fill-current" />
+                    <Star className="w-1.5 h-1.5 lg:w-2 lg:h-2 fill-current" />
+                    <Star className="w-1.5 h-1.5 lg:w-2 lg:h-2 fill-current" />
+                    <Star className="w-1.5 h-1.5 lg:w-2 lg:h-2 fill-current" />
+                    <StarHalf className="w-1.5 h-1.5 lg:w-2 lg:h-2 fill-current" />
                   </div>
-                  <span className="text-emerald-600 text-lg font-extrabold">4.5</span>
+                  <span className="text-emerald-600 text-sm lg:text-lg font-extrabold">4.5</span>
                 </div>
-                <div className="text-[10px] text-black">Average Rating</div>
+                <div className="text-[8px] lg:text-[10px] text-black">Average Rating</div>
               </div>
 
               {/* Conversion Rate - Middle Right */}
-              <div className="absolute top-[80px] right-[-50px] w-[110px] bg-white border border-emerald-600 rounded-md p-2 text-left shadow-lg z-10 animate-float-4">
-                <div className="flex items-center text-lg font-bold mb-1 text-green-500">
-                  <RefreshCw className="w-4 h-4 mr-2" />
+              <div className="absolute top-[50px] lg:top-[80px] right-[-30px] lg:right-[-50px] w-[80px] lg:w-[110px] bg-white border border-emerald-600 rounded-md p-1.5 lg:p-2 text-left shadow-lg z-10 animate-float-4">
+                <div className="flex items-center text-sm lg:text-lg font-bold mb-1 text-green-500">
+                  <RefreshCw className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
                   12%
                 </div>
-                <div className="text-[10px] text-black">Conversion Rate</div>
+                <div className="text-[8px] lg:text-[10px] text-black">Conversion Rate</div>
               </div>
 
               {/* Product Views - Bottom Right */}
-              <div className="absolute bottom-[30px] right-[-50px] w-[110px] bg-white border border-emerald-600 rounded-md p-2 text-left shadow-lg z-10 animate-float-5">
-                <div className="flex items-center text-lg font-bold mb-1 text-green-500">
-                  <Eye className="w-4 h-4 mr-2" />
+              <div className="absolute bottom-[20px] lg:bottom-[30px] right-[-30px] lg:right-[-50px] w-[80px] lg:w-[110px] bg-white border border-emerald-600 rounded-md p-1.5 lg:p-2 text-left shadow-lg z-10 animate-float-5">
+                <div className="flex items-center text-sm lg:text-lg font-bold mb-1 text-green-500">
+                  <Eye className="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" />
                   5,600
                 </div>
-                <div className="text-[10px] text-black">Product Views</div>
+                <div className="text-[8px] lg:text-[10px] text-black">Product Views</div>
               </div>
 
               {/* Affiliate Earnings - Top Left */}
-              <div className="absolute top-[-50px] left-[-50px] w-[110px] bg-white border border-emerald-600 rounded-md p-2 text-left shadow-lg z-10 animate-float-6">
-                <div className="text-lg font-bold mb-1 text-green-500">
+              <div className="absolute top-[-30px] lg:top-[-50px] left-[-30px] lg:left-[-50px] w-[80px] lg:w-[110px] bg-white border border-emerald-600 rounded-md p-1.5 lg:p-2 text-left shadow-lg z-10 animate-float-6">
+                <div className="text-sm lg:text-lg font-bold mb-1 text-green-500">
                   $ 2,250
                 </div>
-                <div className="text-[10px] text-black">Affiliate Earnings</div>
+                <div className="text-[8px] lg:text-[10px] text-black">Affiliate Earnings</div>
               </div>
 
               {/* Central Product Card */}
-              <div className="bg-white text-gray-800 rounded-xl p-0 text-left shadow-xl border border-gray-300 relative max-w-[200px] w-full mx-auto overflow-hidden z-20 animate-float-center">
+              <div className="bg-white text-gray-800 rounded-xl p-0 text-left shadow-xl border border-gray-300 relative max-w-[140px] lg:max-w-[200px] w-full mx-auto overflow-hidden z-20 animate-float-center">
                 <div className="w-full aspect-square overflow-hidden">
                   <img 
                     src="https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg" 
@@ -224,11 +224,11 @@ export default function AuthPage() {
                     className="w-full h-full object-cover bg-gray-300"
                   />
                 </div>
-                <div className="p-5 text-left">
-                  <div className="text-xl font-bold leading-tight mb-1 text-black">
+                <div className="p-3 lg:p-5 text-left">
+                  <div className="text-sm lg:text-xl font-bold leading-tight mb-1 text-black">
                     Organic Cotton T-Shirt
                   </div>
-                  <div className="text-2xl font-bold text-green-400 mt-0">
+                  <div className="text-lg lg:text-2xl font-bold text-green-400 mt-0">
                     $29.99
                   </div>
                 </div>
@@ -238,60 +238,59 @@ export default function AuthPage() {
         </div>
 
         {/* Right Side - Auth Form */}
-        <div className="flex-none w-full lg:w-[450px] bg-white p-6 lg:p-12 flex flex-col">
+        <div className="flex-none w-full lg:w-[450px] bg-white p-4 sm:p-6 lg:p-12 flex flex-col min-h-[500px] lg:min-h-auto">
           <div>
             {/* Logo Section */}
-            <div className="flex items-center mb-8 text-emerald-600 font-bold text-xl">
-              <Store className="w-5 h-5 mr-2" />
+            <div className="flex items-center mb-6 lg:mb-8 text-emerald-600 font-bold text-lg lg:text-xl">
+              <Store className="w-4 h-4 lg:w-5 lg:h-5 mr-2" />
               <span>Tiangge</span>
             </div>
 
-            <h1 className="text-3xl font-semibold text-gray-800 mb-10">
+            <h1 className="text-2xl lg:text-3xl font-semibold text-gray-800 mb-6 lg:mb-10">
               {isLogin ? 'Log in to your account' : 'Create your account'}
             </h1>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4 lg:space-y-6">
               {!isLogin && (
                 <div className="relative">
                   <input
                     type="text"
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
-                    className="w-full pb-3 border-0 border-b border-gray-300 text-base outline-none focus:border-green-400 transition-colors bg-transparent"
+                    className="w-full pb-2 lg:pb-3 border-0 border-b border-gray-300 text-sm lg:text-base outline-none focus:border-green-400 transition-colors bg-transparent"
                     placeholder="Display Name"
                     required={!isLogin}
                   />
-                  <Users className="absolute top-1/2 transform -translate-y-1/2 right-0 w-4 h-4 text-gray-400" />
+                  <Users className="absolute top-1/2 transform -translate-y-1/2 right-0 w-3 h-3 lg:w-4 lg:h-4 text-gray-400" />
                 </div>
               )}
 
               {!isLogin && (
                 <div className="relative">
                   <div className="flex items-center border-b border-gray-300 focus-within:border-green-400 transition-colors">
-                    <span className="text-gray-500 text-base py-3 pr-2">
+                    <span className="text-gray-500 text-sm lg:text-base py-2 lg:py-3 pr-2">
                       tiangge.shop/
                     </span>
                     <input
                       type="text"
                       value={storeSlug}
                       onChange={handleStoreSlugChange}
-                      className="flex-1 border-0 text-base outline-none bg-transparent text-left leading-normal"
+                      className="flex-1 border-0 text-sm lg:text-base outline-none bg-transparent text-left leading-normal py-2 lg:py-3"
                       placeholder="my-store"
                       required={!isLogin}
-                      style={{ padding: '0.75rem 0', lineHeight: 'normal' }}
                     />
                   </div>
                   {isCheckingSlug && (
-                    <p className="mt-2 text-sm text-gray-500 flex items-center">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-emerald-600 mr-2"></div>
+                    <p className="mt-2 text-xs lg:text-sm text-gray-500 flex items-center">
+                      <div className="animate-spin rounded-full h-3 w-3 lg:h-4 lg:w-4 border-b-2 border-emerald-600 mr-2"></div>
                       Checking availability...
                     </p>
                   )}
                   {slugError && (
-                    <p className="mt-2 text-sm text-red-600">{slugError}</p>
+                    <p className="mt-2 text-xs lg:text-sm text-red-600">{slugError}</p>
                   )}
                   {!slugError && !isCheckingSlug && storeSlug && (
-                    <p className="mt-2 text-sm text-green-600">Store URL is available</p>
+                    <p className="mt-2 text-xs lg:text-sm text-green-600">Store URL is available</p>
                   )}
                 </div>
               )}
@@ -301,11 +300,11 @@ export default function AuthPage() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pb-3 border-0 border-b border-gray-300 text-base outline-none focus:border-green-400 transition-colors bg-transparent"
+                  className="w-full pb-2 lg:pb-3 border-0 border-b border-gray-300 text-sm lg:text-base outline-none focus:border-green-400 transition-colors bg-transparent"
                   placeholder="Email Address"
                   required
                 />
-                <AtSign className="absolute top-1/2 transform -translate-y-1/2 right-0 w-4 h-4 text-gray-400" />
+                <AtSign className="absolute top-1/2 transform -translate-y-1/2 right-0 w-3 h-3 lg:w-4 lg:h-4 text-gray-400" />
               </div>
 
               <div className="relative">
@@ -313,34 +312,34 @@ export default function AuthPage() {
                   type="password"
                   value={password}
                   onChange={handlePasswordChange}
-                  className="w-full pb-3 border-0 border-b border-gray-300 text-base outline-none focus:border-green-400 transition-colors bg-transparent"
+                  className="w-full pb-2 lg:pb-3 border-0 border-b border-gray-300 text-sm lg:text-base outline-none focus:border-green-400 transition-colors bg-transparent"
                   placeholder="Enter Password"
                   required
                 />
-                <Lock className="absolute top-1/2 transform -translate-y-1/2 right-0 w-4 h-4 text-gray-400" />
+                <Lock className="absolute top-1/2 transform -translate-y-1/2 right-0 w-3 h-3 lg:w-4 lg:h-4 text-gray-400" />
                 {!isLogin && passwordError && (
-                  <p className="mt-2 text-sm text-red-600">{passwordError}</p>
+                  <p className="mt-2 text-xs lg:text-sm text-red-600">{passwordError}</p>
                 )}
                 {!isLogin && !passwordError && password && (
-                  <p className="mt-2 text-sm text-green-600">Password meets requirements</p>
+                  <p className="mt-2 text-xs lg:text-sm text-green-600">Password meets requirements</p>
                 )}
               </div>
 
               {isLogin && (
-                <div className="mt-1 mb-8">
-                  <a href="#" className="text-green-400 text-sm font-medium hover:text-green-500 transition-colors">
+                <div className="mt-1 mb-4 lg:mb-8">
+                  <a href="#" className="text-green-400 text-xs lg:text-sm font-medium hover:text-green-500 transition-colors">
                     Forgot Password?
                   </a>
                 </div>
               )}
 
               {error && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3 lg:p-4">
                   <div className="flex items-center">
-                    <div className="w-5 h-5 bg-red-100 rounded-full flex items-center justify-center mr-3">
+                    <div className="w-4 h-4 lg:w-5 lg:h-5 bg-red-100 rounded-full flex items-center justify-center mr-2 lg:mr-3">
                       <span className="text-red-600 text-xs font-bold">!</span>
                     </div>
-                    <span className="text-red-800 text-sm">{error}</span>
+                    <span className="text-red-800 text-xs lg:text-sm">{error}</span>
                   </div>
                 </div>
               )}
@@ -348,11 +347,11 @@ export default function AuthPage() {
               <button
                 type="submit"
                 disabled={loading || (!isLogin && (slugError !== '' || passwordError !== '' || isCheckingSlug))}
-                className="w-full py-3 border-0 rounded-md text-base cursor-pointer mb-4 transition-all font-semibold shadow-sm bg-green-400 text-white hover:bg-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-3 lg:py-3 border-0 rounded-md text-sm lg:text-base cursor-pointer mb-3 lg:mb-4 transition-all font-semibold shadow-sm bg-green-400 text-white hover:bg-green-500 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
               >
                 {loading ? (
                   <div className="flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                    <div className="animate-spin rounded-full h-4 w-4 lg:h-5 lg:w-5 border-b-2 border-white mr-2"></div>
                     {isLogin ? 'Signing in...' : 'Creating account...'}
                   </div>
                 ) : (
@@ -361,14 +360,14 @@ export default function AuthPage() {
               </button>
             </form>
 
-            <div className="text-center mt-10">
-              <span className="text-gray-600">
+            <div className="text-center mt-6 lg:mt-10">
+              <span className="text-gray-600 text-sm lg:text-base">
                 {isLogin ? 'Need a Tiangge account? ' : 'Already have an account? '}
               </span>
               <button
                 type="button"
                 onClick={() => setIsLogin(!isLogin)}
-                className="text-green-400 font-semibold hover:text-green-500 transition-colors"
+                className="text-green-400 font-semibold hover:text-green-500 transition-colors text-sm lg:text-base"
               >
                 {isLogin ? 'Create an account' : 'Log in'}
               </button>
@@ -376,7 +375,7 @@ export default function AuthPage() {
           </div>
 
           {/* Footer */}
-          <div className="text-xs text-gray-400 leading-relaxed pt-8 mt-8 border-t border-gray-200">
+          <div className="text-xs text-gray-400 leading-relaxed pt-4 lg:pt-8 mt-4 lg:mt-8 border-t border-gray-200">
             Tiangge ©2025 All Rights Reserved.
           </div>
         </div>
@@ -388,6 +387,17 @@ export default function AuthPage() {
           0% { transform: translateY(0) scale(1) rotate(var(--initial-rotation, 0deg)); }
           50% { transform: translateY(-3px) scale(1.01) rotate(var(--initial-rotation, 0deg)); }
           100% { transform: translateY(0) scale(1) rotate(var(--initial-rotation, 0deg)); }
+        }
+
+        @media (max-width: 1024px) {
+          .animate-float-1,
+          .animate-float-2,
+          .animate-float-3,
+          .animate-float-4,
+          .animate-float-5,
+          .animate-float-6 {
+            animation-duration: 3s;
+          }
         }
 
         .animate-float-1 {

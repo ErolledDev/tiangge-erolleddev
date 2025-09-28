@@ -82,18 +82,18 @@ export default function DashboardNav({ isSidebarOpen, toggleSidebar }: Dashboard
       id="dashboard-sidebar"
       className={`
         fixed top-0 left-0 h-screen bg-white shadow-xl border-r border-gray-200 z-40 flex flex-col
-        transition-transform duration-300 ease-in-out overflow-y-auto w-64
+        transition-transform duration-300 ease-in-out overflow-y-auto w-64 sm:w-72
         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}
     >
       {/* Sidebar Header with Close Button */}
-      <div className="flex items-center justify-between h-16 px-4 bg-gradient-to-r from-primary-500 to-secondary-500 border-b border-gray-200">
+      <div className="flex items-center justify-between h-14 sm:h-16 px-3 sm:px-4 bg-gradient-to-r from-primary-500 to-secondary-500 border-b border-gray-200">
         <div className="flex items-center">
-          <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-            <Store className="w-5 h-5 text-primary-600" />
+          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-white rounded-lg flex items-center justify-center">
+            <Store className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />
           </div>
-          <div className="ml-3">
-            <p className="text-sm font-bold text-white">
+          <div className="ml-2 sm:ml-3">
+            <p className="text-sm sm:text-base font-bold text-white">
               Tiangge
             </p>
             <p className="text-xs text-white text-opacity-80">
@@ -105,22 +105,22 @@ export default function DashboardNav({ isSidebarOpen, toggleSidebar }: Dashboard
         {/* Close Button */}
         <button
           onClick={closeSidebar}
-          className="p-1.5 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors"
+          className="p-1 sm:p-1.5 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
           aria-label="Close sidebar"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-2 py-4 space-y-1">
+      <nav className="flex-1 px-2 py-3 sm:py-4 space-y-1">
         {getNavigationItems().map((item, index) => {
           // Render group headers
           if (item.type === 'header') {
             return (
               <div
                 key={`${item.name}-${index}`}
-                className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider"
+                className="px-2 sm:px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider"
               >
                 {item.name}
               </div>
@@ -137,8 +137,8 @@ export default function DashboardNav({ isSidebarOpen, toggleSidebar }: Dashboard
               href={item.href}
               onClick={closeSidebar}
               className={`
-                group flex items-center px-3 py-3 text-sm font-medium rounded-lg transition-all duration-200
-                min-h-12 relative
+                group flex items-center px-2 sm:px-3 py-3 text-sm font-medium rounded-lg transition-all duration-200
+                min-h-[44px] relative
                 ${isActive
                   ? 'bg-primary-50 text-primary-700 border-r-2 border-primary-600'
                   : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
@@ -150,25 +150,25 @@ export default function DashboardNav({ isSidebarOpen, toggleSidebar }: Dashboard
             >
               <IconComponent 
                 className={`
-                  flex-shrink-0 transition-colors w-5 h-5
+                  flex-shrink-0 transition-colors w-4 h-4 sm:w-5 sm:h-5
                   ${isActive ? 'text-primary-600' : 'text-gray-500 group-hover:text-gray-700'}
                 `} 
               />
-              <span className="ml-3 truncate flex-1">{item.name}</span>
+              <span className="ml-2 sm:ml-3 truncate flex-1 text-sm">{item.name}</span>
             </Link>
           );
         })}
       </nav>
 
       {/* Logout Button */}
-      <div className="p-4 border-t border-gray-200">
+      <div className="p-3 sm:p-4 border-t border-gray-200">
         <button
           onClick={handleLogout}
           disabled={isLoggingOut}
-          className="group flex items-center w-full px-3 py-3 text-sm font-medium text-gray-600 rounded-lg hover:bg-danger-50 hover:text-danger-700 transition-all duration-200 disabled:opacity-50 min-h-12"
+          className="group flex items-center w-full px-2 sm:px-3 py-3 text-sm font-medium text-gray-600 rounded-lg hover:bg-danger-50 hover:text-danger-700 transition-all duration-200 disabled:opacity-50 min-h-[44px]"
         >
-          <LogOut className="flex-shrink-0 text-gray-500 group-hover:text-danger-600 transition-colors w-5 h-5" />
-          <span className="ml-3 truncate text-gray-700 group-hover:text-danger-700 flex-1">
+          <LogOut className="flex-shrink-0 text-gray-500 group-hover:text-danger-600 transition-colors w-4 h-4 sm:w-5 sm:h-5" />
+          <span className="ml-2 sm:ml-3 truncate text-gray-700 group-hover:text-danger-700 flex-1">
             {isLoggingOut ? 'Logging out...' : 'Logout'}
           </span>
         </button>

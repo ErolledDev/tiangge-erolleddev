@@ -82,8 +82,8 @@ export default function DashboardLayout({
       <DashboardNav isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
       
       {/* Main Content */}
-      <main className="pt-16">
-        <div className="px-4 py-6 md:px-8 md:py-8">
+      <main className="pt-14 sm:pt-16">
+        <div className="px-3 py-4 sm:px-4 sm:py-6 md:px-8 md:py-8">
           <div className="max-w-7xl mx-auto">
             {children}
           </div>
@@ -96,7 +96,7 @@ export default function DashboardLayout({
       {/* Sidebar Overlay for Mobile */}
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden"
+          className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"
           onClick={toggleSidebar}
         />
       )}
