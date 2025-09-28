@@ -138,10 +138,10 @@ export default function AuthPage() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-6xl h-[600px] flex shadow-2xl rounded-xl overflow-hidden bg-white relative">
+      <div className="w-full max-w-6xl h-[600px] flex shadow-2xl rounded-xl overflow-hidden bg-white relative md:flex-row flex-col">
         
         {/* Left Side - Visual Showcase */}
-        <div className="flex-1 bg-gradient-to-br from-emerald-600 to-green-500 relative overflow-hidden flex flex-col items-center justify-center text-white p-5">
+        <div className="hidden md:flex md:flex-1 bg-gradient-to-br from-emerald-600 to-green-500 relative overflow-hidden flex-col items-center justify-center text-white p-5">
           
           {/* Background Elements */}
           <div className="absolute top-[10%] left-[5%] w-[150px] h-[150px] bg-white bg-opacity-[0.08] rounded-full"></div>
@@ -155,10 +155,239 @@ export default function AuthPage() {
               Earn Now.
             </h2>
             
-            {/* Floating Metric Cards */}
-            <div className="relative">
-              {/* Store Visits - Top Right */}
-              <div className="absolute top-[70px] right-[-140px] w-[120px] bg-white border border-emerald-600 rounded-md p-3 text-left shadow-lg z-10 animate-float-1">
+            {/* Metric Cards Grid */}
+            <div className="w-full max-w-lg">
+              {/* Metric Cards in Grid */}
+              <div className="grid grid-cols-2 gap-4 mb-8 justify-items-center">
+                {/* Store Visits */}
+                <div className="w-[120px] bg-white border border-emerald-600 rounded-md p-3 text-left shadow-lg">
+                  <div className="flex items-center text-lg font-bold mb-1 text-green-500">
+                    <Store className="w-4 h-4 mr-2" />
+                    9,800
+                  </div>
+                  <div className="text-xs text-black">Store Visits</div>
+                </div>
+
+                {/* Total Clicks */}
+                <div className="w-[120px] bg-white border border-emerald-600 rounded-md p-3 text-left shadow-lg">
+                  <div className="flex items-center text-lg font-bold mb-1 text-green-500">
+                    <MousePointer className="w-4 h-4 mr-2" />
+                    3,450
+                  </div>
+                  <div className="text-xs text-black">Total Clicks</div>
+                </div>
+
+                {/* Rating */}
+                <div className="w-[120px] bg-white border border-emerald-600 rounded-md p-3 text-left shadow-lg">
+                  <div className="flex items-center text-xs font-bold mb-1">
+                    <div className="flex text-yellow-400 mr-2">
+                      <Star className="w-2 h-2 fill-current" />
+                      <Star className="w-2 h-2 fill-current" />
+                      <Star className="w-2 h-2 fill-current" />
+                      <Star className="w-2 h-2 fill-current" />
+                      <StarHalf className="w-2 h-2 fill-current" />
+                    </div>
+                    <span className="text-emerald-600 text-lg font-extrabold">4.5</span>
+                  </div>
+                  <div className="text-xs text-black">Average Rating</div>
+                </div>
+
+                {/* Conversion Rate */}
+                <div className="w-[120px] bg-white border border-emerald-600 rounded-md p-3 text-left shadow-lg">
+                  <div className="flex items-center text-lg font-bold mb-1 text-green-500">
+                    <RefreshCw className="w-4 h-4 mr-2" />
+                    12%
+                  </div>
+                  <div className="text-xs text-black">Conversion Rate</div>
+                </div>
+
+                {/* Product Views */}
+                <div className="w-[120px] bg-white border border-emerald-600 rounded-md p-3 text-left shadow-lg">
+                  <div className="flex items-center text-lg font-bold mb-1 text-green-500">
+                    <Eye className="w-4 h-4 mr-2" />
+                    5,600
+                  </div>
+                  <div className="text-xs text-black">Product Views</div>
+                </div>
+
+                {/* Affiliate Earnings */}
+                <div className="w-[120px] bg-white border border-emerald-600 rounded-md p-3 text-left shadow-lg">
+                  <div className="text-lg font-bold mb-1 text-green-500">
+                    $ 2,250
+                  </div>
+                  <div className="text-xs text-black">Affiliate Earnings</div>
+                </div>
+              </div>
+
+              {/* Central Product Card */}
+              <div className="bg-white text-gray-800 rounded-xl p-0 text-left shadow-xl border border-gray-300 max-w-[200px] w-full overflow-hidden mx-auto">
+                <div className="w-full aspect-square overflow-hidden">
+                  <img 
+                    src="https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg" 
+                    alt="Organic Cotton T-Shirt"
+                    className="w-full h-full object-cover bg-gray-300"
+                  />
+                </div>
+                <div className="p-5 text-left">
+                  <div className="text-xl font-bold leading-tight mb-1 text-black">
+                    Organic Cotton T-Shirt
+                  </div>
+                  <div className="text-2xl font-bold text-green-400 mt-0">
+                    $29.99
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Side - Auth Form */}
+        <div className="w-full md:w-[450px] bg-white p-6 md:p-12 flex flex-col justify-between">
+          <div>
+            {/* Logo Section */}
+            <div className="flex items-center mb-6 md:mb-8 text-emerald-600 font-bold text-xl">
+              <Store className="w-5 h-5 mr-2" />
+              <span>Tiangge</span>
+            </div>
+
+            <h1 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-6 md:mb-10">
+              {isLogin ? 'Log in to your account' : 'Create your account'}
+            </h1>
+
+            <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+              {!isLogin && (
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={displayName}
+                    onChange={(e) => setDisplayName(e.target.value)}
+                    className="w-full pb-3 border-0 border-b border-gray-300 text-base outline-none focus:border-green-400 transition-colors bg-transparent"
+                    placeholder="Display Name"
+                    required={!isLogin}
+                  />
+                  <Users className="absolute top-1/2 transform -translate-y-1/2 right-0 w-4 h-4 text-gray-400" />
+                </div>
+              )}
+
+              {!isLogin && (
+                <div className="relative">
+                  <div className="flex border-b border-gray-300 focus-within:border-green-400 transition-colors">
+                    <span className="text-gray-500 text-base py-3 pr-2">
+                      tiangge.shop/
+                    </span>
+                    <input
+                      type="text"
+                      value={storeSlug}
+                      onChange={handleStoreSlugChange}
+                      className="flex-1 pb-3 border-0 text-base outline-none bg-transparent"
+                      placeholder="my-store"
+                      required={!isLogin}
+                    />
+                  </div>
+                  {isCheckingSlug && (
+                    <p className="mt-2 text-sm text-gray-500 flex items-center">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-emerald-600 mr-2"></div>
+                      Checking availability...
+                    </p>
+                  )}
+                  {slugError && (
+                    <p className="mt-2 text-sm text-red-600">{slugError}</p>
+                  )}
+                  {!slugError && !isCheckingSlug && storeSlug && (
+                    <p className="mt-2 text-sm text-green-600">Store URL is available</p>
+                  )}
+                </div>
+              )}
+
+              <div className="relative">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full pb-3 border-0 border-b border-gray-300 text-base outline-none focus:border-green-400 transition-colors bg-transparent"
+                  placeholder="Email Address"
+                  required
+                />
+                <AtSign className="absolute top-1/2 transform -translate-y-1/2 right-0 w-4 h-4 text-gray-400" />
+              </div>
+
+              <div className="relative">
+                <input
+                  type="password"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  className="w-full pb-3 border-0 border-b border-gray-300 text-base outline-none focus:border-green-400 transition-colors bg-transparent"
+                  placeholder="Enter Password"
+                  required
+                />
+                <Lock className="absolute top-1/2 transform -translate-y-1/2 right-0 w-4 h-4 text-gray-400" />
+                {!isLogin && passwordError && (
+                  <p className="mt-2 text-sm text-red-600">{passwordError}</p>
+                )}
+                {!isLogin && !passwordError && password && (
+                  <p className="mt-2 text-sm text-green-600">Password meets requirements</p>
+                )}
+              </div>
+
+              {isLogin && (
+                <div className="mt-1 mb-6 md:mb-8">
+                  <a href="#" className="text-green-400 text-sm font-medium hover:text-green-500 transition-colors">
+                    Forgot Password?
+                  </a>
+                </div>
+              )}
+
+              {error && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                  <div className="flex items-center">
+                    <div className="w-5 h-5 bg-red-100 rounded-full flex items-center justify-center mr-3">
+                      <span className="text-red-600 text-xs font-bold">!</span>
+                    </div>
+                    <span className="text-red-800 text-sm">{error}</span>
+                  </div>
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading || (!isLogin && (slugError !== '' || passwordError !== '' || isCheckingSlug))}
+                className="w-full py-3 border-0 rounded-md text-base cursor-pointer mb-4 transition-all font-semibold shadow-sm bg-green-400 text-white hover:bg-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? (
+                  <div className="flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                    {isLogin ? 'Signing in...' : 'Creating account...'}
+                  </div>
+                ) : (
+                  isLogin ? 'Log in' : 'Create Account'
+                )}
+              </button>
+            </form>
+
+            <div className="text-center mt-6 md:mt-10">
+              <span className="text-gray-600">
+                {isLogin ? 'Need a Tiangge account? ' : 'Already have an account? '}
+              </span>
+              <button
+                type="button"
+                onClick={() => setIsLogin(!isLogin)}
+                className="text-green-400 font-semibold hover:text-green-500 transition-colors"
+              >
+                {isLogin ? 'Create an account' : 'Log in'}
+              </button>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="text-xs text-gray-400 leading-relaxed pt-5 border-t border-gray-200 mt-auto">
+            Tiangge ©2025 All Rights Reserved.<br />
+            Cookie Preferences, Privacy, and Terms.
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
                 <div className="flex items-center text-lg font-bold mb-1 text-green-500">
                   <Store className="w-4 h-4 mr-2" />
                   9,800
