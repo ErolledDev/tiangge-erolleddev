@@ -100,14 +100,6 @@ export default function DashboardHeader({ isSidebarOpen, toggleSidebar }: Dashbo
               className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 transition-colors"
               aria-label="User menu"
             >
-              <div className="hidden sm:block text-right">
-                <p className="text-sm font-medium text-gray-900">
-                  {userProfile?.displayName || 'User'}
-                </p>
-                <p className="text-xs text-gray-500">
-                  {userProfile?.email}
-                </p>
-              </div>
               <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center">
                 <User className="w-5 h-5 text-white" />
               </div>
