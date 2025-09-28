@@ -67,7 +67,6 @@ export default function AuthPage() {
     const value = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '');
     setStoreSlug(value);
     
-    // Debounce slug checking
     const timeoutId = setTimeout(() => checkSlug(value), 500);
     return () => clearTimeout(timeoutId);
   };
@@ -138,17 +137,17 @@ export default function AuthPage() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-6xl h-[600px] flex shadow-2xl rounded-xl overflow-hidden bg-white relative">
+      <div className="w-full max-w-6xl h-[600px] flex shadow-2xl rounded-xl bg-white relative">
         
         {/* Left Side - Visual Showcase */}
-        <div className="flex-1 bg-gradient-to-br from-emerald-600 to-green-500 relative overflow-hidden flex flex-col items-center justify-center text-white p-5">
+        <div className="hidden lg:flex flex-1 bg-gradient-to-br from-emerald-600 to-green-500 relative overflow-hidden flex-col items-center justify-center text-white p-8">
           
           {/* Background Elements */}
           <div className="absolute top-[10%] left-[5%] w-[150px] h-[150px] bg-white bg-opacity-[0.08] rounded-full"></div>
           <div className="absolute bottom-[-50px] right-[-50px] w-[300px] h-[300px] bg-white bg-opacity-[0.08] rounded-[120px] transform rotate-45"></div>
           <div className="absolute top-[50%] right-[20%] w-[50px] h-[50px] bg-white bg-opacity-[0.08] rounded-full"></div>
 
-          <div className="relative z-10 text-center">
+          <div className="relative z-10 text-center w-full max-w-md">
             <h2 className="text-white text-3xl font-bold mb-10 leading-snug">Tiangge</h2>
             <h2 className="text-white text-3xl font-bold mb-10 leading-snug">
               Create your Store,<br />
@@ -158,25 +157,25 @@ export default function AuthPage() {
             {/* Floating Metric Cards */}
             <div className="relative">
               {/* Store Visits - Top Right */}
-              <div className="absolute top-[70px] right-[-140px] w-[120px] bg-white border border-emerald-600 rounded-md p-3 text-left shadow-lg z-10 animate-float-1">
+              <div className="absolute top-[-50px] right-[-50px] w-[110px] bg-white border border-emerald-600 rounded-md p-2 text-left shadow-lg z-10 animate-float-1">
                 <div className="flex items-center text-lg font-bold mb-1 text-green-500">
                   <Store className="w-4 h-4 mr-2" />
                   9,800
                 </div>
-                <div className="text-xs text-black">Store Visits</div>
+                <div className="text-[10px] text-black">Store Visits</div>
               </div>
 
               {/* Total Clicks - Middle Left */}
-              <div className="absolute top-[220px] left-[-140px] w-[120px] bg-white border border-emerald-600 rounded-md p-3 text-left shadow-lg z-10 animate-float-2">
+              <div className="absolute top-[80px] left-[-50px] w-[110px] bg-white border border-emerald-600 rounded-md p-2 text-left shadow-lg z-10 animate-float-2">
                 <div className="flex items-center text-lg font-bold mb-1 text-green-500">
                   <MousePointer className="w-4 h-4 mr-2" />
                   3,450
                 </div>
-                <div className="text-xs text-black">Total Clicks</div>
+                <div className="text-[10px] text-black">Total Clicks</div>
               </div>
 
               {/* Rating - Bottom Left */}
-              <div className="absolute bottom-[70px] left-[-140px] w-[120px] bg-white border border-emerald-600 rounded-md p-3 text-left shadow-lg z-10 animate-float-3">
+              <div className="absolute bottom-[30px] left-[-50px] w-[110px] bg-white border border-emerald-600 rounded-md p-2 text-left shadow-lg z-10 animate-float-3">
                 <div className="flex items-center text-xs font-bold mb-1">
                   <div className="flex text-yellow-400 mr-2">
                     <Star className="w-2 h-2 fill-current" />
@@ -187,37 +186,37 @@ export default function AuthPage() {
                   </div>
                   <span className="text-emerald-600 text-lg font-extrabold">4.5</span>
                 </div>
-                <div className="text-xs text-black">Average Rating</div>
+                <div className="text-[10px] text-black">Average Rating</div>
               </div>
 
               {/* Conversion Rate - Middle Right */}
-              <div className="absolute top-[220px] right-[-140px] w-[120px] bg-white border border-emerald-600 rounded-md p-3 text-left shadow-lg z-10 animate-float-4">
+              <div className="absolute top-[80px] right-[-50px] w-[110px] bg-white border border-emerald-600 rounded-md p-2 text-left shadow-lg z-10 animate-float-4">
                 <div className="flex items-center text-lg font-bold mb-1 text-green-500">
                   <RefreshCw className="w-4 h-4 mr-2" />
                   12%
                 </div>
-                <div className="text-xs text-black">Conversion Rate</div>
+                <div className="text-[10px] text-black">Conversion Rate</div>
               </div>
 
               {/* Product Views - Bottom Right */}
-              <div className="absolute bottom-[70px] right-[-140px] w-[120px] bg-white border border-emerald-600 rounded-md p-3 text-left shadow-lg z-10 animate-float-5">
+              <div className="absolute bottom-[30px] right-[-50px] w-[110px] bg-white border border-emerald-600 rounded-md p-2 text-left shadow-lg z-10 animate-float-5">
                 <div className="flex items-center text-lg font-bold mb-1 text-green-500">
                   <Eye className="w-4 h-4 mr-2" />
                   5,600
                 </div>
-                <div className="text-xs text-black">Product Views</div>
+                <div className="text-[10px] text-black">Product Views</div>
               </div>
 
               {/* Affiliate Earnings - Top Left */}
-              <div className="absolute top-[70px] left-[-140px] w-[120px] bg-white border border-emerald-600 rounded-md p-3 text-left shadow-lg z-10 animate-float-6">
+              <div className="absolute top-[-50px] left-[-50px] w-[110px] bg-white border border-emerald-600 rounded-md p-2 text-left shadow-lg z-10 animate-float-6">
                 <div className="text-lg font-bold mb-1 text-green-500">
                   $ 2,250
                 </div>
-                <div className="text-xs text-black">Affiliate Earnings</div>
+                <div className="text-[10px] text-black">Affiliate Earnings</div>
               </div>
 
               {/* Central Product Card */}
-              <div className="bg-white text-gray-800 rounded-xl p-0 text-left shadow-xl border border-gray-300 relative max-w-[200px] w-full overflow-hidden z-20 animate-float-center">
+              <div className="bg-white text-gray-800 rounded-xl p-0 text-left shadow-xl border border-gray-300 relative max-w-[200px] w-full mx-auto overflow-hidden z-20 animate-float-center">
                 <div className="w-full aspect-square overflow-hidden">
                   <img 
                     src="https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg" 
@@ -239,7 +238,7 @@ export default function AuthPage() {
         </div>
 
         {/* Right Side - Auth Form */}
-        <div className="flex-none w-[450px] bg-white p-12 flex flex-col justify-between">
+        <div className="flex-none w-full lg:w-[450px] bg-white p-6 lg:p-12 flex flex-col justify-between">
           <div>
             {/* Logo Section */}
             <div className="flex items-center mb-8 text-emerald-600 font-bold text-xl">
@@ -435,34 +434,6 @@ export default function AuthPage() {
 
         .animate-float-center {
           animation: card-float 5s ease-in-out infinite;
-        }
-
-        /* Mobile Responsive */
-        @media (max-width: 900px) {
-          .login-container {
-            flex-direction: column;
-            height: auto;
-            min-height: 100vh;
-            border-radius: 0;
-          }
-          
-          .login-left {
-            height: 400px;
-          }
-          
-          .login-right {
-            flex: 1;
-            padding: 30px 20px;
-            height: auto;
-          }
-          
-          .product-card {
-            max-width: 90%;
-          }
-          
-          .metric-card {
-            display: none;
-          }
         }
       `}</style>
     </div>
