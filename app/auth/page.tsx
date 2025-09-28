@@ -5,7 +5,20 @@ import { useRouter } from 'next/navigation';
 import { signIn, signUp } from '@/lib/auth';
 import { checkSlugAvailability } from '@/lib/store';
 import { useAuth } from '@/hooks/useAuth';
-import { Store, Package, TrendingUp, Users, Eye, MousePointer, ChartBar as BarChart3, ShoppingBag, Star, ArrowRight } from 'lucide-react';
+import { 
+  Store, 
+  Package, 
+  TrendingUp, 
+  Users, 
+  Eye, 
+  MousePointer, 
+  ArrowRight,
+  Star,
+  StarHalf,
+  RefreshCw,
+  AtSign,
+  Lock
+} from 'lucide-react';
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -124,175 +137,153 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex">
-      {/* Left Column - Visual Showcase */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary-600 via-primary-700 to-secondary-600 relative overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }} />
-        </div>
-
-        <div className="relative z-10 flex flex-col justify-center p-12 text-white">
-          {/* Header */}
-          <div className="mb-12">
-            <div className="flex items-center mb-6">
-              <div className="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center mr-4">
-                <Store className="w-7 h-7 text-white" />
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold">Tiangge</h1>
-                <p className="text-primary-100">Affiliate Store Builder</p>
-              </div>
-            </div>
-            <h2 className="text-4xl font-bold mb-4 leading-tight">
-              Build Your Dream<br />
-              <span className="text-secondary-200">Affiliate Store</span>
-            </h2>
-            <p className="text-xl text-primary-100 leading-relaxed">
-              Create stunning affiliate stores, track performance, and earn commissions with our powerful platform.
-            </p>
-          </div>
-
-          {/* Mock Dashboard Preview */}
-          <div className="space-y-6">
-            {/* Analytics Cards */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-4 border border-white border-opacity-20">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="p-2 bg-green-500 bg-opacity-20 rounded-lg">
-                    <TrendingUp className="w-5 h-5 text-green-200" />
-                  </div>
-                  <span className="text-xs text-primary-200">+12%</span>
-                </div>
-                <div className="text-2xl font-bold text-white">2,847</div>
-                <div className="text-sm text-primary-200">Product Clicks</div>
-              </div>
-              
-              <div className="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-4 border border-white border-opacity-20">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="p-2 bg-blue-500 bg-opacity-20 rounded-lg">
-                    <Eye className="w-5 h-5 text-blue-200" />
-                  </div>
-                  <span className="text-xs text-primary-200">+8%</span>
-                </div>
-                <div className="text-2xl font-bold text-white">1,234</div>
-                <div className="text-sm text-primary-200">Store Views</div>
-              </div>
-            </div>
-
-            {/* Product Cards Preview */}
-            <div className="bg-white bg-opacity-10 backdrop-blur-sm rounded-lg p-4 border border-white border-opacity-20">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-white">Top Products</h3>
-                <Package className="w-5 h-5 text-primary-200" />
-              </div>
-              
-              <div className="grid grid-cols-3 gap-3">
-                {[
-                  { name: 'Wireless Headphones', price: '$99', color: 'bg-blue-500' },
-                  { name: 'Smart Watch', price: '$249', color: 'bg-purple-500' },
-                  { name: 'Phone Case', price: '$29', color: 'bg-pink-500' }
-                ].map((product, index) => (
-                  <div key={index} className="bg-white bg-opacity-15 rounded-lg p-3 border border-white border-opacity-20">
-                    <div className={`w-full h-16 ${product.color} bg-opacity-30 rounded-lg mb-2 flex items-center justify-center`}>
-                      <ShoppingBag className="w-6 h-6 text-white" />
-                    </div>
-                    <div className="text-xs font-medium text-white truncate">{product.name}</div>
-                    <div className="text-xs text-primary-200">{product.price}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Features List */}
-            <div className="space-y-3">
-              {[
-                { icon: BarChart3, text: 'Real-time Analytics Dashboard' },
-                { icon: Users, text: 'Email Subscriber Management' },
-                { icon: MousePointer, text: 'Click Tracking & Performance' },
-                { icon: Star, text: 'Custom Branding & Themes' }
-              ].map((feature, index) => (
-                <div key={index} className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
-                    <feature.icon className="w-4 h-4 text-white" />
-                  </div>
-                  <span className="text-primary-100">{feature.text}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Right Column - Auth Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
-        <div className="max-w-md w-full space-y-8">
-          <div className="text-center">
-            <div className="lg:hidden flex items-center justify-center mb-6">
-              <div className="w-12 h-12 bg-primary-600 rounded-xl flex items-center justify-center mr-3">
-                <Store className="w-7 h-7 text-white" />
-              </div>
-              <div className="text-left">
-                <h1 className="text-2xl font-bold text-gray-900">Tiangge</h1>
-                <p className="text-gray-600">Affiliate Store Builder</p>
-              </div>
-            </div>
-            
-            <h2 className="text-3xl font-bold text-gray-900">
-              {isLogin ? 'Welcome back!' : 'Get started today'}
-            </h2>
-            <p className="mt-2 text-gray-600">
-              {isLogin ? 'Sign in to access your affiliate store dashboard' : 'Create your account and start building your affiliate empire'}
-            </p>
-          </div>
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+      <div className="w-full max-w-6xl h-[600px] flex shadow-2xl rounded-xl overflow-hidden bg-white relative">
+        
+        {/* Left Side - Visual Showcase */}
+        <div className="flex-1 bg-gradient-to-br from-emerald-600 to-green-500 relative overflow-hidden flex flex-col items-center justify-center text-white p-5">
           
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            <div className="space-y-4">
-              {!isLogin && (
-                <div>
-                  <label htmlFor="displayName" className="block text-sm font-medium text-gray-700 mb-2">
-                    Display Name
-                  </label>
-                  <input
-                    id="displayName"
-                    name="displayName"
-                    type="text"
-                    required={!isLogin}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
-                    placeholder="Your name"
-                    value={displayName}
-                    onChange={(e) => setDisplayName(e.target.value)}
+          {/* Background Elements */}
+          <div className="absolute top-[10%] left-[5%] w-[150px] h-[150px] bg-white bg-opacity-[0.08] rounded-full"></div>
+          <div className="absolute bottom-[-50px] right-[-50px] w-[300px] h-[300px] bg-white bg-opacity-[0.08] rounded-[120px] transform rotate-45"></div>
+          <div className="absolute top-[50%] right-[20%] w-[50px] h-[50px] bg-white bg-opacity-[0.08] rounded-full"></div>
+
+          <div className="relative z-10 text-center">
+            <h2 className="text-white text-3xl font-bold mb-10 leading-snug">Tiangge</h2>
+            <h2 className="text-white text-3xl font-bold mb-10 leading-snug">
+              Create your Store,<br />
+              Earn Now.
+            </h2>
+            
+            {/* Floating Metric Cards */}
+            <div className="relative">
+              {/* Store Visits - Top Right */}
+              <div className="absolute top-[70px] right-[-140px] w-[120px] bg-white border border-emerald-600 rounded-md p-3 text-left shadow-lg z-10 animate-float-1">
+                <div className="flex items-center text-lg font-bold mb-1 text-green-500">
+                  <Store className="w-4 h-4 mr-2" />
+                  9,800
+                </div>
+                <div className="text-xs text-black">Store Visits</div>
+              </div>
+
+              {/* Total Clicks - Middle Left */}
+              <div className="absolute top-[220px] left-[-140px] w-[120px] bg-white border border-emerald-600 rounded-md p-3 text-left shadow-lg z-10 animate-float-2">
+                <div className="flex items-center text-lg font-bold mb-1 text-green-500">
+                  <MousePointer className="w-4 h-4 mr-2" />
+                  3,450
+                </div>
+                <div className="text-xs text-black">Total Clicks</div>
+              </div>
+
+              {/* Rating - Bottom Left */}
+              <div className="absolute bottom-[70px] left-[-140px] w-[120px] bg-white border border-emerald-600 rounded-md p-3 text-left shadow-lg z-10 animate-float-3">
+                <div className="flex items-center text-xs font-bold mb-1">
+                  <div className="flex text-yellow-400 mr-2">
+                    <Star className="w-2 h-2 fill-current" />
+                    <Star className="w-2 h-2 fill-current" />
+                    <Star className="w-2 h-2 fill-current" />
+                    <Star className="w-2 h-2 fill-current" />
+                    <StarHalf className="w-2 h-2 fill-current" />
+                  </div>
+                  <span className="text-emerald-600 text-lg font-extrabold">4.5</span>
+                </div>
+                <div className="text-xs text-black">Average Rating</div>
+              </div>
+
+              {/* Conversion Rate - Middle Right */}
+              <div className="absolute top-[220px] right-[-140px] w-[120px] bg-white border border-emerald-600 rounded-md p-3 text-left shadow-lg z-10 animate-float-4">
+                <div className="flex items-center text-lg font-bold mb-1 text-green-500">
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  12%
+                </div>
+                <div className="text-xs text-black">Conversion Rate</div>
+              </div>
+
+              {/* Product Views - Bottom Right */}
+              <div className="absolute bottom-[70px] right-[-140px] w-[120px] bg-white border border-emerald-600 rounded-md p-3 text-left shadow-lg z-10 animate-float-5">
+                <div className="flex items-center text-lg font-bold mb-1 text-green-500">
+                  <Eye className="w-4 h-4 mr-2" />
+                  5,600
+                </div>
+                <div className="text-xs text-black">Product Views</div>
+              </div>
+
+              {/* Affiliate Earnings - Top Left */}
+              <div className="absolute top-[70px] left-[-140px] w-[120px] bg-white border border-emerald-600 rounded-md p-3 text-left shadow-lg z-10 animate-float-6">
+                <div className="text-lg font-bold mb-1 text-green-500">
+                  $ 2,250
+                </div>
+                <div className="text-xs text-black">Affiliate Earnings</div>
+              </div>
+
+              {/* Central Product Card */}
+              <div className="bg-white text-gray-800 rounded-xl p-0 text-left shadow-xl border border-gray-300 relative max-w-[200px] w-full overflow-hidden z-20 animate-float-center">
+                <div className="w-full aspect-square overflow-hidden">
+                  <img 
+                    src="https://images.pexels.com/photos/2529148/pexels-photo-2529148.jpeg" 
+                    alt="Organic Cotton T-Shirt"
+                    className="w-full h-full object-cover bg-gray-300"
                   />
                 </div>
-              )}
-              
+                <div className="p-5 text-left">
+                  <div className="text-xl font-bold leading-tight mb-1 text-black">
+                    Organic Cotton T-Shirt
+                  </div>
+                  <div className="text-2xl font-bold text-green-400 mt-0">
+                    $29.99
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Side - Auth Form */}
+        <div className="flex-none w-[450px] bg-white p-12 flex flex-col justify-between">
+          <div>
+            {/* Logo Section */}
+            <div className="flex items-center mb-8 text-emerald-600 font-bold text-xl">
+              <Store className="w-5 h-5 mr-2" />
+              <span>Tiangge</span>
+            </div>
+
+            <h1 className="text-3xl font-semibold text-gray-800 mb-10">
+              {isLogin ? 'Log in to your account' : 'Create your account'}
+            </h1>
+
+            <form onSubmit={handleSubmit} className="space-y-6">
               {!isLogin && (
-                <div>
-                  <label htmlFor="storeSlug" className="block text-sm font-medium text-gray-700 mb-2">
-                    Store URL
-                  </label>
-                  <div className="flex rounded-lg border border-gray-300 focus-within:ring-2 focus-within:ring-primary-500 focus-within:border-transparent">
-                    <span className="inline-flex items-center px-3 bg-gray-50 text-gray-500 text-sm border-r border-gray-300">
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={displayName}
+                    onChange={(e) => setDisplayName(e.target.value)}
+                    className="w-full pb-3 border-0 border-b border-gray-300 text-base outline-none focus:border-green-400 transition-colors bg-transparent"
+                    placeholder="Display Name"
+                    required={!isLogin}
+                  />
+                  <Users className="absolute top-1/2 transform -translate-y-1/2 right-0 w-4 h-4 text-gray-400" />
+                </div>
+              )}
+
+              {!isLogin && (
+                <div className="relative">
+                  <div className="flex border-b border-gray-300 focus-within:border-green-400 transition-colors">
+                    <span className="text-gray-500 text-base py-3 pr-2">
                       tiangge.shop/
                     </span>
                     <input
-                      id="storeSlug"
-                      name="storeSlug"
                       type="text"
-                      required={!isLogin}
-                      className={`flex-1 px-3 py-3 rounded-r-lg focus:outline-none ${
-                        slugError ? 'border-red-300' : ''
-                      }`}
-                      placeholder="my-store"
                       value={storeSlug}
                       onChange={handleStoreSlugChange}
+                      className="flex-1 pb-3 border-0 text-base outline-none bg-transparent"
+                      placeholder="my-store"
+                      required={!isLogin}
                     />
                   </div>
                   {isCheckingSlug && (
                     <p className="mt-2 text-sm text-gray-500 flex items-center">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-600 mr-2"></div>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-emerald-600 mr-2"></div>
                       Checking availability...
                     </p>
                   )}
@@ -300,123 +291,180 @@ export default function AuthPage() {
                     <p className="mt-2 text-sm text-red-600">{slugError}</p>
                   )}
                   {!slugError && !isCheckingSlug && storeSlug && (
-                    <p className="mt-2 text-sm text-green-600 flex items-center">
-                      <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center mr-2">
-                        <div className="w-2 h-2 bg-white rounded-full"></div>
-                      </div>
-                      Store URL is available
-                    </p>
+                    <p className="mt-2 text-sm text-green-600">Store URL is available</p>
                   )}
                 </div>
               )}
-              
-              <div>
-                <label htmlFor="email-address" className="block text-sm font-medium text-gray-700 mb-2">
-                  Email address
-                </label>
+
+              <div className="relative">
                 <input
-                  id="email-address"
-                  name="email"
                   type="email"
-                  autoComplete="email"
-                  required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
-                  placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                  Password
-                </label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
+                  className="w-full pb-3 border-0 border-b border-gray-300 text-base outline-none focus:border-green-400 transition-colors bg-transparent"
+                  placeholder="Email Address"
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
-                  placeholder="Enter your password"
+                />
+                <AtSign className="absolute top-1/2 transform -translate-y-1/2 right-0 w-4 h-4 text-gray-400" />
+              </div>
+
+              <div className="relative">
+                <input
+                  type="password"
                   value={password}
                   onChange={handlePasswordChange}
+                  className="w-full pb-3 border-0 border-b border-gray-300 text-base outline-none focus:border-green-400 transition-colors bg-transparent"
+                  placeholder="Enter Password"
+                  required
                 />
+                <Lock className="absolute top-1/2 transform -translate-y-1/2 right-0 w-4 h-4 text-gray-400" />
                 {!isLogin && passwordError && (
                   <p className="mt-2 text-sm text-red-600">{passwordError}</p>
                 )}
                 {!isLogin && !passwordError && password && (
-                  <p className="mt-2 text-sm text-green-600 flex items-center">
-                    <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center mr-2">
-                      <div className="w-2 h-2 bg-white rounded-full"></div>
-                    </div>
-                    Password meets requirements
-                  </p>
+                  <p className="mt-2 text-sm text-green-600">Password meets requirements</p>
                 )}
               </div>
-            </div>
 
-            {error && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                <div className="flex items-center">
-                  <div className="w-5 h-5 bg-red-100 rounded-full flex items-center justify-center mr-3">
-                    <span className="text-red-600 text-xs font-bold">!</span>
-                  </div>
-                  <span className="text-red-800 text-sm">{error}</span>
+              {isLogin && (
+                <div className="mt-1 mb-8">
+                  <a href="#" className="text-green-400 text-sm font-medium hover:text-green-500 transition-colors">
+                    Forgot Password?
+                  </a>
                 </div>
-              </div>
-            )}
-
-            <button
-              type="submit"
-              disabled={loading || (!isLogin && (slugError !== '' || passwordError !== '' || isCheckingSlug))}
-              className="w-full flex justify-center items-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              {loading ? (
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-              ) : (
-                <>
-                  {isLogin ? 'Sign in to Dashboard' : 'Create Your Store'}
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </>
               )}
-            </button>
 
-            <div className="text-center">
+              {error && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                  <div className="flex items-center">
+                    <div className="w-5 h-5 bg-red-100 rounded-full flex items-center justify-center mr-3">
+                      <span className="text-red-600 text-xs font-bold">!</span>
+                    </div>
+                    <span className="text-red-800 text-sm">{error}</span>
+                  </div>
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading || (!isLogin && (slugError !== '' || passwordError !== '' || isCheckingSlug))}
+                className="w-full py-3 border-0 rounded-md text-base cursor-pointer mb-4 transition-all font-semibold shadow-sm bg-green-400 text-white hover:bg-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? (
+                  <div className="flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                    {isLogin ? 'Signing in...' : 'Creating account...'}
+                  </div>
+                ) : (
+                  isLogin ? 'Log in' : 'Create Account'
+                )}
+              </button>
+            </form>
+
+            <div className="text-center mt-10">
               <span className="text-gray-600">
-                {isLogin ? "Don't have an account? " : 'Already have an account? '}
+                {isLogin ? 'Need a Tiangge account? ' : 'Already have an account? '}
               </span>
               <button
                 type="button"
                 onClick={() => setIsLogin(!isLogin)}
-                className="font-medium text-primary-600 hover:text-primary-500 transition-colors"
+                className="text-green-400 font-semibold hover:text-green-500 transition-colors"
               >
-                {isLogin ? 'Sign up' : 'Sign in'}
+                {isLogin ? 'Create an account' : 'Log in'}
               </button>
             </div>
-          </form>
+          </div>
 
-          {/* Features Preview for Mobile */}
-          <div className="lg:hidden mt-8 pt-8 border-t border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">What you'll get:</h3>
-            <div className="grid grid-cols-2 gap-4">
-              {[
-                { icon: BarChart3, text: 'Analytics Dashboard', color: 'bg-blue-100 text-blue-600' },
-                { icon: Package, text: 'Product Management', color: 'bg-green-100 text-green-600' },
-                { icon: Users, text: 'Subscriber System', color: 'bg-purple-100 text-purple-600' },
-                { icon: Star, text: 'Custom Branding', color: 'bg-yellow-100 text-yellow-600' }
-              ].map((feature, index) => (
-                <div key={index} className="flex items-center space-x-2">
-                  <div className={`w-8 h-8 ${feature.color} rounded-lg flex items-center justify-center`}>
-                    <feature.icon className="w-4 h-4" />
-                  </div>
-                  <span className="text-sm text-gray-700">{feature.text}</span>
-                </div>
-              ))}
-            </div>
+          {/* Footer */}
+          <div className="text-xs text-gray-400 leading-relaxed pt-5 border-t border-gray-200 mt-auto">
+            Tiangge ©2025 All Rights Reserved.<br />
+            Cookie Preferences, Privacy, and Terms.
           </div>
         </div>
       </div>
+
+      {/* Custom Styles for Animations */}
+      <style jsx>{`
+        @keyframes card-float {
+          0% { transform: translateY(0) scale(1) rotate(var(--initial-rotation, 0deg)); }
+          50% { transform: translateY(-3px) scale(1.01) rotate(var(--initial-rotation, 0deg)); }
+          100% { transform: translateY(0) scale(1) rotate(var(--initial-rotation, 0deg)); }
+        }
+
+        .animate-float-1 {
+          --initial-rotation: 5deg;
+          transform: rotate(5deg);
+          animation: card-float 4s ease-in-out infinite;
+          animation-delay: 0.2s;
+        }
+
+        .animate-float-2 {
+          --initial-rotation: -10deg;
+          transform: rotate(-10deg);
+          animation: card-float 4s ease-in-out infinite;
+          animation-delay: 0.3s;
+        }
+
+        .animate-float-3 {
+          --initial-rotation: -15deg;
+          transform: rotate(-15deg);
+          animation: card-float 4s ease-in-out infinite;
+          animation-delay: 0.7s;
+        }
+
+        .animate-float-4 {
+          --initial-rotation: 8deg;
+          transform: rotate(8deg);
+          animation: card-float 4s ease-in-out infinite;
+          animation-delay: 0.5s;
+        }
+
+        .animate-float-5 {
+          --initial-rotation: -5deg;
+          transform: rotate(-5deg);
+          animation: card-float 4s ease-in-out infinite;
+          animation-delay: 0.9s;
+        }
+
+        .animate-float-6 {
+          --initial-rotation: -12deg;
+          transform: rotate(-12deg);
+          animation: card-float 4s ease-in-out infinite;
+          animation-delay: 0.1s;
+        }
+
+        .animate-float-center {
+          animation: card-float 5s ease-in-out infinite;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 900px) {
+          .login-container {
+            flex-direction: column;
+            height: auto;
+            min-height: 100vh;
+            border-radius: 0;
+          }
+          
+          .login-left {
+            height: 400px;
+          }
+          
+          .login-right {
+            flex: 1;
+            padding: 30px 20px;
+            height: auto;
+          }
+          
+          .product-card {
+            max-width: 90%;
+          }
+          
+          .metric-card {
+            display: none;
+          }
+        }
+      `}</style>
     </div>
   );
 }
