@@ -79,6 +79,7 @@ export default function DashboardNav({ isSidebarOpen, toggleSidebar }: Dashboard
 
   return (
     <div
+      id="dashboard-sidebar"
       className={`
         fixed top-0 left-0 h-screen bg-white shadow-xl border-r border-gray-200 z-40 flex flex-col
         transition-transform duration-300 ease-in-out overflow-y-auto w-64
@@ -143,6 +144,9 @@ export default function DashboardNav({ isSidebarOpen, toggleSidebar }: Dashboard
                   : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
                 }
               `}
+              onFocus={() => {
+                // Keep sidebar open when navigating with keyboard
+              }}
             >
               <IconComponent 
                 className={`

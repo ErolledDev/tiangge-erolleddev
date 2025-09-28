@@ -28,6 +28,35 @@ export default function DashboardLayout({
     }
   }, [user, loading, router, mounted]);
 
+  // Auto-close sidebar when clicking outside or losing focus
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      const sidebar = document.getElementById('dashboard-sidebar');
+      const hamburgerButton = document.getElementById('hamburger-button');
+      
+      // Don't close if clicking on sidebar or hamburger button
+      if (sidebar && !sidebar.contains(target) && hamburgerButton && !hamburgerButton.contains(target)) {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    const handleEscapeKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    if (isSidebarOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleEscapeKey);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscapeKey);
+    };
+  }, [isSidebarOpen]);
   if (loading || !mounted) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
