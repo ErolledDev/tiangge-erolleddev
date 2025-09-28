@@ -7,8 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/useToast';
 import { trackEvent } from '@/lib/analytics';
 import { getStoreSlides, deleteSlide, Slide, getUserStore } from '@/lib/store';
-import { CreditCard as Edit, Trash2, Plus, ExternalLink } from 'lucide-react';
-import { RefreshCcw } from 'lucide-react';
+import { Edit, Trash2, Plus, ExternalLink, RefreshCcw } from 'lucide-react';
 
 export default function SlidesPage() {
   const { user } = useAuth();
