@@ -137,7 +137,7 @@ export default function AuthPage() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-6xl h-[600px] flex shadow-2xl rounded-xl bg-white relative">
+      <div className="w-full max-w-6xl min-h-[600px] flex shadow-2xl rounded-xl bg-white relative">
         
         {/* Left Side - Visual Showcase */}
         <div className="hidden lg:flex flex-1 bg-gradient-to-br from-emerald-600 to-green-500 relative overflow-hidden flex-col items-center justify-center text-white p-8">
@@ -238,7 +238,7 @@ export default function AuthPage() {
         </div>
 
         {/* Right Side - Auth Form */}
-        <div className="flex-none w-full lg:w-[450px] bg-white p-6 lg:p-12 flex flex-col justify-between">
+        <div className="flex-none w-full lg:w-[450px] bg-white p-6 lg:p-12 flex flex-col">
           <div>
             {/* Logo Section */}
             <div className="flex items-center mb-8 text-emerald-600 font-bold text-xl">
@@ -267,7 +267,7 @@ export default function AuthPage() {
 
               {!isLogin && (
                 <div className="relative">
-                  <div className="flex border-b border-gray-300 focus-within:border-green-400 transition-colors">
+                  <div className="flex items-center border-b border-gray-300 focus-within:border-green-400 transition-colors">
                     <span className="text-gray-500 text-base py-3 pr-2">
                       tiangge.shop/
                     </span>
@@ -275,9 +275,10 @@ export default function AuthPage() {
                       type="text"
                       value={storeSlug}
                       onChange={handleStoreSlugChange}
-                      className="flex-1 pb-3 border-0 text-base outline-none bg-transparent"
+                      className="flex-1 border-0 text-base outline-none bg-transparent text-left leading-normal"
                       placeholder="my-store"
                       required={!isLogin}
+                      style={{ padding: '0.75rem 0', lineHeight: 'normal' }}
                     />
                   </div>
                   {isCheckingSlug && (
@@ -375,9 +376,8 @@ export default function AuthPage() {
           </div>
 
           {/* Footer */}
-          <div className="text-xs text-gray-400 leading-relaxed pt-5 border-t border-gray-200 mt-auto">
-            Tiangge ©2025 All Rights Reserved.<br />
-            Cookie Preferences, Privacy, and Terms.
+          <div className="text-xs text-gray-400 leading-relaxed pt-8 mt-8 border-t border-gray-200">
+            Tiangge ©2025 All Rights Reserved.
           </div>
         </div>
       </div>
