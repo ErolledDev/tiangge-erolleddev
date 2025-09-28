@@ -81,10 +81,14 @@ export default function DashboardNav({ isSidebarOpen, toggleSidebar }: Dashboard
     <div
       id="dashboard-sidebar"
       className={`
-        fixed top-0 left-0 h-screen bg-white shadow-xl border-r border-gray-200 z-40 flex flex-col
+        fixed top-0 left-0 h-full min-h-screen bg-white shadow-xl border-r border-gray-200 z-40 flex flex-col
         transition-transform duration-300 ease-in-out overflow-y-auto w-64 sm:w-72
         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}
+      style={{
+        height: '100vh',
+        height: '100dvh', // Dynamic viewport height for mobile browsers
+      }}
     >
       {/* Sidebar Header with Close Button */}
       <div className="flex items-center justify-between h-14 sm:h-16 px-3 sm:px-4 bg-gradient-to-r from-primary-500 to-secondary-500 border-b border-gray-200">
