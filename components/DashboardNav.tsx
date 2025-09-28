@@ -86,8 +86,7 @@ export default function DashboardNav({ isSidebarOpen, toggleSidebar }: Dashboard
         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}
       style={{
-        height: '100vh',
-        height: '100dvh', // Dynamic viewport height for mobile browsers
+        height: '100%', // Dynamic viewport height for mobile browsers
       }}
     >
       {/* Sidebar Header with Close Button */}
