@@ -142,16 +142,8 @@ export default function SubscribersPage() {
       {/* Header */}
       <div className="p-3 sm:p-4 lg:p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div className="flex items-center gap-3 sm:gap-4">
-            <div className="p-2 sm:p-3 bg-primary-100 rounded-lg">
-              <Users className="w-6 h-6 sm:w-7 sm:h-7 text-primary-600" />
-            </div>
-            <div>
-              <h1 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-gray-900">Subscribers</h1>
-              <p className="text-gray-600 mt-1 text-sm sm:text-base">
-                Manage your mailing list subscribers ({subscribers.length} total)
-              </p>
-            </div>
+          <div>
+            <h1 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-gray-900">Subscribers</h1>
           </div>
           
           <div className="flex flex-col sm:flex-row space-y-2  sm:space-y-0 sm:space-x-3">

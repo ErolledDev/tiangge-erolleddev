@@ -138,20 +138,8 @@ export default function UserManagementPage() {
       <div className="space-y-6 md:space-y-8">
         {/* Header */}
         <div className="p-6">
-          <div className="flex items-center gap-4 mb-6">
-            <button
-              onClick={() => router.push('/dashboard/system-management')}
-              className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
-            <div className="p-3 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-lg">
-              <Users className="w-7 h-7 text-blue-600" />
-            </div>
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">User Management</h1>
-              <p className="text-gray-600 mt-1">Manage user roles and permissions</p>
-            </div>
+          <div className="mb-6">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">User Management</h1>
           </div>
         </div>
 

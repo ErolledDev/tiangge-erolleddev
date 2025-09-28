@@ -18,18 +18,7 @@ import {
 import { getGlobalBannerClickEvents } from '@/lib/analytics';
 import ImageUploadWithDelete from '@/components/ImageUploadWithDelete';
 import CustomToggle from '@/components/CustomToggle';
-import { 
-  Radio, 
-  Save, 
-  Trash2,
-  AlertTriangle,
-  CheckCircle,
-  XCircle,
-  ExternalLink,
-  ArrowLeft,
-  Settings,
-  Megaphone
-} from 'lucide-react';
+import { Radio, Save, Trash2, TriangleAlert as AlertTriangle, CircleCheck as CheckCircle, Circle as XCircle, ExternalLink, ArrowLeft, Settings, Megaphone } from 'lucide-react';
 
 export default function GlobalBroadcastPage() {
   const { user, userProfile } = useAuth();
@@ -240,20 +229,8 @@ export default function GlobalBroadcastPage() {
       <div className="space-y-6 md:space-y-8">
         {/* Header */}
         <div className="p-6">
-          <div className="flex items-center gap-4 mb-6">
-            <button
-              onClick={() => router.push('/dashboard/system-management')}
-              className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
-            <div className="p-3 bg-gradient-to-br from-purple-100 to-pink-100 rounded-lg">
-              <Radio className="w-7 h-7 text-purple-600" />
-            </div>
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Global Broadcast</h1>
-              <p className="text-gray-600 mt-1">Manage system-wide announcement banners</p>
-            </div>
+          <div className="mb-6">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Global Broadcast</h1>
           </div>
         </div>
 

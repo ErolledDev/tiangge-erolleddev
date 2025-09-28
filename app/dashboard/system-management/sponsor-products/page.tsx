@@ -10,7 +10,7 @@ import {
   deleteSponsoredProduct, 
   SponsoredProduct 
 } from '@/lib/store';
-import { Edit, Trash2, Plus, ExternalLink, RefreshCcw, DollarSign } from 'lucide-react';
+import { CreditCard as Edit, Trash2, Plus, ExternalLink, RefreshCcw, DollarSign } from 'lucide-react';
 
 export default function SponsorProductsPage() {
   const { user } = useAuth();
@@ -93,16 +93,8 @@ export default function SponsorProductsPage() {
       {/* Header */}
       <div className="p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-gradient-to-br from-green-100 to-emerald-100 rounded-lg">
-              <DollarSign className="w-7 h-7 text-green-600" />
-            </div>
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Sponsor Products</h1>
-              <p className="text-gray-600 mt-1">
-                Manage sponsored products that appear in user stores ({sponsoredProducts.length} total)
-              </p>
-            </div>
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Sponsor Products</h1>
           </div>
           
           <div className="flex space-x-3">

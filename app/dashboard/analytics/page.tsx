@@ -185,14 +185,8 @@ export default function AnalyticsPage() {
       {/* Header */}
       <div className="p-4 sm:p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div className="flex items-start sm:items-center gap-3 sm:gap-4">
-            <div className="p-2 sm:p-3 bg-gradient-to-br from-primary-100 to-primary-200 rounded-lg sm:rounded-xl">
-              <TrendingUp className="w-6 h-6 sm:w-7 sm:h-7 text-primary-600" />
-            </div>
-            <div>
-              <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-900">Analytics Dashboard</h1>
-              <p className="text-sm sm:text-base text-gray-600 mt-1">Track user interactions and store performance</p>
-            </div>
+          <div>
+            <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-900">Analytics Dashboard</h1>
           </div>
           
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">

@@ -25,23 +25,7 @@ import {
 import { getGlobalBannerClickEvents } from '@/lib/analytics';
 import ImageUploadWithDelete from '@/components/ImageUploadWithDelete';
 import CustomToggle from '@/components/CustomToggle';
-import { 
-  Settings, 
-  Users, 
-  Search, 
-  Shield, 
-  Crown, 
-  Megaphone, 
-  Save, 
-  Trash2,
-  AlertTriangle,
-  CheckCircle,
-  XCircle,
-  Radio,
-  RefreshCw,
-  ExternalLink,
-  DollarSign
-} from 'lucide-react';
+import { Settings, Users, Search, Shield, Crown, Megaphone, Save, Trash2, TriangleAlert as AlertTriangle, CircleCheck as CheckCircle, Circle as XCircle, Radio, RefreshCw, ExternalLink, DollarSign } from 'lucide-react';
 
 type TabType = 'user-management' | 'global-broadcast' | 'sponsor-products';
 
@@ -386,14 +370,8 @@ export default function SystemManagementPage() {
       <div className="space-y-6 md:space-y-8">
         {/* Header */}
         <div className="p-6">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-gradient-to-br from-red-100 to-orange-100 rounded-lg">
-              <Settings className="w-7 h-7 text-red-600" />
-            </div>
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">System Management</h1>
-              <p className="text-gray-600 mt-1">Administrator tools and system configuration</p>
-            </div>
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">System Management</h1>
           </div>
         </div>
 

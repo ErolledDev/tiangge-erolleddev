@@ -286,14 +286,8 @@ export default function StoreSettingsPage() {
     <div className="space-y-4 sm:space-y-6 lg:space-y-8">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-3 sm:space-x-4">
-          <div className="p-2 sm:p-3 bg-primary-100 rounded-lg">
-            <Settings className="w-6 h-6 sm:w-7 sm:h-7 text-primary-600" />
-          </div>
-          <div>
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">Store Settings</h1>
-            <p className="text-gray-600 mt-1 text-sm sm:text-base">Customize your store appearance and functionality</p>
-          </div>
+        <div>
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">Store Settings</h1>
         </div>
       </div>
 

@@ -125,16 +125,8 @@ export default function DashboardOverview() {
       {/* Header */}
       <div className="p-4 sm:p-6 lg:p-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="p-2 sm:p-3 bg-primary-100 rounded-lg">
-              <BarChart3 className="w-6 h-6 sm:w-7 sm:h-7 text-primary-600" />
-            </div>
-            <div>
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800">Dashboard Overview</h1>
-              <p className="text-xs sm:text-sm text-gray-500 mt-1">
-                Welcome back! Here's what's happening with your store.
-              </p>
-            </div>
+          <div>
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800">Dashboard Overview</h1>
           </div>
           {store && (
             <Link

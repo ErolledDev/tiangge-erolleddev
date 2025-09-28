@@ -294,21 +294,10 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
     <div className="space-y-4 sm:space-y-6 md:space-y-8">
       {/* Header */}
       <div className="p-3 sm:p-4 lg:p-6">
-        <div className="flex items-center mb-4">
-          <button
-            onClick={handleCancel}
-            className="mr-3 sm:mr-4 p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
-          >
-            <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
-          </button>
-          <div>
-            <h1 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-gray-900">
-              {mode === 'edit' ? 'Edit Product' : 'Add New Product'}
-            </h1>
-            <p className="text-gray-600 mt-1 text-sm sm:text-base">
-              {mode === 'edit' ? 'Update your affiliate product' : 'Add a new affiliate product to your store'}
-            </p>
-          </div>
+        <div className="mb-4">
+          <h1 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-gray-900">
+            {mode === 'edit' ? 'Edit Product' : 'Add New Product'}
+          </h1>
         </div>
       </div>
       
