@@ -91,7 +91,7 @@ export default function DashboardNav({ isSidebarOpen, toggleSidebar }: Dashboard
       }}
     >
       {/* Sidebar Header with Close Button */}
-      <div className="flex items-center justify-between h-14 sm:h-16 px-3 sm:px-4 bg-gradient-to-r from-primary-500 to-secondary-500 border-b border-gray-200">
+      <div className="flex items-center justify-between min-h-16 px-3 sm:px-4 bg-gradient-to-r from-primary-500 to-secondary-500 border-b border-gray-200">
         <div className="flex items-center">
           <div className="w-7 h-7 sm:w-8 sm:h-8 bg-white rounded-lg flex items-center justify-center">
             <Store className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />

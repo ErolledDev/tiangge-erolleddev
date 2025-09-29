@@ -119,7 +119,7 @@ export default function DashboardHeader({ isSidebarOpen, toggleSidebar }: Dashbo
   const storeUrl = storeSlug ? `${window.location.origin}/${storeSlug}` : '';
 
   return (
-    <header className="fixed top-0 left-0 right-0 h-14 sm:h-16 bg-white shadow-sm border-b border-gray-200 z-30">
+    <header className="fixed top-0 left-0 right-0 h-16 bg-white shadow-sm border-b border-gray-200 z-30">
       <div className="flex items-center justify-between h-full px-3 sm:px-4">
         {/* Left Side - Hamburger Menu */}
         <div className="flex items-center">
