@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { logout } from '@/lib/auth';
 import { canAccessFeature } from '@/lib/auth';
 import { useAuth } from '@/hooks/useAuth';
-import { ChartBar as BarChart3, Store, Image, Package, LogOut, X, User, CirclePlus as PlusCircle, SquarePlus as PlusSquare, TrendingUp, Users, Settings, DollarSign, Radio } from 'lucide-react';
+import { ChartBar as BarChart3, Store, Image, Package, LogOut, X, User, CirclePlus as PlusCircle, SquarePlus as PlusSquare, TrendingUp, Users, Settings, DollarSign, Radio, Bell } from 'lucide-react';
 
 interface DashboardNavProps {
   isSidebarOpen: boolean;
@@ -54,6 +54,7 @@ export default function DashboardNav({ isSidebarOpen, toggleSidebar }: Dashboard
         { type: 'header', name: 'Administration' },
         { name: 'Manage Users', href: '/dashboard/system-management/users', icon: Users },
         { name: 'Global Broadcast', href: '/dashboard/system-management/global-broadcast', icon: Radio },
+        { name: 'Broadcast Notifications', href: '/dashboard/system-management/broadcast-notifications', icon: Bell },
         { name: 'Sponsor Products', href: '/dashboard/system-management/sponsor-products', icon: DollarSign },
       );
     }

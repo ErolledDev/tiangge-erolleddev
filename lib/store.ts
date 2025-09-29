@@ -137,6 +137,22 @@ export interface SponsoredProduct {
   updatedAt?: Date;
 }
 
+export interface Notification {
+  id?: string;
+  ownerId: string;
+  title: string;
+  description: string;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface UserNotificationStatus {
+  id?: string;
+  userId: string;
+  notificationId: string;
+  readAt: Date;
+}
 // Store Management Functions
 export const checkSlugAvailability = async (slug: string): Promise<boolean> => {
   try {
@@ -887,6 +903,185 @@ export const incrementSponsoredProductClickCount = async (sponsoredProductId: st
   }
 };
 
+// Notification Management Functions
+export const addNotification = async (notification: Omit<Notification, 'id' | 'createdAt' | 'updatedAt'>, userId: string): Promise<string> => {
+  try {
+    if (!db) throw new Error('Firebase not initialized');
+    
+    const notificationData = {
+      ...notification,
+      ownerId: userId,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    
+    const docRef = await addDoc(collection(db, 'notifications'), notificationData);
+    return docRef.id;
+  } catch (error) {
+    console.error('Error adding notification:', error);
+    throw error;
+  }
+};
+
+export const getAllNotifications = async (): Promise<Notification[]> => {
+  try {
+    if (!db) return [];
+    
+    const notificationsRef = collection(db, 'notifications');
+    const q = query(notificationsRef, orderBy('createdAt', 'desc'));
+    const querySnapshot = await getDocs(q);
+    
+    return querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+      createdAt: doc.data().createdAt?.toDate ? doc.data().createdAt.toDate() : doc.data().createdAt,
+      updatedAt: doc.data().updatedAt?.toDate ? doc.data().updatedAt.toDate() : doc.data().updatedAt
+    })) as Notification[];
+  } catch (error) {
+    console.error('Error fetching all notifications:', error);
+    return [];
+  }
+};
+
+export const getNotificationById = async (notificationId: string): Promise<Notification | null> => {
+  try {
+    if (!db) return null;
+    
+    const notificationRef = doc(db, 'notifications', notificationId);
+    const notificationSnap = await getDoc(notificationRef);
+    
+    if (notificationSnap.exists()) {
+      const data = notificationSnap.data();
+      return {
+        id: notificationSnap.id,
+        ...data,
+        createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : data.createdAt,
+        updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : data.updatedAt
+      } as Notification;
+    }
+    
+    return null;
+  } catch (error) {
+    console.error('Error fetching notification by ID:', error);
+    return null;
+  }
+};
+
+export const updateNotification = async (notificationId: string, updates: Partial<Notification>): Promise<void> => {
+  try {
+    if (!db) throw new Error('Firebase not initialized');
+    
+    const notificationRef = doc(db, 'notifications', notificationId);
+    await updateDoc(notificationRef, {
+      ...updates,
+      updatedAt: new Date()
+    });
+  } catch (error) {
+    console.error('Error updating notification:', error);
+    throw error;
+  }
+};
+
+export const deleteNotification = async (notificationId: string): Promise<void> => {
+  try {
+    if (!db) throw new Error('Firebase not initialized');
+    
+    const notificationRef = doc(db, 'notifications', notificationId);
+    await deleteDoc(notificationRef);
+  } catch (error) {
+    console.error('Error deleting notification:', error);
+    throw error;
+  }
+};
+
+// User Notification Status Functions
+export const markNotificationAsRead = async (userId: string, notificationId: string): Promise<void> => {
+  try {
+    if (!db) throw new Error('Firebase not initialized');
+    
+    const readNotificationData = {
+      userId,
+      notificationId,
+      readAt: new Date()
+    };
+    
+    await addDoc(collection(db, 'users', userId, 'read_notifications'), readNotificationData);
+  } catch (error) {
+    console.error('Error marking notification as read:', error);
+    throw error;
+  }
+};
+
+export const getReadNotificationIds = async (userId: string): Promise<string[]> => {
+  try {
+    if (!db) return [];
+    
+    const readNotificationsRef = collection(db, 'users', userId, 'read_notifications');
+    const querySnapshot = await getDocs(readNotificationsRef);
+    
+    return querySnapshot.docs.map(doc => doc.data().notificationId);
+  } catch (error) {
+    console.error('Error fetching read notification IDs:', error);
+    return [];
+  }
+};
+
+export const getUnreadNotificationCount = async (userId: string): Promise<number> => {
+  try {
+    if (!db) return 0;
+    
+    // Get all active notifications
+    const notificationsRef = collection(db, 'notifications');
+    const activeNotificationsQuery = query(notificationsRef, where('isActive', '==', true));
+    const activeNotificationsSnapshot = await getDocs(activeNotificationsQuery);
+    
+    // Get read notification IDs for this user
+    const readNotificationIds = await getReadNotificationIds(userId);
+    
+    // Count unread notifications
+    const unreadCount = activeNotificationsSnapshot.docs.filter(doc => 
+      !readNotificationIds.includes(doc.id)
+    ).length;
+    
+    return unreadCount;
+  } catch (error) {
+    console.error('Error getting unread notification count:', error);
+    return 0;
+  }
+};
+
+export const getAllUserNotifications = async (userId: string): Promise<(Notification & { isRead: boolean })[]> => {
+  try {
+    if (!db) return [];
+    
+    // Get all active notifications
+    const notificationsRef = collection(db, 'notifications');
+    const activeNotificationsQuery = query(
+      notificationsRef, 
+      where('isActive', '==', true),
+      orderBy('createdAt', 'desc')
+    );
+    const activeNotificationsSnapshot = await getDocs(activeNotificationsQuery);
+    
+    // Get read notification IDs for this user
+    const readNotificationIds = await getReadNotificationIds(userId);
+    
+    // Map notifications with read status
+    return activeNotificationsSnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+        createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : data.createdAt,
+        updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : data.updatedAt,
+        isRead: readNotificationIds.includes(doc.id)
+      } as Notification & { isRead: boolean };
+    });
+  } catch (error) {
+    console.error('Error fetching user notifications:', error);
+    return [];
+  }
+};
 // Utility Functions
 export const getAllStoreSlugs = async (): Promise<Map<string, string>> => {
   try {

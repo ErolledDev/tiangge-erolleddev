@@ -26,8 +26,9 @@ import { getGlobalBannerClickEvents } from '@/lib/analytics';
 import ImageUploadWithDelete from '@/components/ImageUploadWithDelete';
 import CustomToggle from '@/components/CustomToggle';
 import { Settings, Users, Search, Shield, Crown, Megaphone, Save, Trash2, TriangleAlert as AlertTriangle, CircleCheck as CheckCircle, Circle as XCircle, Radio, RefreshCw, ExternalLink, DollarSign } from 'lucide-react';
+import { Bell } from 'lucide-react';
 
-type TabType = 'user-management' | 'global-broadcast' | 'sponsor-products';
+type TabType = 'user-management' | 'global-broadcast' | 'broadcast-notifications' | 'sponsor-products';
 
 export default function SystemManagementPage() {
   const { user, userProfile } = useAuth();
@@ -358,6 +359,12 @@ export default function SystemManagementPage() {
       description: 'System-wide announcements'
     },
     {
+      id: 'broadcast-notifications' as TabType,
+      name: 'Broadcast Notifications',
+      icon: Bell,
+      description: 'User dashboard notifications'
+    },
+    {
       id: 'sponsor-products' as TabType,
       name: 'Sponsor Products',
       icon: DollarSign,
@@ -500,6 +507,55 @@ export default function SystemManagementPage() {
                         <p>• Stores with 25+ products show 2 sponsored products (1st and 6th positions)</p>
                         <p>• Only displayed in "All Products" section, not in filters or search</p>
                         <p>• Click tracking helps measure performance and revenue</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Broadcast Notifications Tab */}
+          {activeTab === 'broadcast-notifications' && (
+            <div className="space-y-6">
+              {/* Broadcast Notifications Header */}
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 gap-4">
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    <div className="p-2 sm:p-3 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-lg">
+                      <Bell className="w-5 h-5 sm:w-7 sm:h-7 text-blue-600" />
+                    </div>
+                    <div>
+                      <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Broadcast Notifications</h2>
+                      <p className="text-sm sm:text-base text-gray-600 mt-1">
+                        Manage system-wide notifications for all users
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+                    <button
+                      onClick={() => router.push('/dashboard/system-management/broadcast-notifications')}
+                      className="flex items-center justify-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors text-sm min-h-[44px]"
+                    >
+                      <Bell className="w-4 h-4 mr-2" />
+                      Manage Notifications
+                    </button>
+                  </div>
+                </div>
+
+                {/* Info Banner */}
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-3 sm:p-4 border border-blue-200">
+                  <div className="flex items-start space-x-2 sm:space-x-3">
+                    <Bell className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                    <div className="flex-1">
+                      <h4 className="font-medium text-blue-900 mb-1 text-sm sm:text-base">Broadcast Notification Features</h4>
+                      <div className="text-xs sm:text-sm text-blue-800 space-y-1">
+                        <p>• Create system-wide notifications that appear in all user dashboards</p>
+                        <p>• Support for Markdown formatting in notification descriptions</p>
+                        <p>• Real-time badge count updates when users read notifications</p>
+                        <p>• Track notification read status per user</p>
+                        <p>• Control notification visibility with active/inactive status</p>
                       </div>
                     </div>
                   </div>

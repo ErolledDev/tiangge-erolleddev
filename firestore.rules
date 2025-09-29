@@ -84,5 +84,19 @@ service cloud.firestore {
       allow list: if request.auth != null && 
                   get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
+
+    // Notifications collection: Public read for active notifications, admin write
+    match /notifications/{notificationId} {
+      allow read: if request.auth != null; // Authenticated users can read notifications
+      allow create, update, delete: if request.auth != null && 
+                                    get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+      allow list: if request.auth != null && 
+                  get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // User read notifications subcollection: Users can only manage their own read status
+    match /users/{userId}/read_notifications/{readNotificationId} {
+      allow read, create, update, delete: if request.auth != null && request.auth.uid == userId;
+    }
   }
 }
