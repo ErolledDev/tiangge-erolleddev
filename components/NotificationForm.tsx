@@ -73,7 +73,10 @@ export default function NotificationForm({ notification, mode, onSave, onCancel 
         await updateNotification(notification.id!, notificationData);
         showSuccess('Notification updated successfully!');
       } else {
-        await addNotification(notificationData, user.uid);
+        await addNotification({
+          ...notificationData,
+          ownerId: user.uid
+        }, user.uid);
         showSuccess('Notification created successfully!');
       }
 
