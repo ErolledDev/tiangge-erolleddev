@@ -123,6 +123,9 @@ export const signUp = async (email: string, password: string, displayName?: stri
       subscriptionEnabled: true,
       slidesEnabled: true,
       displayPriceOnProducts: true,
+      // Store owner's premium and trial status for public access
+      ownerIsPremiumAdminSet: false,
+      ownerTrialEndDate: trialEndDate,
       createdAt: new Date(),
       updatedAt: new Date(),
       isActive: true
@@ -222,6 +225,29 @@ export const updateUserRoleAndPremiumStatus = async (userId: string, updates: { 
     
     const userRef = doc(db, 'users', userId);
     await updateDoc(userRef, updateData);
+    
+    // Also update the store document to keep premium status synchronized for public access
+    try {
+      const storeRef = doc(db, 'users', userId, 'stores', userId);
+      const storeUpdateData: any = {
+        updatedAt: new Date()
+      };
+      
+      // Sync premium status fields to store document
+      if (updates.isPremium === true) {
+        storeUpdateData.ownerIsPremiumAdminSet = true;
+        storeUpdateData.ownerTrialEndDate = null;
+      } else if (updates.isPremium === false) {
+        storeUpdateData.ownerIsPremiumAdminSet = false;
+        storeUpdateData.ownerTrialEndDate = null;
+      }
+      
+      await updateDoc(storeRef, storeUpdateData);
+      console.log('✅ Store document updated with premium status sync');
+    } catch (storeError) {
+      console.warn('⚠️ Failed to update store document with premium status:', storeError);
+      // Don't throw error here as the main user update succeeded
+    }
   } catch (error) {
     console.error('Error updating user role/premium status:', error);
     throw error;
@@ -528,6 +554,19 @@ export const updateUserTrialStatus = async (userId: string, action: 'end' | 'res
         updatedAt: new Date()
       });
       
+      // Also update the store document
+      try {
+        const storeRef = doc(db, 'users', userId, 'stores', userId);
+        await updateDoc(storeRef, {
+          ownerIsPremiumAdminSet: false,
+          ownerTrialEndDate: new Date(0), // Set to past date to end trial
+          updatedAt: new Date()
+        });
+        console.log('✅ Store document updated with trial end');
+      } catch (storeError) {
+        console.warn('⚠️ Failed to update store document with trial end:', storeError);
+      }
+      
     } else if (action === 'reset') {
       // Reset the user's trial for another 7 days
       
@@ -552,6 +591,19 @@ export const updateUserTrialStatus = async (userId: string, action: 'end' | 'res
         isPremiumAdminSet: false, // Ensure this is a trial, not permanent premium
         updatedAt: new Date()
       });
+      
+      // Also update the store document
+      try {
+        const storeRef = doc(db, 'users', userId, 'stores', userId);
+        await updateDoc(storeRef, {
+          ownerIsPremiumAdminSet: false,
+          ownerTrialEndDate: newTrialEndDate,
+          updatedAt: new Date()
+        });
+        console.log('✅ Store document updated with trial reset');
+      } catch (storeError) {
+        console.warn('⚠️ Failed to update store document with trial reset:', storeError);
+      }
     }
     
   } catch (error) {

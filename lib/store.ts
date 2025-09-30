@@ -67,6 +67,8 @@ export interface Store {
     loadMoreButtonBgColor?: string;
     loadMoreButtonTextColor?: string;
   };
+  ownerIsPremiumAdminSet?: boolean;  // Store owner's premium status (admin-granted)
+  ownerTrialEndDate?: Date;          // Store owner's trial end date
   createdAt: Date;
   updatedAt: Date;
   isActive: boolean;
@@ -247,6 +249,12 @@ export const updateStore = async (userId: string, updates: Partial<Store>): Prom
       }
     }
     
+    // Sync owner premium status to store document if user profile is available
+    if (userProfile) {
+      updates.ownerIsPremiumAdminSet = userProfile.isPremiumAdminSet;
+      updates.ownerTrialEndDate = userProfile.trialEndDate;
+    }
+    
     const storeRef = doc(db, 'users', userId, 'stores', userId);
     await updateDoc(storeRef, {
       ...updates,
@@ -338,18 +346,16 @@ export const getStoreProducts = async (storeId: string): Promise<Product[]> => {
 };
 
 // Get store products with trial limitations applied
-export const getStoreProductsWithTrialLimits = async (storeId: string, userProfile: UserProfile | null): Promise<Product[]> => {
+export const getStoreProductsWithTrialLimits = async (storeId: string, store: Store | null): Promise<Product[]> => {
   try {
     if (!db) return [];
     
-    console.log('🔍 getStoreProductsWithTrialLimits called for user:', {
+    console.log('🔍 getStoreProductsWithTrialLimits called for store:', {
       storeId,
-      userEmail: userProfile?.email,
-      isPremium: isPremium(userProfile),
-      isPremiumAdminSet: userProfile?.isPremiumAdminSet,
-      trialEndDate: userProfile?.trialEndDate,
-      isOnTrial: userProfile ? isOnTrial(userProfile) : false,
-      hasTrialExpired: userProfile ? hasTrialExpired(userProfile) : false
+      storeName: store?.name,
+      ownerIsPremiumAdminSet: store?.ownerIsPremiumAdminSet,
+      ownerTrialEndDate: store?.ownerTrialEndDate,
+      isOwnerTrialExpired: store?.ownerTrialEndDate ? store.ownerTrialEndDate.getTime() < Date.now() : false
     });
     
     let querySnapshot;
@@ -378,11 +384,11 @@ export const getStoreProductsWithTrialLimits = async (storeId: string, userProfi
     
     console.log(`🔍 Total products found: ${allProducts.length}`);
     
-    // Only apply product limits if:
-    // 1. We have a valid user profile (not a public visitor)
-    // 2. The user's trial has expired AND they don't have permanent premium access
-    if (userProfile && hasTrialExpired(userProfile) && !userProfile.isPremiumAdminSet) {
-      console.log('⚠️ User is NOT premium - applying 30 product limit');
+    // Apply product limits based on store owner's trial status
+    // Only limit products if:
+    // 1. Store owner's trial has expired AND they don't have permanent premium access
+    if (store && store.ownerTrialEndDate && store.ownerTrialEndDate.getTime() < Date.now() && !store.ownerIsPremiumAdminSet) {
+      console.log('⚠️ Store owner trial expired and not premium - applying 30 product limit');
       // Sort by creation date (newest first) and take only the first 30
       const sortedProducts = allProducts.sort((a, b) => {
         const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
@@ -394,10 +400,16 @@ export const getStoreProductsWithTrialLimits = async (storeId: string, userProfi
       console.log(`🔍 Returning limited products: ${limitedProducts.length}/30`);
       return limitedProducts;
     } else {
-      if (userProfile) {
-        console.log('✅ User IS premium or trial active - returning all products');
+      if (store) {
+        if (store.ownerIsPremiumAdminSet) {
+          console.log('✅ Store owner has permanent premium - returning all products');
+        } else if (store.ownerTrialEndDate && store.ownerTrialEndDate.getTime() > Date.now()) {
+          console.log('✅ Store owner trial is active - returning all products');
+        } else {
+          console.log('✅ Store owner status unknown or no trial limits - returning all products');
+        }
       } else {
-        console.log('👁️ Public visitor - returning all products');
+        console.log('👁️ No store data available - returning all products');
       }
     }
     

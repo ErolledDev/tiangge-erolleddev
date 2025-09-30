@@ -82,19 +82,9 @@ export default async function StorePage({ params, searchParams }: StorePageProps
       notFound();
     }
 
-    // Get store owner's profile to check trial status
-    let storeOwnerProfile: any = null;
-    try {
-      storeOwnerProfile = await getUserProfile(store.ownerId);
-    } catch (error) {
-      console.error('Error fetching store owner profile:', error);
-      // Continue without owner profile - this allows public access to work
-      storeOwnerProfile = null;
-    }
-
     // Fetch products and slides
     const [products, slides] = await Promise.all([
-      getStoreProductsWithTrialLimits(store.id, storeOwnerProfile),
+      getStoreProductsWithTrialLimits(store.id, store),
       getStoreSlides(store.id)
     ]);
 

@@ -55,7 +55,7 @@ export default function AnalyticsPage() {
       // Fetch analytics events and products in parallel
       const [analyticsEvents, storeProducts] = await Promise.all([
         getAnalyticsEvents(user.uid),
-        getStoreProductsWithTrialLimits(user.uid, userProfile)
+        getStoreProducts(user.uid) // Use regular getStoreProducts for analytics since we're in authenticated context
       ]);
       
       setEvents(analyticsEvents);
