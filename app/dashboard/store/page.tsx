@@ -288,26 +288,6 @@ export default function StoreSettingsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">Store Settings</h1>
-          {/* Trial Status Display */}
-          {userProfile && (isOnTrial(userProfile) || hasTrialExpired(userProfile)) && (
-            <div className={`mt-2 inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-              isOnTrial(userProfile) 
-                ? 'bg-blue-100 text-blue-800' 
-                : 'bg-red-100 text-red-800'
-            }`}>
-              {isOnTrial(userProfile) ? (
-                <>
-                  <Clock className="w-4 h-4 mr-2" />
-                  Trial: {getTrialDaysRemaining(userProfile)} days left
-                </>
-              ) : (
-                <>
-                  <Crown className="w-4 h-4 mr-2" />
-                  Trial expired - Basic features only
-                </>
-              )}
-            </div>
-          )}
         </div>
       </div>
 

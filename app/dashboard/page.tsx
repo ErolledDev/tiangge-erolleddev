@@ -144,67 +144,6 @@ export default function DashboardOverview() {
         </div>
       </div>
 
-      {/* Trial Status Banner */}
-      {userProfile && !userProfile.isPremiumAdminSet && (isOnTrial(userProfile) || hasTrialExpired(userProfile)) && (
-        <div className="p-4 sm:p-6 lg:p-8">
-          <div className={`rounded-lg p-4 sm:p-6 border ${
-            isOnTrial(userProfile) 
-              ? 'bg-blue-50 border-blue-200' 
-              : 'bg-red-50 border-red-200'
-          }`}>
-            <div className="flex items-start space-x-3">
-              <div className={`p-2 rounded-lg ${
-                isOnTrial(userProfile) 
-                  ? 'bg-blue-100' 
-                  : 'bg-red-100'
-              }`}>
-                {isOnTrial(userProfile) ? (
-                  <Clock className="w-5 h-5 text-blue-600" />
-                ) : (
-                  <Crown className="w-5 h-5 text-red-600" />
-                )}
-              </div>
-              <div className="flex-1">
-                <h3 className={`font-semibold mb-2 ${
-                  isOnTrial(userProfile) 
-                    ? 'text-blue-900' 
-                    : 'text-red-900'
-                }`}>
-                  {isOnTrial(userProfile) 
-                    ? `🎉 Free Trial Active - ${getTrialDaysRemaining(userProfile)} Days Remaining!` 
-                    : '⚠️ Free Trial Expired'
-                  }
-                </h3>
-                <p className={`text-sm mb-3 ${
-                  isOnTrial(userProfile) 
-                    ? 'text-blue-800' 
-                    : 'text-red-800'
-                }`}>
-                  {isOnTrial(userProfile) 
-                    ? `You're enjoying all premium features during your free trial. After ${getTrialDaysRemaining(userProfile)} days, you'll be limited to 30 products and basic features.`
-                    : 'Your free trial has ended. You now have access to basic features only. Premium features like unlimited products, widgets, and banners are disabled.'
-                  }
-                </p>
-                {hasTrialExpired(userProfile) && (
-                  <div className="bg-red-100 rounded-lg p-3 mt-3">
-                    <h4 className="font-medium text-red-900 mb-2">Current Limitations:</h4>
-                    <ul className="text-sm text-red-800 space-y-1">
-                      <li>• Only your latest 30 products are visible in your store</li>
-                      <li>• Cannot add new products (30 product limit)</li>
-                      <li>• Floating widgets and pop-up banners are disabled</li>
-                      <li>• Category display toggle is disabled</li>
-                      <li>• No CSV import or data export capabilities</li>
-                    </ul>
-                    <p className="text-sm text-red-700 mt-3 font-medium">
-                      Contact an administrator to upgrade to permanent premium access.
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
