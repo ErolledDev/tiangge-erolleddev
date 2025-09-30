@@ -37,6 +37,7 @@ export const useAuth = () => {
                 const data = docSnapshot.data();
                 const profile: UserProfile = {
                   uid: user.uid,
+                  email: user.email || data.email || '',
                   ...data,
                   createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : data.createdAt,
                   updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : data.updatedAt,
