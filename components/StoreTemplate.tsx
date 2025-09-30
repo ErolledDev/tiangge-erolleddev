@@ -119,7 +119,6 @@ export default function StoreTemplate({ store, products, slides, categories, ini
     // If search term is active, filter all products by search
     if (searchTerm) {
       return products.filter(product => 
-        !product.isSponsored && // Exclude sponsored products from search
         product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.category.toLowerCase().includes(searchTerm.toLowerCase())
@@ -128,10 +127,11 @@ export default function StoreTemplate({ store, products, slides, categories, ini
     
     // If specific category is selected, show only that category
     if (selectedCategory !== 'all') {
-      return products.filter(product => 
-        !product.isSponsored && // Exclude sponsored products from category filtering
-        product.category === selectedCategory
+      const categoryProducts = products.filter(product => 
+        !product.isSponsored && product.category === selectedCategory
       );
+      const sponsoredProducts = products.filter(product => product.isSponsored);
+      return [...categoryProducts, ...sponsoredProducts];
     }
     
     // Default: show all products including sponsored ones
@@ -712,10 +712,10 @@ export default function StoreTemplate({ store, products, slides, categories, ini
                 <div
                   key={product.id}
                   onClick={() => handleProductClickWithDetails(product)}
-                  className={`border rounded-md shadow-lg overflow-hidden cursor-pointer hover:shadow-xl transition-shadow min-h-[44px] ${
+                  className={`rounded-md shadow-lg overflow-hidden cursor-pointer hover:shadow-xl transition-shadow min-h-[44px] ${
                     product.isSponsored 
-                      ? 'bg-yellow-50 border-yellow-300 ring-1 ring-yellow-200' 
-                      : 'bg-white border-gray-200'
+                      ? 'bg-yellow-50 ring-1 ring-yellow-200' 
+                      : 'bg-white'
                   }`}
                 >
                   <div className="aspect-square overflow-hidden relative">
@@ -809,85 +809,6 @@ export default function StoreTemplate({ store, products, slides, categories, ini
               </div>
             )}
           </section>
-
-          {/* All Products Section - Only show when category filtering is active (not for search) */}
-          {store.showCategories !== false && selectedCategory !== 'all' && !searchTerm && (
-            <section className="pt-4 sm:pt-6 pb-4 sm:pb-6" id="all-products">
-              <div className="mb-4 sm:mb-6">
-                <h2
-                  className="text-[0.8rem] sm:text-[0.9rem] font-bold mb-2"
-                  style={{ 
-                    color: store.customization?.headingTextColor || priceColor,
-                    fontFamily: store.customization?.headingFontFamily || store.customization?.bodyFontFamily || store.customization?.fontFamily || 'inherit'
-                  }}
-                >
-                  All Products
-                </h2>
-              </div>
-              
-              <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-3">
-                {products.filter(p => !p.isSponsored).slice(0, visibleAllProductsCount).map((product) => (
-                  <div
-                    key={`all-${product.id}`}
-                    onClick={() => handleProductClickWithDetails(product)}
-                    className="bg-white rounded-md shadow-lg overflow-hidden cursor-pointer hover:shadow-xl transition-shadow min-h-[44px]"
-                  >
-                    <div className="aspect-square overflow-hidden">
-                      {product.images && product.images[0] && (
-                        <Image
-                          src={product.images[0]}
-                          alt={product.title}
-                          width={200}
-                          height={200}
-                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                        />
-                      )}
-                    </div>
-                    <div className="p-1 sm:p-[5px] min-h-[3.5rem] sm:min-h-[4rem] flex flex-col justify-between">
-                      <h3 
-                        className="font-semibold line-clamp-2 text-[0.7rem] sm:text-[0.8rem] mb-1 sm:mb-[5px] flex-1"
-                        style={{ 
-                          color: store.customization?.headingTextColor || '#1f2937',
-                          fontFamily: store.customization?.headingFontFamily || store.customization?.bodyFontFamily || store.customization?.fontFamily || 'inherit'
-                        }}
-                      >
-                        {product.title}
-                      </h3>
-                      {store.displayPriceOnProducts !== false && (
-                        <div className="flex items-center justify-between mt-auto">
-                          <span 
-                            className="font-bold text-[0.7rem] sm:text-[0.8rem]"
-                            style={{ 
-                              color: priceColor,
-                              fontFamily: store.customization?.bodyFontFamily || store.customization?.fontFamily || 'inherit'
-                            }}
-                          >
-                            {currencySymbol}{product.price}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-              
-              {/* Load More Button for All Products */}
-              {products.filter(p => !p.isSponsored).length > visibleAllProductsCount && (
-                <div className="text-center mt-4 sm:mt-6">
-                  <button
-                    onClick={loadMoreAllProducts}
-                    className="inline-flex items-center px-4 sm:px-6 py-3 rounded-lg transition-colors font-medium text-sm sm:text-base min-h-[44px]"
-                    style={{
-                      backgroundColor: store.customization?.loadMoreButtonBgColor || '#84cc16',
-                      color: store.customization?.loadMoreButtonTextColor || '#ffffff'
-                    }}
-                  >
-                    Load More Products
-                  </button>
-                </div>
-              )}
-            </section>
-          )}
 
           {/* Custom HTML Section */}
           {store.customHtml && store.customHtml.trim() && (
