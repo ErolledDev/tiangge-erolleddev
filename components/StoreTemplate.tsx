@@ -116,26 +116,25 @@ export default function StoreTemplate({ store, products, slides, categories, ini
 
   // Get displayed products with category prioritization and search filtering
   const getDisplayedProducts = () => {
-    // If search term is active, filter all products by search
+    let filteredProducts = products;
+    
+    // Apply search filter to all products (including sponsored ones)
     if (searchTerm) {
-      return products.filter(product => 
+      filteredProducts = filteredProducts.filter(product => 
         product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.category.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
     
-    // If specific category is selected, show only that category
+    // Apply category filter to all products (including sponsored ones)
     if (selectedCategory !== 'all') {
-      const categoryProducts = products.filter(product => 
-        !product.isSponsored && product.category === selectedCategory
+      filteredProducts = filteredProducts.filter(product => 
+        product.category === selectedCategory
       );
-      const sponsoredProducts = products.filter(product => product.isSponsored);
-      return [...categoryProducts, ...sponsoredProducts];
     }
     
-    // Default: show all products including sponsored ones
-    return products;
+    return filteredProducts;
   };
 
   // Auto-advance slides
@@ -212,22 +211,6 @@ export default function StoreTemplate({ store, products, slides, categories, ini
     setVisibleProductsCount(prev => Math.min(prev + 9, finalFilteredProducts.length));
   };
 
-  const loadMoreAllProducts = () => {
-    const nonSponsoredProducts = products.filter(p => !p.isSponsored);
-    setVisibleAllProductsCount(prev => Math.min(prev + 9, nonSponsoredProducts.length));
-  };
-
-  const handleProductClick = (productLink?: string) => {
-    if (productLink) {
-      // Track product click before redirect
-      trackEvent('product_click', store.ownerId, {
-        product_link: productLink,
-        store_slug: store.slug,
-        store_name: store.name,
-      });
-      window.open(productLink, '_blank', 'noopener,noreferrer');
-    }
-  };
 
   const handleProductClickWithDetails = (product: Product) => {
     // Track product click with detailed information
@@ -491,10 +474,6 @@ export default function StoreTemplate({ store, products, slides, categories, ini
                         className="w-full h-full object-cover"
                         priority={index === 0}
                       />
-                      {/* Overlay layer */}
-                      <div 
-                        className="absolute inset-0 opacity-0"
-                      />
                       {/* Text content layer */}
                       <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-3 sm:p-4 z-10">
                         <h2 
@@ -712,9 +691,9 @@ export default function StoreTemplate({ store, products, slides, categories, ini
                 <div
                   key={product.id}
                   onClick={() => handleProductClickWithDetails(product)}
-                  className={`rounded-md shadow-lg overflow-hidden cursor-pointer hover:shadow-xl transition-shadow min-h-[44px] ${
+                  className={`border-0 rounded-md shadow-lg overflow-hidden cursor-pointer hover:shadow-xl transition-shadow min-h-[44px] ${
                     product.isSponsored 
-                      ? 'bg-yellow-50 ring-1 ring-yellow-200' 
+                      ? 'bg-yellow-50 ring-1 ring-yellow-200'
                       : 'bg-white'
                   }`}
                 >
