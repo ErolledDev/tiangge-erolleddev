@@ -243,7 +243,7 @@ export const updateUserRoleAndPremiumStatus = async (userId: string, updates: { 
       }
       
       await updateDoc(storeRef, storeUpdateData);
-      console.log('✅ Store document updated with premium status sync');
+       console.log('✅ Store document updated with premium status sync for public access');
     } catch (storeError) {
       console.warn('⚠️ Failed to update store document with premium status:', storeError);
       // Don't throw error here as the main user update succeeded
@@ -562,7 +562,7 @@ export const updateUserTrialStatus = async (userId: string, action: 'end' | 'res
           ownerTrialEndDate: new Date(0), // Set to past date to end trial
           updatedAt: new Date()
         });
-        console.log('✅ Store document updated with trial end');
+         console.log('✅ Store document updated with trial end for public access enforcement');
       } catch (storeError) {
         console.warn('⚠️ Failed to update store document with trial end:', storeError);
       }
@@ -600,7 +600,7 @@ export const updateUserTrialStatus = async (userId: string, action: 'end' | 'res
           ownerTrialEndDate: newTrialEndDate,
           updatedAt: new Date()
         });
-        console.log('✅ Store document updated with trial reset');
+         console.log('✅ Store document updated with trial reset for public access');
       } catch (storeError) {
         console.warn('⚠️ Failed to update store document with trial reset:', storeError);
       }

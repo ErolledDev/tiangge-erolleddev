@@ -384,11 +384,17 @@ export const getStoreProductsWithTrialLimits = async (storeId: string, store: St
     
     console.log(`🔍 Total products found: ${allProducts.length}`);
     
-    // Apply product limits based on store owner's trial status
-    // Only limit products if:
-    // 1. Store owner's trial has expired AND they don't have permanent premium access
-    if (store && store.ownerTrialEndDate && store.ownerTrialEndDate.getTime() < Date.now() && !store.ownerIsPremiumAdminSet) {
-      console.log('⚠️ Store owner trial expired and not premium - applying 30 product limit');
+    // Determine if we should apply product limits
+    const shouldApplyLimit = store && (
+      // Case 1: Trial has expired AND user doesn't have permanent premium
+      (store.ownerTrialEndDate && store.ownerTrialEndDate.getTime() < Date.now() && !store.ownerIsPremiumAdminSet) ||
+      // Case 2: No trial date set AND not permanent premium (legacy users)
+      (!store.ownerTrialEndDate && !store.ownerIsPremiumAdminSet)
+    );
+    
+    if (shouldApplyLimit) {
+      console.log('⚠️ Applying 30-product limit - trial expired or no premium access');
+      
       // Sort by creation date (newest first) and take only the first 30
       const sortedProducts = allProducts.sort((a, b) => {
         const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
@@ -397,7 +403,7 @@ export const getStoreProductsWithTrialLimits = async (storeId: string, store: St
       });
       
       const limitedProducts = sortedProducts.slice(0, 30);
-      console.log(`🔍 Returning limited products: ${limitedProducts.length}/30`);
+      console.log(`🔍 Returning limited products: ${limitedProducts.length}/30 (${allProducts.length} total products)`);
       return limitedProducts;
     } else {
       if (store) {
@@ -406,10 +412,10 @@ export const getStoreProductsWithTrialLimits = async (storeId: string, store: St
         } else if (store.ownerTrialEndDate && store.ownerTrialEndDate.getTime() > Date.now()) {
           console.log('✅ Store owner trial is active - returning all products');
         } else {
-          console.log('✅ Store owner status unknown or no trial limits - returning all products');
+          console.log('⚠️ Store owner status unclear - returning all products (fallback)');
         }
       } else {
-        console.log('👁️ No store data available - returning all products');
+        console.log('👁️ No store data available - returning all products (fallback)');
       }
     }
     
