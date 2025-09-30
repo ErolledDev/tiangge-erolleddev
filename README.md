@@ -45,6 +45,8 @@ For detailed information about user roles and their specific permissions, see [U
 - **Subscriber Management**: Manage your email subscribers with export capabilities
 - **Toast Notifications**: User-friendly feedback system for all interactions
 - **Search Functionality**: Product search with real-time filtering and tracking
+- **System Notifications**: Real-time broadcast notifications from administrators with read status tracking
+- **Notification Center**: Dashboard notification bell with unread count badges and persistent modal viewing
 
 ### 🖼️ Advanced Image Optimization
 - **Automatic Compression**: All uploaded images compressed to 75% quality
@@ -57,10 +59,12 @@ For detailed information about user roles and their specific permissions, see [U
 - **User Roles**: Admin and user roles with different permission levels
 - **Premium Features**: Tiered access to advanced features
 - **Row Level Security**: Comprehensive security with Firestore rules
+- **Notification System**: Secure broadcast messaging with per-user read status tracking
 
 ### 🎯 Admin Features
 - **User Management**: Search users, manage roles, and grant premium access
 - **Global Broadcast**: System-wide announcement banners for all users
+- **Broadcast Notifications**: Dashboard notification system with Markdown support and read tracking
 - **Sponsored Products**: Passive income through sponsored product placement in user stores
 - **System Analytics**: Track global platform usage and performance
 
@@ -95,11 +99,13 @@ When visitors interact with your store:
 
 ## Key Features Implemented
 
-### 🔐 Authentication & User Management
-- Strong password validation (8+ chars, mixed case, numbers, special chars)
-- Automatic store creation on signup with custom URLs
-- Admin panel for user management and role assignment
-- Premium user features with access control
+### 🔐 Authentication & User Management System
+- **Strong Authentication**: Email/password with comprehensive validation (8+ chars, mixed case, numbers, special chars)
+- **Automatic Store Creation**: Each user gets a unique store with custom URL on signup
+- **User Roles**: Admin and user roles with different permission levels
+- **Premium Features**: Tiered access system with premium user benefits
+- **Protected Routes**: Dashboard routes protected with authentication checks
+- **Notification System**: Real-time broadcast notifications with read status tracking and persistent modal viewing
 
 ### 🏪 Advanced Store Customization
 - **Typography**: Custom font families for headings and body text
@@ -128,12 +134,29 @@ When visitors interact with your store:
 - **Premium Subscriptions**: Tiered feature access
 - **Email Marketing**: Subscriber collection and management
 
-### 🛡️ Admin System Management
-- **User Management**: Search, view, and manage all users
-- **Role Control**: Toggle user roles and premium status
-- **Global Broadcast**: System-wide announcement banners
-- **Sponsored Products**: Manage products that appear in user stores
-- **Analytics Tracking**: Monitor global platform performance
+### 🎯 Admin & System Management
+- **User Management Panel**: 
+  - Search users by email address
+  - View all registered users with store information
+  - Toggle user roles between User and Admin
+  - Grant or revoke Premium access
+  - Direct links to user stores
+- **Global Broadcast System**: 
+  - Create system-wide announcement banners
+  - Upload custom images with descriptions and links
+  - Control banner visibility and timing
+  - Track banner click performance
+- **Broadcast Notification System**:
+  - Create dashboard notifications for all users
+  - Markdown formatting support for rich content
+  - Real-time unread count badges in dashboard header
+  - Per-user read status tracking with persistent storage
+  - Non-intrusive notification modal that stays open until manually closed
+- **Sponsored Products Management**:
+  - Admin-managed products that appear in user stores
+  - Automatic placement in stores with 15+ products
+  - Revenue sharing through sponsored product clicks
+  - Performance tracking and analytics
 
 ## Getting Started
 
@@ -191,6 +214,8 @@ The application is configured for Netlify deployment:
 - **analytics_events**: User interaction tracking (nested under stores)
 - **sponsored_products**: Admin-managed sponsored products
 - **global_banners**: System-wide announcement banners
+- **notifications**: Broadcast notifications for all users
+- **read_notifications**: Per-user notification read status tracking (nested under users)
 
 ### Security
 - Firestore security rules with row-level access control
@@ -242,6 +267,9 @@ components/            # Reusable React components
 ├── AdminRoute.tsx     # Admin access control
 ├── PremiumFeatureGate.tsx # Premium feature gating
 ├── StoreTemplate.tsx  # Main store display
+├── NotificationModal.tsx # Notification display modal
+├── NotificationForm.tsx # Admin notification creation/editing
+├── DashboardHeader.tsx # Header with notification bell
 └── ...
 
 lib/                   # Core business logic
@@ -253,6 +281,12 @@ lib/                   # Core business logic
 hooks/                 # Custom React hooks
 ├── useAuth.ts        # Authentication hook
 └── useToast.ts       # Toast notification hook
+
+app/dashboard/system-management/ # Admin panel pages
+├── users/page.tsx    # User management interface
+├── global-broadcast/page.tsx # Global banner management
+├── broadcast-notifications/page.tsx # Notification management
+├── sponsor-products/ # Sponsored product management
 ```
 
 ### Security Implementation
@@ -267,6 +301,23 @@ hooks/                 # Custom React hooks
 - **Lazy Loading**: Components and images loaded on demand
 - **Efficient Queries**: Optimized Firestore operations
 - **Bundle Optimization**: Code splitting and tree shaking
+
+### Recent Major Updates & Enhancements
+
+### Enhanced Notification System
+- Implemented comprehensive broadcast notification system for admin-to-user communication
+- Added real-time notification bell with unread count badges in dashboard header
+- Created persistent notification modal that remains open until manually closed
+- Integrated Markdown formatting support for rich notification content
+- Built per-user read status tracking with Firestore persistence
+- Added notification management interface for administrators
+- Fixed auto-closing modal issue to improve user experience
+
+### Complete Admin System Implementation
+- Built comprehensive user management system with search and role controls
+- Created global broadcast system for platform-wide announcements
+- Implemented sponsored products system for passive income generation
+- Added system analytics and performance monitoring capabilities
 
 ## Contributing
 

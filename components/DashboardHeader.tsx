@@ -111,7 +111,6 @@ export default function DashboardHeader({ isSidebarOpen, toggleSidebar }: Dashbo
     try {
       await markNotificationAsRead(user.uid, selectedNotification.id!);
       await loadNotifications(); // Refresh notifications
-      setShowNotificationModal(false);
     } catch (error) {
       console.error('Error marking notification as read:', error);
     }

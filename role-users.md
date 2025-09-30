@@ -55,6 +55,8 @@ Standard users are the primary users of the platform, responsible for creating a
   - Top performing products by click count
   - Most filtered categories
   - Most searched terms
+- **System Notifications**: Receive broadcast notifications from administrators in dashboard
+- **Notification Center**: Access notification bell with unread count and persistent modal viewing
 
 #### 🖼️ Image Optimization
 - Automatic compression of all uploaded images to 75% quality
@@ -96,6 +98,7 @@ Premium users have access to all Standard User features, plus advanced capabilit
 #### 📊 Advanced Analytics & Data Export
 - **Data Export**: Export subscriber lists and analytics data to CSV files
 - **Enhanced Insights**: Access to detailed performance metrics and conversion tracking
+- **System Notifications**: Same notification access as standard users with enhanced support priority
 
 #### 🎯 Priority Support
 - Enhanced support services and priority assistance
@@ -121,6 +124,14 @@ Administrators have full control over the platform, including managing users, sy
 - **Visibility Control**: Control banner visibility with active/inactive status
 - **Performance Tracking**: Track global banner click performance and engagement
 - **Banner Management**: Full CRUD operations for global banners
+
+#### 📢 Broadcast Notification System
+- **Dashboard Notifications**: Create, edit, and delete system-wide dashboard notifications
+- **Rich Content**: Markdown formatting support for notification descriptions
+- **User Targeting**: Send notifications to all users with individual read status tracking
+- **Notification Analytics**: Monitor notification engagement and read rates
+- **Content Management**: Full CRUD operations for broadcast notifications
+- **Real-time Updates**: Notifications appear instantly in user dashboard headers
 
 #### 💰 Sponsored Products Management
 - **Revenue Generation**: Add, edit, and delete sponsored products for passive income
@@ -155,11 +166,14 @@ Administrators have full control over the platform, including managing users, sy
 | Image Optimization | ✅ | ✅ | ✅ |
 | Custom HTML Editor | ✅ | ✅ | ✅ |
 | Product URL Scraping | ✅ | ✅ | ✅ |
+| System Notifications | ✅ | ✅ | ✅ |
+| Notification Center | ✅ | ✅ | ✅ |
 | **CSV Product Import** | **❌** | **✅** | **✅** |
 | **Data Export (CSV)** | **❌** | **✅** | **✅** |
 | Priority Support | ❌ | ✅ | ✅ |
 | User Management | ❌ | ❌ | ✅ |
 | Global Broadcasts | ❌ | ❌ | ✅ |
+| Broadcast Notifications | ❌ | ❌ | ✅ |
 | Sponsored Products | ❌ | ❌ | ✅ |
 | System Analytics | ❌ | ❌ | ✅ |
 
@@ -172,6 +186,8 @@ Administrators have full control over the platform, including managing users, sy
 - **Customer Engagement**: Email subscriptions and subscriber management
 - **Performance Tracking**: Comprehensive analytics dashboard
 - **Professional Appearance**: Advanced typography and color customization
+- **System Communication**: Receive and view broadcast notifications from administrators
+- **Notification Management**: Access notification center with unread badges and persistent viewing
 
 ### What Standard Users CANNOT Do:
 - **Advanced Promotional Tools**: No floating widgets or pop-up banners
@@ -230,6 +246,13 @@ Consider making floating widgets available to standard users as they significant
 
 ## Implementation Notes
 
+### Notification System Architecture
+- `NotificationModal` component provides persistent modal viewing (doesn't auto-close)
+- `NotificationForm` component handles admin notification creation and editing
+- `DashboardHeader` component displays notification bell with real-time unread counts
+- Markdown formatting support for rich notification content
+- Per-user read status tracking with Firestore subcollections
+
 ### Component-Level Access Control
 - `AdminRoute` component protects admin-only pages
 - `PremiumFeatureGate` component controls premium feature access
@@ -244,6 +267,7 @@ Consider making floating widgets available to standard users as they significant
 ### Admin System Management
 - Complete user management interface with search and filtering
 - Global broadcast system for platform-wide communications
+- Broadcast notification system for dashboard messaging
 - Sponsored products system for revenue generation
 - Comprehensive analytics tracking for admin insights
 
