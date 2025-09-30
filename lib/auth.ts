@@ -12,6 +12,8 @@ export interface UserProfile {
   storeSlug?: string;
   role?: 'user' | 'admin';
   isPremium?: boolean;
+  isPremiumAdminSet?: boolean; // Indicates if premium was granted by admin (permanent)
+  trialEndDate?: Date;         // When the trial period ends
   updatedAt?: Date;
 }
 
@@ -82,6 +84,10 @@ export const signUp = async (email: string, password: string, displayName?: stri
     
     console.log('Using store slug:', finalStoreSlug);
     
+    // Calculate trial end date (7 days from now)
+    const trialEndDate = new Date();
+    trialEndDate.setDate(trialEndDate.getDate() + 7);
+
     // Create user profile and store in Firestore
     const userProfile: UserProfile = {
       uid: user.uid,
@@ -91,6 +97,7 @@ export const signUp = async (email: string, password: string, displayName?: stri
       updatedAt: new Date(),
       role: 'user',
       isPremium: false,
+      trialEndDate: trialEndDate,
     };
     
     console.log('Creating user profile:', userProfile);
@@ -168,7 +175,8 @@ export const getUserProfile = async (uid: string): Promise<UserProfile | null> =
       return {
         ...data,
         createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : data.createdAt,
-        updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : data.updatedAt
+        updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : data.updatedAt,
+        trialEndDate: data.trialEndDate?.toDate ? data.trialEndDate.toDate() : data.trialEndDate
       } as UserProfile;
     }
     return null;
@@ -182,11 +190,26 @@ export const updateUserRoleAndPremiumStatus = async (userId: string, updates: { 
   try {
     if (!db) throw new Error('Firebase not initialized');
     
-    const userRef = doc(db, 'users', userId);
-    await updateDoc(userRef, {
+    // Prepare the update object
+    const updateData: any = {
       ...updates,
       updatedAt: new Date()
-    });
+    };
+    
+    // If admin is granting premium access, make it permanent and clear trial
+    if (updates.isPremium === true) {
+      updateData.isPremiumAdminSet = true;
+      updateData.trialEndDate = null; // Clear trial end date
+    }
+    
+    // If admin is revoking premium access, clear all premium-related fields
+    if (updates.isPremium === false) {
+      updateData.isPremiumAdminSet = false;
+      updateData.trialEndDate = null; // Clear trial end date
+    }
+    
+    const userRef = doc(db, 'users', userId);
+    await updateDoc(userRef, updateData);
   } catch (error) {
     console.error('Error updating user role/premium status:', error);
     throw error;
@@ -234,7 +257,8 @@ export const getAllUserProfiles = async (): Promise<UserProfile[]> => {
         uid: doc.id,
         ...data,
         createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : data.createdAt,
-        updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : data.updatedAt
+        updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : data.updatedAt,
+        trialEndDate: data.trialEndDate?.toDate ? data.trialEndDate.toDate() : data.trialEndDate
       } as UserProfile);
     });
     
@@ -261,13 +285,73 @@ export const isAdmin = (userProfile: UserProfile | null): boolean => {
 
 // Helper function to check if user is premium
 export const isPremium = (userProfile: UserProfile | null): boolean => {
-  return userProfile?.isPremium === true || isAdmin(userProfile);
+  if (!userProfile) return false;
+  
+  // Admin users always have premium access
+  if (isAdmin(userProfile)) return true;
+  
+  // If premium was set by admin, it's permanent
+  if (userProfile.isPremiumAdminSet === true) return true;
+  
+  // Check if trial is still active
+  if (userProfile.trialEndDate && userProfile.trialEndDate.getTime() > Date.now()) {
+    return true;
+  }
+  
+  // Otherwise, check the isPremium flag (for backward compatibility)
+  return userProfile.isPremium === true;
+};
+
+// Helper function to check if trial has expired
+export const hasTrialExpired = (userProfile: UserProfile | null): boolean => {
+  if (!userProfile) return false;
+
+  // If premium was set by admin, trial never expires
+  if (userProfile.isPremiumAdminSet === true) return false;
+
+  // Check if trial end date exists and has passed
+  if (userProfile.trialEndDate && userProfile.trialEndDate.getTime() < Date.now()) {
+    return true;
+  }
+
+  return false;
+};
+
+// Helper function to check if user is on trial
+export const isOnTrial = (userProfile: UserProfile | null): boolean => {
+  if (!userProfile) return false;
+
+  // If premium was set by admin, user is not on trial
+  if (userProfile.isPremiumAdminSet === true) return false;
+
+  // Check if trial end date exists and is still valid
+  if (userProfile.trialEndDate && userProfile.trialEndDate.getTime() > Date.now()) {
+    return true;
+  }
+
+  return false;
+};
+
+// Helper function to get trial days remaining
+export const getTrialDaysRemaining = (userProfile: UserProfile | null): number => {
+  if (!userProfile || !userProfile.trialEndDate) return 0;
+
+  // If premium was set by admin, return 0 (not on trial)
+  if (userProfile.isPremiumAdminSet === true) return 0;
+
+  const now = Date.now();
+  const trialEnd = userProfile.trialEndDate.getTime();
+  const msRemaining = trialEnd - now;
+
+  if (msRemaining <= 0) return 0;
+
+  return Math.ceil(msRemaining / (1000 * 60 * 60 * 24));
 };
 
 // Helper function to check if user can access feature
 export const canAccessFeature = (userProfile: UserProfile | null, feature: 'analytics' | 'csv_import' | 'export' | 'admin'): boolean => {
   if (!userProfile) return false;
-  
+
   switch (feature) {
     case 'admin':
       return isAdmin(userProfile);

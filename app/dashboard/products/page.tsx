@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/useToast';
 import { trackEvent } from '@/lib/analytics';
-import { isPremium } from '@/lib/auth';
+import { isPremium, isOnTrial, hasTrialExpired, getTrialDaysRemaining } from '@/lib/auth';
 import { 
   getStoreProducts, 
   deleteProduct,
@@ -14,7 +14,7 @@ import {
   Product,
   getUserStore
 } from '@/lib/store';
-import { Edit, Trash2, Plus, Check, X, Users } from 'lucide-react';
+import { CreditCard as Edit, Trash2, Plus, Check, X, Users, Clock, Crown } from 'lucide-react';
 import { RefreshCcw } from 'lucide-react';
 import ProductCSVImporter from '@/components/ProductCSVImporter';
 
@@ -123,6 +123,26 @@ export default function ProductsPage() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-gray-900">Manage Products</h1>
+            {/* Trial Status Display */}
+            {userProfile && (isOnTrial(userProfile) || hasTrialExpired(userProfile)) && (
+              <div className={`mt-2 inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                isOnTrial(userProfile) 
+                  ? 'bg-blue-100 text-blue-800' 
+                  : 'bg-red-100 text-red-800'
+              }`}>
+                {isOnTrial(userProfile) ? (
+                  <>
+                    <Clock className="w-4 h-4 mr-2" />
+                    Trial: {getTrialDaysRemaining(userProfile)} days left
+                  </>
+                ) : (
+                  <>
+                    <Crown className="w-4 h-4 mr-2" />
+                    Trial expired - Limited to 30 products
+                  </>
+                )}
+              </div>
+            )}
           </div>
           
          <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">

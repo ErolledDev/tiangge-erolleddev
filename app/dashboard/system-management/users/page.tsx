@@ -4,21 +4,25 @@ import React, { useState, useEffect } from 'react';
 import AdminRoute from '@/components/AdminRoute';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/useToast';
-import { 
-  updateUserRoleAndPremiumStatus, 
-  getUserByEmail, 
+import {
+  updateUserRoleAndPremiumStatus,
+  getUserByEmail,
   UserProfile,
-  getAllUserProfiles
+  getAllUserProfiles,
+  isOnTrial,
+  hasTrialExpired,
+  getTrialDaysRemaining
 } from '@/lib/auth';
 import { getAllStoreSlugs } from '@/lib/store';
-import { 
-  Users, 
-  Search, 
-  Shield, 
-  Crown, 
+import {
+  Users,
+  Search,
+  Shield,
+  Crown,
   RefreshCw,
   ExternalLink,
-  ArrowLeft
+  ArrowLeft,
+  Clock
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -389,20 +393,44 @@ export default function UserManagementPage() {
                             </span>
                           </td>
                           <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                              user.isPremium 
-                                ? 'bg-yellow-100 text-yellow-800' 
-                                : 'bg-gray-100 text-gray-800'
-                            }`}>
-                              {user.isPremium ? (
-                                <>
-                                  <Crown className="w-3 h-3 mr-1" />
-                                  Premium
-                                </>
-                              ) : (
-                                'Basic'
+                            <div className="flex flex-col space-y-1">
+                              {/* Premium Status Badge */}
+                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                user.isPremiumAdminSet === true
+                                  ? 'bg-yellow-100 text-yellow-800'
+                                  : isOnTrial(user)
+                                    ? 'bg-blue-100 text-blue-800'
+                                    : 'bg-gray-100 text-gray-800'
+                              }`}>
+                                {user.isPremiumAdminSet === true ? (
+                                  <>
+                                    <Crown className="w-3 h-3 mr-1" />
+                                    Premium
+                                  </>
+                                ) : isOnTrial(user) ? (
+                                  <>
+                                    <Clock className="w-3 h-3 mr-1" />
+                                    Trial
+                                  </>
+                                ) : (
+                                  'Basic'
+                                )}
+                              </span>
+                              
+                              {/* Trial Days Remaining */}
+                              {isOnTrial(user) && (
+                                <span className="text-xs text-blue-600 font-medium">
+                                  {getTrialDaysRemaining(user)} days left
+                                </span>
                               )}
-                            </span>
+                              
+                              {/* Trial Expired Notice */}
+                              {hasTrialExpired(user) && !user.isPremiumAdminSet && (
+                                <span className="text-xs text-red-600 font-medium">
+                                  Trial expired
+                                </span>
+                              )}
+                            </div>
                           </td>
                           <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-sm font-medium">
                             <div className="flex flex-col sm:flex-row space-y-1 sm:space-y-0 sm:space-x-2">

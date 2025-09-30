@@ -7,7 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/useToast';
 import { trackEvent } from '@/lib/analytics';
 import { addProduct, updateProduct, Product, uploadProductImage, getStoreProducts } from '@/lib/store';
-import { isPremium } from '@/lib/auth';
+import { isPremium, isOnTrial, hasTrialExpired, getTrialDaysRemaining } from '@/lib/auth';
 import Image from 'next/image';
 import { addDoc, collection, updateDoc, doc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
@@ -538,10 +538,14 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
                         : 'text-blue-800'
                   }`}>
                     {isAtProductLimit 
-                      ? '⚠️ Product Limit Reached' 
+                      ? (hasTrialExpired(userProfile) 
+                          ? '⚠️ Trial Expired - Product Limit Reached' 
+                          : '⚠️ Product Limit Reached')
                       : currentProductCount >= 25 
                         ? '⚠️ Approaching Product Limit' 
-                        : '📦 Product Count'
+                        : (isOnTrial(userProfile) 
+                            ? `🎉 Trial Active - ${getTrialDaysRemaining(userProfile)} days left` 
+                            : '📦 Product Count')
                     }
                   </p>
                   <p className={`text-xs mt-1 ${
@@ -552,7 +556,9 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
                         : 'text-blue-600'
                   }`}>
                     {isAtProductLimit 
-                      ? 'You have reached the 30-product limit. Upgrade to premium for unlimited products.' 
+                      ? (hasTrialExpired(userProfile)
+                          ? 'Your trial has expired. Only your latest 30 products are visible. Contact an administrator to upgrade.'
+                          : 'You have reached the 30-product limit. Upgrade to premium for unlimited products.')
                       : `${currentProductCount}/30 products used. ${30 - currentProductCount} remaining.`
                     }
                   </p>

@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
-import { getStoreBySlug, getStoreProducts, getStoreSlides, generateCategoriesWithCountSync, getSponsoredProducts, SponsoredProduct } from '@/lib/store';
+import { getStoreBySlug, getStoreProducts, getStoreSlides, generateCategoriesWithCountSync, getSponsoredProducts, SponsoredProduct, getStoreProductsWithTrialLimits } from '@/lib/store';
+import { getUserProfile } from '@/lib/auth';
 import StoreTemplate from '@/components/StoreTemplate';
 
 interface StorePageProps {
@@ -81,9 +82,12 @@ export default async function StorePage({ params, searchParams }: StorePageProps
       notFound();
     }
 
+    // Get store owner's profile to check trial status
+    const storeOwnerProfile = await getUserProfile(store.ownerId);
+
     // Fetch products and slides
     const [products, slides] = await Promise.all([
-      getStoreProducts(store.id),
+      getStoreProductsWithTrialLimits(store.id, storeOwnerProfile),
       getStoreSlides(store.id)
     ]);
 

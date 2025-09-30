@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/useToast';
-import { isPremium } from '@/lib/auth';
+import { isPremium, isOnTrial, hasTrialExpired, getTrialDaysRemaining } from '@/lib/auth';
 import PremiumFeatureGate from '@/components/PremiumFeatureGate';
 import { 
   getUserStore, 
@@ -13,7 +13,7 @@ import {
   deleteImageFromStorage,
   Store 
 } from '@/lib/store';
-import { Settings, Save, Palette, Globe, Badge as Widget, Megaphone, Mail, Code } from 'lucide-react';
+import { Settings, Save, Palette, Globe, Badge as Widget, Megaphone, Mail, Code, Clock, Crown } from 'lucide-react';
 import CustomToggle from '@/components/CustomToggle';
 import ImageUploadWithDelete from '@/components/ImageUploadWithDelete';
 import CustomHtmlEditor from '@/components/CustomHtmlEditor';
@@ -288,6 +288,26 @@ export default function StoreSettingsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">Store Settings</h1>
+          {/* Trial Status Display */}
+          {userProfile && (isOnTrial(userProfile) || hasTrialExpired(userProfile)) && (
+            <div className={`mt-2 inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+              isOnTrial(userProfile) 
+                ? 'bg-blue-100 text-blue-800' 
+                : 'bg-red-100 text-red-800'
+            }`}>
+              {isOnTrial(userProfile) ? (
+                <>
+                  <Clock className="w-4 h-4 mr-2" />
+                  Trial: {getTrialDaysRemaining(userProfile)} days left
+                </>
+              ) : (
+                <>
+                  <Crown className="w-4 h-4 mr-2" />
+                  Trial expired - Basic features only
+                </>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
@@ -429,6 +449,7 @@ export default function StoreSettingsPage() {
             checked={formData.widgetEnabled}
             onChange={(checked) => handleInputChange('widgetEnabled', checked)}
             disabled={!isUserPremium}
+            isPremiumFeature={true}
           />
           
           {formData.widgetEnabled && (
@@ -477,6 +498,7 @@ export default function StoreSettingsPage() {
             checked={formData.bannerEnabled}
             onChange={(checked) => handleInputChange('bannerEnabled', checked)}
             disabled={!isUserPremium}
+            isPremiumFeature={true}
           />
           
           {formData.bannerEnabled && (
@@ -575,6 +597,7 @@ export default function StoreSettingsPage() {
             checked={formData.showCategories}
             onChange={(checked) => handleInputChange('showCategories', checked)}
             disabled={!isUserPremium}
+            isPremiumFeature={true}
           />
           
         </div>

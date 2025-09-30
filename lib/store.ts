@@ -24,7 +24,7 @@ import {
 } from 'firebase/storage';
 import { fromBlob } from 'image-resize-compress';
 
-import { isPremium, getUserProfile } from './auth';
+import { isPremium, getUserProfile, UserProfile } from './auth';
 
 // Interfaces
 export interface Store {
@@ -333,6 +333,40 @@ export const getStoreProducts = async (storeId: string): Promise<Product[]> => {
     })) as Product[];
   } catch (error) {
     console.error('Error fetching store products:', error);
+    return [];
+  }
+};
+
+// Get store products with trial limitations applied
+export const getStoreProductsWithTrialLimits = async (storeId: string, userProfile: UserProfile | null): Promise<Product[]> => {
+  try {
+    if (!db) return [];
+    
+    const productsRef = collection(db, 'users', storeId, 'stores', storeId, 'products');
+    const querySnapshot = await getDocs(productsRef);
+    
+    const allProducts = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+      createdAt: doc.data().createdAt?.toDate ? doc.data().createdAt.toDate() : doc.data().createdAt,
+      updatedAt: doc.data().updatedAt?.toDate ? doc.data().updatedAt.toDate() : doc.data().updatedAt
+    })) as Product[];
+    
+    // If user is not premium (trial expired or standard user), limit to latest 30 products
+    if (!isPremium(userProfile)) {
+      // Sort by creation date (newest first) and take only the first 30
+      const sortedProducts = allProducts.sort((a, b) => {
+        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return dateB - dateA; // Newest first
+      });
+      
+      return sortedProducts.slice(0, 30);
+    }
+    
+    return allProducts;
+  } catch (error) {
+    console.error('Error fetching store products with trial limits:', error);
     return [];
   }
 };
