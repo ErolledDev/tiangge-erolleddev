@@ -25,7 +25,7 @@ export default function NotificationModal({
 }: NotificationModalProps) {
   const { showSuccess, showError } = useToast();
 
-  // Auto-mark as read when modal opens
+  // Auto-mark as read when modal opens (but don't auto-close)
   React.useEffect(() => {
     const autoMarkAsRead = async () => {
       if (!notification || isRead) return;
@@ -43,10 +43,37 @@ export default function NotificationModal({
     }
   }, [isOpen, notification, isRead, userId, onMarkAsRead]);
 
+  // Handle escape key to close modal
+  React.useEffect(() => {
+    const handleEscapeKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscapeKey);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscapeKey);
+    };
+  }, [isOpen, onClose]);
+
+  // Handle click outside modal to close
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
   if (!isOpen || !notification) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-[9999] flex items-center justify-center p-4">
+    <div 
+      className="fixed inset-0 bg-black bg-opacity-50 z-[9999] flex items-center justify-center p-4"
+      onClick={handleBackdropClick}
+    >
       <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden relative">
         {/* Close Button */}
         <button
