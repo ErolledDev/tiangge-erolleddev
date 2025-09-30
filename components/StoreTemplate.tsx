@@ -710,7 +710,7 @@ export default function StoreTemplate({ store, products, slides, categories, ini
                   </div>
                   <div className="p-1 sm:p-[5px] min-h-[3.5rem] sm:min-h-[4rem] flex flex-col justify-between">
                     <h3 
-                      className="font-semibold line-clamp-2 text-[0.7rem] sm:text-[0.8rem] mb-1 sm:mb-[5px] flex-1"
+                      className="font-semibold line-clamp-2 text-[0.7rem] sm:text-[0.8rem] mb-1 sm:mb-[5px] flex-1 h-8 sm:h-10"
                       style={{ 
                         color: store.customization?.headingTextColor || '#1f2937',
                         fontFamily: store.customization?.headingFontFamily || store.customization?.bodyFontFamily || store.customization?.fontFamily || 'inherit'
