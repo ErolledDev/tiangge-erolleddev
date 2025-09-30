@@ -364,8 +364,10 @@ export const getStoreProductsWithTrialLimits = async (storeId: string, userProfi
     
     console.log(`🔍 Total products found: ${allProducts.length}`);
     
-    // If user is not premium (trial expired or standard user), limit to latest 30 products
-    if (!isPremium(userProfile)) {
+    // Only apply product limits if:
+    // 1. We have a valid user profile (not a public visitor)
+    // 2. The user's trial has expired AND they don't have permanent premium access
+    if (userProfile && hasTrialExpired(userProfile) && !userProfile.isPremiumAdminSet) {
       console.log('⚠️ User is NOT premium - applying 30 product limit');
       // Sort by creation date (newest first) and take only the first 30
       const sortedProducts = allProducts.sort((a, b) => {
@@ -378,7 +380,11 @@ export const getStoreProductsWithTrialLimits = async (storeId: string, userProfi
       console.log(`🔍 Returning limited products: ${limitedProducts.length}/30`);
       return limitedProducts;
     } else {
-      console.log('✅ User IS premium - returning all products');
+      if (userProfile) {
+        console.log('✅ User IS premium or trial active - returning all products');
+      } else {
+        console.log('👁️ Public visitor - returning all products');
+      }
     }
     
     console.log(`🔍 Returning all products: ${allProducts.length}`);
