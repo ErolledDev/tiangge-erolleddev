@@ -43,18 +43,12 @@ service cloud.firestore {
                           request.resource.data.bannerEnabled == true || 
                           request.resource.data.showCategories == true)
                       );
-        // Allow updating specific fields for store customization
 
         // Products subcollection: Public read, owner write
         match /products/{productId} {
           allow read; // Anyone can read products from any store
-          // Allow product creation only if user is premium (trial active or admin-granted)
-          allow create: if request.auth != null && 
-                        request.auth.uid == userId &&
-                        (get(/databases/$(database)/documents/users/$(userId)).data.isPremiumAdminSet == true ||
-                         (get(/databases/$(database)/documents/users/$(userId)).data.trialEndDate != null &&
-                          get(/databases/$(database)/documents/users/$(userId)).data.trialEndDate > request.time) ||
-                         get(/databases/$(database)/documents/users/$(userId)).data.role == 'admin');
+          // Allow product creation for authenticated users (remove premium restriction for creation)
+          allow create: if request.auth != null && request.auth.uid == userId;
           allow update, delete: if request.auth != null && request.auth.uid == userId;
         }
 
@@ -80,6 +74,11 @@ service cloud.firestore {
           // Only authenticated store owners can read, update, or delete their own analytics data
           allow read, update, delete: if request.auth != null && request.auth.uid == userId;
         }
+      }
+
+      // User read notifications subcollection: Users can only manage their own read status
+      match /read_notifications/{readNotificationId} {
+        allow read, create, update, delete: if request.auth != null && request.auth.uid == userId;
       }
     }
 
@@ -116,11 +115,6 @@ service cloud.firestore {
                                     get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
       allow list: if request.auth != null && 
                   get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
-    }
-
-    // User read notifications subcollection: Users can only manage their own read status
-    match /users/{userId}/read_notifications/{readNotificationId} {
-      allow read, create, update, delete: if request.auth != null && request.auth.uid == userId;
     }
   }
 }

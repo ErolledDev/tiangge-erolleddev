@@ -165,13 +165,16 @@ export const logout = async () => {
 export const getUserProfile = async (uid: string): Promise<UserProfile | null> => {
   try {
     if (!db) return null;
-
+    
+    // Add error handling for permission issues
+    console.log('🔍 getUserProfile: Attempting to fetch profile for UID:', uid);
 
     const docRef = doc(db, 'users', uid);
     const docSnap = await getDoc(docRef);
     
     if (docSnap.exists()) {
       const data = docSnap.data();
+      console.log('✅ getUserProfile: Profile data found for UID:', uid);
       return {
         ...data,
         createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : data.createdAt,
@@ -179,9 +182,18 @@ export const getUserProfile = async (uid: string): Promise<UserProfile | null> =
         trialEndDate: data.trialEndDate?.toDate ? data.trialEndDate.toDate() : data.trialEndDate
       } as UserProfile;
     }
+    
+    console.log('⚠️ getUserProfile: No profile document found for UID:', uid);
     return null;
   } catch (error) {
-    console.error('Error fetching user profile:', error);
+    console.error('❌ getUserProfile: Error fetching user profile for UID:', uid, error);
+    
+    // If it's a permission error, return null instead of throwing
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'permission-denied') {
+      console.log('🔒 getUserProfile: Permission denied - returning null for public access');
+      return null;
+    }
+    
     return null;
   }
 };

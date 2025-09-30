@@ -99,7 +99,17 @@ export const useAuth = () => {
               console.log('👤 useAuth: Setting loading to false (with profile)');
               setLoading(false);
             }, (error) => {
-              console.error('Error listening to user profile changes:', error);
+              console.error('❌ useAuth: Error listening to user profile changes:', error);
+              
+              // Handle permission denied errors gracefully
+              if (error && typeof error === 'object' && 'code' in error && error.code === 'permission-denied') {
+                console.log('🔒 useAuth: Permission denied for profile listener - user may not have profile yet');
+                // For permission denied, still set loading to false but keep profile as null
+                setUserProfile(null);
+                setLoading(false);
+                return;
+              }
+              
               console.log('❌ useAuth: Profile listener error, setting profile to null');
               setUserProfile(null);
               setLoading(false);

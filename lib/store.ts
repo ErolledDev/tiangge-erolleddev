@@ -352,8 +352,22 @@ export const getStoreProductsWithTrialLimits = async (storeId: string, userProfi
       hasTrialExpired: userProfile ? hasTrialExpired(userProfile) : false
     });
     
-    const productsRef = collection(db, 'users', storeId, 'stores', storeId, 'products');
-    const querySnapshot = await getDocs(productsRef);
+    let querySnapshot;
+    try {
+      const productsRef = collection(db, 'users', storeId, 'stores', storeId, 'products');
+      querySnapshot = await getDocs(productsRef);
+    } catch (error) {
+      console.error('❌ Error fetching products from Firestore:', error);
+      
+      // If it's a permission error or the store doesn't exist, return empty array
+      if (error && typeof error === 'object' && 'code' in error && 
+          (error.code === 'permission-denied' || error.code === 'not-found')) {
+        console.log('🔒 Store not found or permission denied - returning empty products array');
+        return [];
+      }
+      
+      throw error; // Re-throw other errors
+    }
     
     const allProducts = querySnapshot.docs.map(doc => ({
       id: doc.id,
