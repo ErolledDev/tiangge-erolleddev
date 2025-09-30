@@ -714,7 +714,7 @@ export default function StoreTemplate({ store, products, slides, categories, ini
                       className={`p-1 sm:p-[5px] ${showPrice ? 'min-h-[3.5rem] sm:min-h-[4rem]' : 'min-h-[2.5rem] sm:min-h-[3rem]'} flex flex-col ${showPrice ? 'justify-between' : 'justify-start'}`}
                     >
                       <h3 
-                        className="font-semibold line-clamp-2 text-[0.7rem] sm:text-[0.8rem] mb-1 sm:mb-[5px]"
+                        className="font-semibold line-clamp-2 text-[0.7rem] sm:text-[0.8rem] mb-0 sm:mb-[5px]"
                         style={{ 
                           color: store.customization?.headingTextColor || '#1f2937',
                           fontFamily: store.customization?.headingFontFamily || store.customization?.bodyFontFamily || store.customization?.fontFamily || 'inherit'
