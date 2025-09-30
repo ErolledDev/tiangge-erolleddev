@@ -135,17 +135,21 @@ export default function UserManagementPage() {
 
   const handleMigratePremiumUsers = async () => {
     const confirmed = window.confirm(
-      'This will migrate all existing premium users to fix any trial display issues. Continue?'
+      'This will migrate all existing premium users to fix any trial display issues and ensure unlimited product access.\n\nThis will:\n• Set isPremiumAdminSet=true for all premium users\n• Clear trialEndDate for permanent premium access\n• Enable unlimited products for affected users\n\nContinue?'
     );
     
     if (!confirmed) return;
     
     setIsMigrating(true);
     try {
+      console.log('🔧 Starting premium users migration...');
+      console.log('🔧 Current user count before migration:', allUsers.length);
+      
       await migratePremiumUsers();
-      showSuccess('Premium users migrated successfully!');
+      showSuccess('Premium users migrated successfully! Check console for details. All premium users now have unlimited product access.');
       
       // Refresh the users list
+      console.log('🔧 Refreshing user list after migration...');
       const [users, storeSlugsMap] = await Promise.all([
         getAllUserProfiles(),
         getAllStoreSlugs()
@@ -157,9 +161,19 @@ export default function UserManagementPage() {
       }));
       
       setAllUsers(enrichedUsers);
+      console.log('✅ User list refreshed after migration. New count:', enrichedUsers.length);
+      
+      // Show detailed results
+      const premiumUsers = enrichedUsers.filter(u => u.isPremium === true);
+      const fixedUsers = enrichedUsers.filter(u => u.isPremium === true && u.isPremiumAdminSet === true);
+      console.log(`📊 Migration Results:`);
+      console.log(`   - Total users: ${enrichedUsers.length}`);
+      console.log(`   - Premium users: ${premiumUsers.length}`);
+      console.log(`   - Fixed premium users: ${fixedUsers.length}`);
+      
     } catch (error) {
       console.error('Error migrating premium users:', error);
-      showError('Failed to migrate premium users');
+      showError(`Failed to migrate premium users: ${error instanceof Error ? error.message : 'Unknown error'}. Check console for details.`);
     } finally {
       setIsMigrating(false);
     }
@@ -395,8 +409,8 @@ export default function UserManagementPage() {
                 <button
                   onClick={handleMigratePremiumUsers}
                   disabled={isMigrating}
-                  className="flex items-center justify-center px-3 py-1.5 text-xs sm:text-sm bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 disabled:opacity-50 transition-colors min-h-[44px]"
-                  title="Fix all premium users with trial display issues"
+                  className="flex items-center justify-center px-3 py-1.5 text-xs sm:text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors min-h-[44px]"
+                  title="Fix all premium users with trial display issues and ensure unlimited product access"
                 >
                   {isMigrating ? (
                     <>
@@ -404,7 +418,7 @@ export default function UserManagementPage() {
                       Migrating...
                     </>
                   ) : (
-                    'Fix Premium Users'
+                    '🔧 Fix Premium Users'
                   )}
                 </button>
                 <button

@@ -287,17 +287,36 @@ export const isAdmin = (userProfile: UserProfile | null): boolean => {
 export const isPremium = (userProfile: UserProfile | null): boolean => {
   if (!userProfile) return false;
   
+  console.log('🔍 isPremium check for user:', {
+    email: userProfile.email,
+    role: userProfile.role,
+    isPremium: userProfile.isPremium,
+    isPremiumAdminSet: userProfile.isPremiumAdminSet,
+    trialEndDate: userProfile.trialEndDate,
+    trialEndDateTimestamp: userProfile.trialEndDate?.getTime(),
+    currentTimestamp: Date.now(),
+    isTrialActive: userProfile.trialEndDate ? userProfile.trialEndDate.getTime() > Date.now() : false
+  });
+  
   // Admin users always have premium access
-  if (isAdmin(userProfile)) return true;
-  
-  // If premium was set by admin, it's permanent
-  if (userProfile.isPremiumAdminSet === true) return true;
-  
-  // Check if trial is still active
-  if (userProfile.trialEndDate && userProfile.trialEndDate.getTime() > Date.now()) {
+  if (isAdmin(userProfile)) {
+    console.log('✅ User is admin - premium access granted');
     return true;
   }
   
+  // If premium was set by admin, it's permanent
+  if (userProfile.isPremiumAdminSet === true) {
+    console.log('✅ User has permanent premium (isPremiumAdminSet=true)');
+    return true;
+  }
+  
+  // Check if trial is still active
+  if (userProfile.trialEndDate && userProfile.trialEndDate.getTime() > Date.now()) {
+    console.log('✅ User trial is still active');
+    return true;
+  }
+  
+  console.log('❌ User is NOT premium');
   // Otherwise, check the isPremium flag (for backward compatibility)
   return userProfile.isPremium === true;
 };
@@ -370,21 +389,29 @@ export const migratePremiumUsers = async (): Promise<void> => {
   try {
     if (!db) throw new Error('Firebase not initialized');
     
-    console.log('Starting migration of premium users...');
+    console.log('🔧 Starting migration of premium users...');
+    console.log('🔧 Checking all users for premium status issues...');
     
     // Get all users
     const usersRef = collection(db, 'users');
     const querySnapshot = await getDocs(usersRef);
     
-    const batch = [];
+    const updatePromises = [];
     let migratedCount = 0;
+    let totalChecked = 0;
     
     for (const userDoc of querySnapshot.docs) {
       const userData = userDoc.data();
+      totalChecked++;
+      
+      console.log(`🔧 Checking user: ${userData.email} (${userDoc.id})`);
+      console.log(`   - isPremium: ${userData.isPremium}`);
+      console.log(`   - isPremiumAdminSet: ${userData.isPremiumAdminSet}`);
+      console.log(`   - trialEndDate: ${userData.trialEndDate}`);
       
       // Check if user has isPremium: true but missing isPremiumAdminSet
       if (userData.isPremium === true && userData.isPremiumAdminSet === undefined) {
-        console.log(`Migrating user: ${userData.email} (${userDoc.id})`);
+        console.log(`🔧 MIGRATING user: ${userData.email} (${userDoc.id})`);
         
         const userRef = doc(db, 'users', userDoc.id);
         const updateData = {
@@ -393,21 +420,31 @@ export const migratePremiumUsers = async (): Promise<void> => {
           updatedAt: new Date()
         };
         
-        batch.push(updateDoc(userRef, updateData));
+        updatePromises.push(updateDoc(userRef, updateData));
         migratedCount++;
+      } else if (userData.isPremium === true && userData.isPremiumAdminSet === true) {
+        console.log(`✅ User already has correct premium status: ${userData.email}`);
+      } else {
+        console.log(`ℹ️ User is not premium or already correct: ${userData.email}`);
       }
     }
     
     // Execute all updates
-    if (batch.length > 0) {
-      await Promise.all(batch);
-      console.log(`Successfully migrated ${migratedCount} premium users`);
+    if (updatePromises.length > 0) {
+      console.log(`🔧 Executing ${updatePromises.length} user updates...`);
+      await Promise.all(updatePromises);
+      console.log(`✅ Successfully migrated ${migratedCount} out of ${totalChecked} premium users`);
     } else {
-      console.log('No users needed migration');
+      console.log(`ℹ️ No users needed migration (checked ${totalChecked} users)`);
     }
     
   } catch (error) {
-    console.error('Error migrating premium users:', error);
+    console.error('❌ Error migrating premium users:', error);
+    console.error('❌ Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      code: (error as any)?.code,
+      stack: error instanceof Error ? error.stack : undefined
+    });
     throw error;
   }
 };

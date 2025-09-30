@@ -342,6 +342,16 @@ export const getStoreProductsWithTrialLimits = async (storeId: string, userProfi
   try {
     if (!db) return [];
     
+    console.log('🔍 getStoreProductsWithTrialLimits called for user:', {
+      storeId,
+      userEmail: userProfile?.email,
+      isPremium: isPremium(userProfile),
+      isPremiumAdminSet: userProfile?.isPremiumAdminSet,
+      trialEndDate: userProfile?.trialEndDate,
+      isOnTrial: userProfile ? isOnTrial(userProfile) : false,
+      hasTrialExpired: userProfile ? hasTrialExpired(userProfile) : false
+    });
+    
     const productsRef = collection(db, 'users', storeId, 'stores', storeId, 'products');
     const querySnapshot = await getDocs(productsRef);
     
@@ -352,8 +362,11 @@ export const getStoreProductsWithTrialLimits = async (storeId: string, userProfi
       updatedAt: doc.data().updatedAt?.toDate ? doc.data().updatedAt.toDate() : doc.data().updatedAt
     })) as Product[];
     
+    console.log(`🔍 Total products found: ${allProducts.length}`);
+    
     // If user is not premium (trial expired or standard user), limit to latest 30 products
     if (!isPremium(userProfile)) {
+      console.log('⚠️ User is NOT premium - applying 30 product limit');
       // Sort by creation date (newest first) and take only the first 30
       const sortedProducts = allProducts.sort((a, b) => {
         const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
@@ -361,9 +374,14 @@ export const getStoreProductsWithTrialLimits = async (storeId: string, userProfi
         return dateB - dateA; // Newest first
       });
       
-      return sortedProducts.slice(0, 30);
+      const limitedProducts = sortedProducts.slice(0, 30);
+      console.log(`🔍 Returning limited products: ${limitedProducts.length}/30`);
+      return limitedProducts;
+    } else {
+      console.log('✅ User IS premium - returning all products');
     }
     
+    console.log(`🔍 Returning all products: ${allProducts.length}`);
     return allProducts;
   } catch (error) {
     console.error('Error fetching store products with trial limits:', error);
