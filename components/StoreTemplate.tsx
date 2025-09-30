@@ -134,7 +134,7 @@ export default function StoreTemplate({ store, products, slides, categories, ini
       );
     }
     
-    // Default: show all products
+    // Default: show all products including sponsored ones
     return products;
   };
 
@@ -576,10 +576,10 @@ export default function StoreTemplate({ store, products, slides, categories, ini
           )}
 
           {/* Categories */}
-          {store.showCategories !== false && categories.length > 0 && (
+          {store.showCategories !== false && categories.length > 1 && (
             <section className="pt-4 sm:pt-6 overflow-x-auto category-scroller">
               <h2 className="sr-only">Product Categories</h2>
-              <div className="flex space-x-1 sm:space-x-[5px] px-2 sm:px-4 pb-2">
+              <div className="flex space-x-2 sm:space-x-3 px-3 sm:px-4 pb-3">
                 {categories.map((category) => {
                   return (
                     <div
@@ -633,7 +633,7 @@ export default function StoreTemplate({ store, products, slides, categories, ini
                         )}
                       </div>
                       <span 
-                        className="text-[0.7rem] sm:text-[0.8rem] font-semibold mt-1 whitespace-nowrap max-w-[4rem] sm:max-w-none truncate"
+                        className="text-[0.7rem] sm:text-[0.8rem] font-semibold mt-2 whitespace-nowrap max-w-[4rem] sm:max-w-[5rem] truncate"
                         style={{ 
                           color: '#000000',
                           fontFamily: store.customization?.bodyFontFamily || store.customization?.fontFamily || 'inherit'
@@ -729,9 +729,9 @@ export default function StoreTemplate({ store, products, slides, categories, ini
                       />
                     )}
                   </div>
-                  <div className="p-1 sm:p-[5px]">
+                  <div className="p-1 sm:p-[5px] min-h-[3.5rem] sm:min-h-[4rem] flex flex-col justify-between">
                     <h3 
-                      className="font-semibold line-clamp-2 text-[0.7rem] sm:text-[0.8rem] mb-1 sm:mb-[5px] min-h-[2rem] sm:min-h-[2.4rem]"
+                      className="font-semibold line-clamp-2 text-[0.7rem] sm:text-[0.8rem] mb-1 sm:mb-[5px] flex-1"
                       style={{ 
                         color: store.customization?.headingTextColor || '#1f2937',
                         fontFamily: store.customization?.headingFontFamily || store.customization?.bodyFontFamily || store.customization?.fontFamily || 'inherit'
@@ -740,7 +740,7 @@ export default function StoreTemplate({ store, products, slides, categories, ini
                       {product.title}
                     </h3>
                     {store.displayPriceOnProducts !== false && (
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between mt-auto">
                         <span 
                           className="font-bold text-[0.7rem] sm:text-[0.8rem]"
                           style={{ 
@@ -843,9 +843,9 @@ export default function StoreTemplate({ store, products, slides, categories, ini
                         />
                       )}
                     </div>
-                    <div className="p-1 sm:p-[5px]">
+                    <div className="p-1 sm:p-[5px] min-h-[3.5rem] sm:min-h-[4rem] flex flex-col justify-between">
                       <h3 
-                        className="font-semibold line-clamp-2 text-[0.7rem] sm:text-[0.8rem] mb-1 sm:mb-[5px] min-h-[2rem] sm:min-h-[2.4rem]"
+                        className="font-semibold line-clamp-2 text-[0.7rem] sm:text-[0.8rem] mb-1 sm:mb-[5px] flex-1"
                         style={{ 
                           color: store.customization?.headingTextColor || '#1f2937',
                           fontFamily: store.customization?.headingFontFamily || store.customization?.bodyFontFamily || store.customization?.fontFamily || 'inherit'
@@ -854,7 +854,7 @@ export default function StoreTemplate({ store, products, slides, categories, ini
                         {product.title}
                       </h3>
                       {store.displayPriceOnProducts !== false && (
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between mt-auto">
                           <span 
                             className="font-bold text-[0.7rem] sm:text-[0.8rem]"
                             style={{ 
@@ -1046,12 +1046,12 @@ export default function StoreTemplate({ store, products, slides, categories, ini
         
         @media (max-width: 640px) {
           .category-scroller {
-            padding-left: 0.5rem;
-            padding-right: 0.5rem;
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
           }
           
           .grid {
-            gap: 0.25rem;
+            gap: 0.5rem;
           }
           
           .prose {
