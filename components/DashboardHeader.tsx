@@ -258,6 +258,7 @@ export default function DashboardHeader({ isSidebarOpen, toggleSidebar }: Dashbo
                       )}
                       {userProfile && isPremium(userProfile) && !isOnTrial(userProfile) && (
                         <span className="inline-flex items-center px-1.5 sm:px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 mt-1">
+                          <Crown className="w-3 h-3 mr-1" />
                           Premium
                         </span>
                       )}

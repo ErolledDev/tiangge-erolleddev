@@ -524,41 +524,35 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
             {mode === 'add' && !isPremium(userProfile) && (
               <div className="w-full sm:flex-1 sm:mr-4 order-1 sm:order-none">
                 <div className={`p-2 sm:p-3 rounded-lg border ${
-                  isAtProductLimit 
-                    ? 'bg-red-50 border-red-200' 
-                    : currentProductCount >= 25 
-                      ? 'bg-yellow-50 border-yellow-200' 
+                  isAtProductLimit
+                    ? 'bg-red-50 border-red-200'
+                    : currentProductCount >= 25
+                      ? 'bg-yellow-50 border-yellow-200'
                       : 'bg-blue-50 border-blue-200'
                 }`}>
                   <p className={`text-xs sm:text-sm font-medium ${
-                    isAtProductLimit 
-                      ? 'text-red-800' 
-                      : currentProductCount >= 25 
-                        ? 'text-yellow-800' 
+                    isAtProductLimit
+                      ? 'text-red-800'
+                      : currentProductCount >= 25
+                        ? 'text-yellow-800'
                         : 'text-blue-800'
                   }`}>
-                    {isAtProductLimit 
-                      ? (hasTrialExpired(userProfile) 
-                          ? '⚠️ Trial Expired - Product Limit Reached' 
-                          : '⚠️ Product Limit Reached')
-                      : currentProductCount >= 25 
-                        ? '⚠️ Approaching Product Limit' 
-                        : (isOnTrial(userProfile) 
-                            ? `🎉 Trial Active - ${getTrialDaysRemaining(userProfile)} days left` 
-                            : '📦 Product Count')
+                    {isAtProductLimit
+                      ? '⚠️ Product Limit Reached'
+                      : currentProductCount >= 25
+                        ? '⚠️ Approaching Product Limit'
+                        : '📦 Product Count'
                     }
                   </p>
                   <p className={`text-xs mt-1 ${
-                    isAtProductLimit 
-                      ? 'text-red-600' 
-                      : currentProductCount >= 25 
-                        ? 'text-yellow-600' 
+                    isAtProductLimit
+                      ? 'text-red-600'
+                      : currentProductCount >= 25
+                        ? 'text-yellow-600'
                         : 'text-blue-600'
                   }`}>
-                    {isAtProductLimit 
-                      ? (hasTrialExpired(userProfile)
-                          ? 'Your trial has expired. Only your latest 30 products are visible. Contact an administrator to upgrade.'
-                          : 'You have reached the 30-product limit. Upgrade to premium for unlimited products.')
+                    {isAtProductLimit
+                      ? 'You have reached the 30-product limit. Contact an administrator for enhanced access.'
                       : `${currentProductCount}/30 products used. ${30 - currentProductCount} remaining.`
                     }
                   </p>

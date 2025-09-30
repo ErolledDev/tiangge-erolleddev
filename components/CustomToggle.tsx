@@ -33,17 +33,11 @@ export default function CustomToggle({
     }
   };
 
-  // Generate dynamic title for premium features based on trial status
+  // Generate dynamic title for premium features
   const getDynamicTitle = () => {
     if (!isPremiumFeature || !userProfile) return title;
-    
-    if (isOnTrial(userProfile)) {
-      return `Trial Feature - ${getTrialDaysRemaining(userProfile)} days remaining`;
-    } else if (hasTrialExpired(userProfile)) {
-      return 'Trial expired - Contact admin to upgrade';
-    }
-    
-    return title || 'Premium Feature';
+
+    return title || 'Premium Access Required';
   };
   return (
     <div className="flex items-start justify-between py-3 sm:py-4">
@@ -53,17 +47,6 @@ export default function CustomToggle({
         </label>
         {description && (
           <p className="mt-1 text-xs sm:text-sm text-gray-500">{description}</p>
-        )}
-        {/* Trial Status for Premium Features */}
-        {isPremiumFeature && userProfile && (isOnTrial(userProfile) || hasTrialExpired(userProfile)) && (
-          <p className={`mt-1 text-xs font-medium ${
-            isOnTrial(userProfile) ? 'text-blue-600' : 'text-red-600'
-          }`}>
-            {isOnTrial(userProfile) 
-              ? `🎉 Trial: ${getTrialDaysRemaining(userProfile)} days left`
-              : '⚠️ Trial expired'
-            }
-          </p>
         )}
       </div>
       

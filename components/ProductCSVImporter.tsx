@@ -192,41 +192,6 @@ export default function ProductCSVImporter() {
   return (
     <PremiumFeatureGate feature="csv_import" showUpgrade={false}>
     <div className="p-3 sm:p-4 lg:p-6">
-      {/* Trial Status Warning */}
-      {userProfile && (isOnTrial(userProfile) || hasTrialExpired(userProfile)) && (
-        <div className={`mb-4 sm:mb-6 p-3 sm:p-4 rounded-lg border ${
-          isOnTrial(userProfile) 
-            ? 'bg-blue-50 border-blue-200' 
-            : 'bg-red-50 border-red-200'
-        }`}>
-          <div className="flex items-start space-x-2 sm:space-x-3">
-            {isOnTrial(userProfile) ? (
-              <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600 mt-0.5 flex-shrink-0" />
-            ) : (
-              <Crown className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 mt-0.5 flex-shrink-0" />
-            )}
-            <div className="flex-1">
-              <h4 className={`font-medium mb-1 text-sm sm:text-base ${
-                isOnTrial(userProfile) ? 'text-blue-900' : 'text-red-900'
-              }`}>
-                {isOnTrial(userProfile) 
-                  ? `🎉 Trial Active - ${getTrialDaysRemaining(userProfile)} Days Remaining` 
-                  : '⚠️ Trial Expired'
-                }
-              </h4>
-              <p className={`text-xs sm:text-sm ${
-                isOnTrial(userProfile) ? 'text-blue-800' : 'text-red-800'
-              }`}>
-                {isOnTrial(userProfile) 
-                  ? `You can import unlimited products during your trial period. After ${getTrialDaysRemaining(userProfile)} days, you'll be limited to 30 products total.`
-                  : 'Your trial has expired. CSV import is no longer available. Contact an administrator to upgrade to premium.'
-                }
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 gap-3 sm:gap-0">
         <div className="flex items-center space-x-2 sm:space-x-3">
           <div className="p-1.5 sm:p-2 bg-secondary-100 rounded-lg">
