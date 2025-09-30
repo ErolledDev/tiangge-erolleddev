@@ -11,19 +11,14 @@ import {
   getAllUserProfiles,
   isOnTrial,
   hasTrialExpired,
-  getTrialDaysRemaining
+  getTrialDaysRemaining,
+  migratePremiumUsers,
+  fixUserPremiumStatus,
+  updateUserTrialStatus,
+  isOriginalTrialWindowValid
 } from '@/lib/auth';
 import { getAllStoreSlugs } from '@/lib/store';
-import {
-  Users,
-  Search,
-  Shield,
-  Crown,
-  RefreshCw,
-  ExternalLink,
-  ArrowLeft,
-  Clock
-} from 'lucide-react';
+import { Users, Search, Shield, Crown, RefreshCw, ExternalLink, ArrowLeft, Clock, CircleStop as StopCircle, RotateCcw } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
 export default function UserManagementPage() {
@@ -38,6 +33,7 @@ export default function UserManagementPage() {
   const [allUsers, setAllUsers] = useState<UserProfile[]>([]);
   const [allUsersLoading, setAllUsersLoading] = useState(false);
   const [updatingUserId, setUpdatingUserId] = useState<string | null>(null);
+  const [isMigrating, setIsMigrating] = useState(false);
 
   // Load all users for admin
   useEffect(() => {
@@ -137,6 +133,107 @@ export default function UserManagementPage() {
     }
   };
 
+  const handleMigratePremiumUsers = async () => {
+    const confirmed = window.confirm(
+      'This will migrate all existing premium users to fix any trial display issues. Continue?'
+    );
+    
+    if (!confirmed) return;
+    
+    setIsMigrating(true);
+    try {
+      await migratePremiumUsers();
+      showSuccess('Premium users migrated successfully!');
+      
+      // Refresh the users list
+      const [users, storeSlugsMap] = await Promise.all([
+        getAllUserProfiles(),
+        getAllStoreSlugs()
+      ]);
+      
+      const enrichedUsers = users.map(user => ({
+        ...user,
+        storeSlug: storeSlugsMap.get(user.uid) || undefined
+      }));
+      
+      setAllUsers(enrichedUsers);
+    } catch (error) {
+      console.error('Error migrating premium users:', error);
+      showError('Failed to migrate premium users');
+    } finally {
+      setIsMigrating(false);
+    }
+  };
+  
+  const handleFixUserPremiumStatus = async (userId: string) => {
+    setUpdatingUserId(userId);
+    try {
+      await fixUserPremiumStatus(userId);
+      showSuccess('User premium status fixed!');
+      
+      // Refresh the users list
+      const [users, storeSlugsMap] = await Promise.all([
+        getAllUserProfiles(),
+        getAllStoreSlugs()
+      ]);
+      
+      const enrichedUsers = users.map(user => ({
+        ...user,
+        storeSlug: storeSlugsMap.get(user.uid) || undefined
+      }));
+      
+      setAllUsers(enrichedUsers);
+      
+      // Update found user if it's the same user
+      if (foundUser && foundUser.uid === userId) {
+        const updatedUser = enrichedUsers.find(u => u.uid === userId);
+        if (updatedUser) {
+          setFoundUser(updatedUser);
+        }
+      }
+    } catch (error) {
+      console.error('Error fixing user premium status:', error);
+      showError('Failed to fix user premium status');
+    } finally {
+      setUpdatingUserId(null);
+    }
+  };
+
+  const handleUpdateTrialStatus = async (userId: string, action: 'end' | 'reset') => {
+    setUpdatingUserId(userId);
+    try {
+      await updateUserTrialStatus(userId, action);
+      
+      const actionText = action === 'end' ? 'ended' : 'reset';
+      showSuccess(`User trial ${actionText} successfully!`);
+      
+      // Refresh the users list
+      const [users, storeSlugsMap] = await Promise.all([
+        getAllUserProfiles(),
+        getAllStoreSlugs()
+      ]);
+      
+      const enrichedUsers = users.map(user => ({
+        ...user,
+        storeSlug: storeSlugsMap.get(user.uid) || undefined
+      }));
+      
+      setAllUsers(enrichedUsers);
+      
+      // Update found user if it's the same user
+      if (foundUser && foundUser.uid === userId) {
+        const updatedUser = enrichedUsers.find(u => u.uid === userId);
+        if (updatedUser) {
+          setFoundUser(updatedUser);
+        }
+      }
+    } catch (error) {
+      console.error(`Error ${action}ing user trial:`, error);
+      showError(error instanceof Error ? error.message : `Failed to ${action} user trial`);
+    } finally {
+      setUpdatingUserId(null);
+    }
+  };
   return (
     <AdminRoute>
       <div className="space-y-6 md:space-y-8">
@@ -188,6 +285,28 @@ export default function UserManagementPage() {
             {/* Found User Display */}
             {foundUser && (
               <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-gray-50 rounded-lg border border-gray-200">
+                {/* Fix Needed Warning */}
+                {foundUser.isPremium && foundUser.isPremiumAdminSet === undefined && (
+                  <div className="mb-4 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-yellow-600">🔧</span>
+                      <div>
+                        <p className="text-sm font-medium text-yellow-800">Premium Status Needs Migration</p>
+                        <p className="text-xs text-yellow-700">
+                          This user has premium access but is missing the isPremiumAdminSet field. Click "Fix Premium Status" to resolve.
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => handleFixUserPremiumStatus(foundUser.uid)}
+                        disabled={updatingUserId === foundUser.uid}
+                        className="px-3 py-1 text-xs bg-yellow-600 text-white rounded hover:bg-yellow-700 disabled:opacity-50 min-h-[32px]"
+                      >
+                        {updatingUserId === foundUser.uid ? 'Fixing...' : 'Fix Now'}
+                      </button>
+                    </div>
+                  </div>
+                )}
+                
                 <h3 className="font-medium text-gray-900 mb-3 text-sm sm:text-base">User Found</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div>
@@ -273,6 +392,21 @@ export default function UserManagementPage() {
                 <h2 className="text-lg sm:text-xl font-semibold text-gray-900">All Users ({allUsers.length})</h2>
               </div>
               <div className="flex items-center space-x-2 sm:space-x-3">
+                <button
+                  onClick={handleMigratePremiumUsers}
+                  disabled={isMigrating}
+                  className="flex items-center justify-center px-3 py-1.5 text-xs sm:text-sm bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 disabled:opacity-50 transition-colors min-h-[44px]"
+                  title="Fix all premium users with trial display issues"
+                >
+                  {isMigrating ? (
+                    <>
+                      <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-b-2 border-white mr-1"></div>
+                      Migrating...
+                    </>
+                  ) : (
+                    'Fix Premium Users'
+                  )}
+                </button>
                 <button
                   onClick={() => {
                     setAllUsersLoading(true);
@@ -396,16 +530,16 @@ export default function UserManagementPage() {
                             <div className="flex flex-col space-y-1">
                               {/* Premium Status Badge */}
                               <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                user.isPremiumAdminSet === true
+                                user.isPremiumAdminSet === true || (user.isPremium && user.isPremiumAdminSet === undefined)
                                   ? 'bg-yellow-100 text-yellow-800'
                                   : isOnTrial(user)
                                     ? 'bg-blue-100 text-blue-800'
                                     : 'bg-gray-100 text-gray-800'
                               }`}>
-                                {user.isPremiumAdminSet === true ? (
+                                {user.isPremiumAdminSet === true || (user.isPremium && user.isPremiumAdminSet === undefined) ? (
                                   <>
                                     <Crown className="w-3 h-3 mr-1" />
-                                    Premium
+                                    {user.isPremiumAdminSet === undefined ? 'Premium (Fix Needed)' : 'Premium'}
                                   </>
                                 ) : isOnTrial(user) ? (
                                   <>
@@ -417,56 +551,121 @@ export default function UserManagementPage() {
                                 )}
                               </span>
                               
-                              {/* Trial Days Remaining */}
-                              {isOnTrial(user) && (
+                              {/* Trial Days Remaining - only show if not admin-set premium */}
+                              {isOnTrial(user) && user.isPremiumAdminSet !== true && (
                                 <span className="text-xs text-blue-600 font-medium">
                                   {getTrialDaysRemaining(user)} days left
                                 </span>
                               )}
                               
-                              {/* Trial Expired Notice */}
-                              {hasTrialExpired(user) && !user.isPremiumAdminSet && (
+                              {/* Trial Expired Notice - only show if not admin-set premium */}
+                              {hasTrialExpired(user) && user.isPremiumAdminSet !== true && (
                                 <span className="text-xs text-red-600 font-medium">
                                   Trial expired
+                                </span>
+                              )}
+                              
+                              {/* Fix Needed Notice */}
+                              {user.isPremium && user.isPremiumAdminSet === undefined && (
+                                <span className="text-xs text-yellow-600 font-medium">
+                                  🔧 Needs migration
                                 </span>
                               )}
                             </div>
                           </td>
                           <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-sm font-medium">
-                            <div className="flex flex-col sm:flex-row space-y-1 sm:space-y-0 sm:space-x-2">
-                              <button
-                                onClick={() => handleUpdateUserRole(user.uid, user.role === 'admin' ? 'user' : 'admin')}
-                                disabled={updatingUserId === user.uid}
-                                className={`inline-flex items-center justify-center px-2 sm:px-3 py-1.5 border shadow-sm text-xs font-medium rounded transition-colors min-h-[36px] min-w-[36px] ${
-                                  user.role === 'admin'
-                                    ? 'border-gray-300 text-gray-700 bg-white hover:bg-gray-50'
-                                    : 'border-red-300 text-red-700 bg-red-50 hover:bg-red-100'
-                                } disabled:opacity-50 disabled:cursor-not-allowed`}
-                                title={user.role === 'admin' ? 'Remove Admin' : 'Make Admin'}
-                              >
-                                {updatingUserId === user.uid ? (
-                                  <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-b-2 border-current"></div>
-                                ) : (
-                                  <Shield className="w-3 h-3 sm:w-4 sm:h-4" />
-                                )}
-                              </button>
+                            <div className="flex flex-col space-y-1">
+                              {/* Fix Premium Status Button - only show for premium users with trial issues */}
+                              {user.isPremium && user.isPremiumAdminSet === undefined && (
+                                <div className="flex space-x-1">
+                                  <button
+                                    onClick={() => handleFixUserPremiumStatus(user.uid)}
+                                    disabled={updatingUserId === user.uid}
+                                    className="inline-flex items-center justify-center px-2 sm:px-3 py-1.5 border border-yellow-300 shadow-sm text-xs font-medium rounded text-yellow-700 bg-yellow-50 hover:bg-yellow-100 transition-colors min-h-[36px] min-w-[36px]"
+                                    title="Fix premium status (remove trial display)"
+                                  >
+                                    {updatingUserId === user.uid ? (
+                                      <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-b-2 border-current"></div>
+                                    ) : (
+                                      '🔧'
+                                    )}
+                                  </button>
+                                </div>
+                              )}
                               
-                              <button
-                                onClick={() => handleUpdateUserPremium(user.uid, !user.isPremium)}
-                                disabled={updatingUserId === user.uid}
-                                className={`inline-flex items-center justify-center px-2 sm:px-3 py-1.5 border shadow-sm text-xs font-medium rounded transition-colors min-h-[36px] min-w-[36px] ${
-                                  user.isPremium
-                                    ? 'border-gray-300 text-gray-700 bg-white hover:bg-gray-50'
-                                    : 'border-yellow-300 text-yellow-700 bg-yellow-50 hover:bg-yellow-100'
-                                } disabled:opacity-50 disabled:cursor-not-allowed`}
-                                title={user.isPremium ? 'Revoke Premium' : 'Grant Premium'}
-                              >
-                                {updatingUserId === user.uid ? (
-                                  <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-b-2 border-current"></div>
-                                ) : (
-                                  <Crown className="w-3 h-3 sm:w-4 sm:h-4" />
-                                )}
-                              </button>
+                              {/* Main Action Buttons Row */}
+                              <div className="flex space-x-1">
+                                <button
+                                  onClick={() => handleFixUserPremiumStatus(user.uid)}
+                                  disabled={updatingUserId === user.uid}
+                                  className={`inline-flex items-center justify-center px-2 sm:px-3 py-1.5 border shadow-sm text-xs font-medium rounded transition-colors min-h-[36px] min-w-[36px] ${
+                                    user.role === 'admin'
+                                      ? 'border-gray-300 text-gray-700 bg-white hover:bg-gray-50'
+                                      : 'border-red-300 text-red-700 bg-red-50 hover:bg-red-100'
+                                  } disabled:opacity-50 disabled:cursor-not-allowed`}
+                                  title={user.role === 'admin' ? 'Remove Admin' : 'Make Admin'}
+                                >
+                                  {updatingUserId === user.uid ? (
+                                    <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-b-2 border-current"></div>
+                                  ) : (
+                                    <Shield className="w-3 h-3 sm:w-4 sm:h-4" />
+                                  )}
+                                </button>
+                                
+                                <button
+                                  onClick={() => handleUpdateUserPremium(user.uid, !user.isPremium)}
+                                  disabled={updatingUserId === user.uid}
+                                  className={`inline-flex items-center justify-center px-2 sm:px-3 py-1.5 border shadow-sm text-xs font-medium rounded transition-colors min-h-[36px] min-w-[36px] ${
+                                    user.isPremium
+                                      ? 'border-gray-300 text-gray-700 bg-white hover:bg-gray-50'
+                                      : 'border-yellow-300 text-yellow-700 bg-yellow-50 hover:bg-yellow-100'
+                                  } disabled:opacity-50 disabled:cursor-not-allowed`}
+                                  title={user.isPremium ? 'Revoke Premium' : 'Grant Premium'}
+                                >
+                                  {updatingUserId === user.uid ? (
+                                    <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-b-2 border-current"></div>
+                                  ) : (
+                                    <Crown className="w-3 h-3 sm:w-4 sm:h-4" />
+                                  )}
+                                </button>
+                              </div>
+                              
+                              {/* Trial Management Buttons Row */}
+                              {(isOnTrial(user) || (isOriginalTrialWindowValid(user) && user.isPremiumAdminSet !== true)) && (
+                                <div className="flex space-x-1">
+                                  {/* End Trial Button - only show if user is on trial */}
+                                  {isOnTrial(user) && (
+                                    <button
+                                      onClick={() => handleUpdateTrialStatus(user.uid, 'end')}
+                                      disabled={updatingUserId === user.uid}
+                                      className="inline-flex items-center justify-center px-2 sm:px-3 py-1.5 border border-red-300 shadow-sm text-xs font-medium rounded text-red-700 bg-red-50 hover:bg-red-100 transition-colors min-h-[36px] min-w-[36px] disabled:opacity-50 disabled:cursor-not-allowed"
+                                      title="End trial immediately"
+                                    >
+                                      {updatingUserId === user.uid ? (
+                                        <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-b-2 border-current"></div>
+                                      ) : (
+                                        <StopCircle className="w-3 h-3 sm:w-4 sm:h-4" />
+                                      )}
+                                    </button>
+                                  )}
+                                  
+                                  {/* Reset Trial Button - only show if original trial window is valid and not permanent premium */}
+                                  {isOriginalTrialWindowValid(user) && user.isPremiumAdminSet !== true && (
+                                    <button
+                                      onClick={() => handleUpdateTrialStatus(user.uid, 'reset')}
+                                      disabled={updatingUserId === user.uid}
+                                      className="inline-flex items-center justify-center px-2 sm:px-3 py-1.5 border border-blue-300 shadow-sm text-xs font-medium rounded text-blue-700 bg-blue-50 hover:bg-blue-100 transition-colors min-h-[36px] min-w-[36px] disabled:opacity-50 disabled:cursor-not-allowed"
+                                      title="Reset trial for 7 more days"
+                                    >
+                                      {updatingUserId === user.uid ? (
+                                        <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-b-2 border-current"></div>
+                                      ) : (
+                                        <RotateCcw className="w-3 h-3 sm:w-4 sm:h-4" />
+                                      )}
+                                    </button>
+                                  )}
+                                </div>
+                              )}
                             </div>
                           </td>
                         </tr>

@@ -364,3 +364,149 @@ export const canAccessFeature = (userProfile: UserProfile | null, feature: 'anal
       return false;
   }
 };
+
+// Migration function to fix existing premium users missing isPremiumAdminSet field
+export const migratePremiumUsers = async (): Promise<void> => {
+  try {
+    if (!db) throw new Error('Firebase not initialized');
+    
+    console.log('Starting migration of premium users...');
+    
+    // Get all users
+    const usersRef = collection(db, 'users');
+    const querySnapshot = await getDocs(usersRef);
+    
+    const batch = [];
+    let migratedCount = 0;
+    
+    for (const userDoc of querySnapshot.docs) {
+      const userData = userDoc.data();
+      
+      // Check if user has isPremium: true but missing isPremiumAdminSet
+      if (userData.isPremium === true && userData.isPremiumAdminSet === undefined) {
+        console.log(`Migrating user: ${userData.email} (${userDoc.id})`);
+        
+        const userRef = doc(db, 'users', userDoc.id);
+        const updateData = {
+          isPremiumAdminSet: true,
+          trialEndDate: null,
+          updatedAt: new Date()
+        };
+        
+        batch.push(updateDoc(userRef, updateData));
+        migratedCount++;
+      }
+    }
+    
+    // Execute all updates
+    if (batch.length > 0) {
+      await Promise.all(batch);
+      console.log(`Successfully migrated ${migratedCount} premium users`);
+    } else {
+      console.log('No users needed migration');
+    }
+    
+  } catch (error) {
+    console.error('Error migrating premium users:', error);
+    throw error;
+  }
+};
+
+// Helper function to fix a specific user's premium status
+export const fixUserPremiumStatus = async (userId: string): Promise<void> => {
+  try {
+    if (!db) throw new Error('Firebase not initialized');
+    
+    const userRef = doc(db, 'users', userId);
+    const userDoc = await getDoc(userRef);
+    
+    if (!userDoc.exists()) {
+      throw new Error('User not found');
+    }
+    
+    const userData = userDoc.data();
+    
+    // If user has isPremium: true but missing isPremiumAdminSet, fix it
+    if (userData.isPremium === true && userData.isPremiumAdminSet === undefined) {
+      await updateDoc(userRef, {
+        isPremiumAdminSet: true,
+        trialEndDate: null,
+        updatedAt: new Date()
+      });
+      
+      console.log(`Fixed premium status for user: ${userData.email}`);
+    }
+  } catch (error) {
+    console.error('Error fixing user premium status:', error);
+    throw error;
+  }
+};
+
+// Helper function to check if user's original trial window is still valid
+export const isOriginalTrialWindowValid = (userProfile: UserProfile | null): boolean => {
+  if (!userProfile || !userProfile.createdAt) return false;
+  
+  const createdAt = userProfile.createdAt instanceof Date ? userProfile.createdAt : new Date(userProfile.createdAt);
+  const originalTrialEnd = new Date(createdAt);
+  originalTrialEnd.setDate(originalTrialEnd.getDate() + 7);
+  
+  return originalTrialEnd.getTime() > Date.now();
+};
+
+// Function to manage user trial status (end or reset trial)
+export const updateUserTrialStatus = async (userId: string, action: 'end' | 'reset'): Promise<void> => {
+  try {
+    if (!db) throw new Error('Firebase not initialized');
+    
+    // Use getUserProfile to properly convert Firestore timestamps to Date objects
+    const userData = await getUserProfile(userId);
+    
+    if (!userData) {
+      throw new Error('User not found');
+    }
+    
+    if (action === 'end') {
+      // End the user's trial immediately
+      if (!isOnTrial(userData)) {
+        throw new Error('User is not currently on trial');
+      }
+      
+      const userRef = doc(db, 'users', userId);
+      await updateDoc(userRef, {
+        trialEndDate: new Date(0), // Set to past date to end trial
+        isPremium: false,
+        isPremiumAdminSet: false,
+        updatedAt: new Date()
+      });
+      
+    } else if (action === 'reset') {
+      // Reset the user's trial for another 7 days
+      
+      // Check if user has permanent premium (cannot reset trial)
+      if (userData.isPremiumAdminSet === true) {
+        throw new Error('Cannot reset trial for users with permanent premium access');
+      }
+      
+      // Check if original 7-day window has passed
+      if (!isOriginalTrialWindowValid(userData)) {
+        throw new Error('Cannot reset trial: Original 7-day trial window has expired');
+      }
+      
+      // Calculate new trial end date (7 days from now)
+      const newTrialEndDate = new Date();
+      newTrialEndDate.setDate(newTrialEndDate.getDate() + 7);
+      
+      const userRef = doc(db, 'users', userId);
+      await updateDoc(userRef, {
+        trialEndDate: newTrialEndDate,
+        isPremium: true,
+        isPremiumAdminSet: false, // Ensure this is a trial, not permanent premium
+        updatedAt: new Date()
+      });
+    }
+    
+  } catch (error) {
+    console.error('Error updating user trial status:', error);
+    throw error;
+  }
+};

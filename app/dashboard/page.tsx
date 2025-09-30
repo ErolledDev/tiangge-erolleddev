@@ -145,7 +145,7 @@ export default function DashboardOverview() {
       </div>
 
       {/* Trial Status Banner */}
-      {userProfile && (isOnTrial(userProfile) || hasTrialExpired(userProfile)) && (
+      {userProfile && !userProfile.isPremiumAdminSet && (isOnTrial(userProfile) || hasTrialExpired(userProfile)) && (
         <div className="p-4 sm:p-6 lg:p-8">
           <div className={`rounded-lg p-4 sm:p-6 border ${
             isOnTrial(userProfile) 

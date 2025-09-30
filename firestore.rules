@@ -17,7 +17,7 @@ service cloud.firestore {
       // Admin can update specific fields (role, isPremium) for any user
       allow update: if request.auth != null && 
                     get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' &&
-                    request.resource.data.diff(resource.data).affectedKeys().hasOnly(['role', 'isPremium', 'updatedAt']);
+                    request.resource.data.diff(resource.data).affectedKeys().hasOnly(['role', 'isPremium', 'isPremiumAdminSet', 'trialEndDate', 'updatedAt']);
 
       // Stores subcollection: Public read, owner write/create/delete
       match /stores/{storeId} {
