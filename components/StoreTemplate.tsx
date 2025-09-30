@@ -687,53 +687,63 @@ export default function StoreTemplate({ store, products, slides, categories, ini
             )}
             
             <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-3">
-              {visibleProducts.map((product) => (
-                <div
-                  key={product.id}
-                  onClick={() => handleProductClickWithDetails(product)}
-                  className={`border-0 rounded-md shadow-lg overflow-hidden cursor-pointer hover:shadow-xl transition-shadow min-h-[44px] ${
-                    product.isSponsored 
-                      ? 'bg-yellow-50 ring-1 ring-yellow-200'
-                      : 'bg-white'
-                  }`}
-                >
-                  <div className="aspect-square overflow-hidden relative">
-                    {product.images && product.images[0] && (
-                      <Image
-                        src={product.images[0]}
-                        alt={product.title}
-                        width={200}
-                        height={200}
-                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                      />
-                    )}
-                  </div>
-                  <div className="p-1 sm:p-[5px] min-h-[3.5rem] sm:min-h-[4rem] flex flex-col justify-between">
-                    <h3 
-                      className="font-semibold line-clamp-2 text-[0.7rem] sm:text-[0.8rem] mb-1 sm:mb-[5px] flex-1 h-8 sm:h-10"
-                      style={{ 
-                        color: store.customization?.headingTextColor || '#1f2937',
-                        fontFamily: store.customization?.headingFontFamily || store.customization?.bodyFontFamily || store.customization?.fontFamily || 'inherit'
-                      }}
+              {visibleProducts.map((product) => {
+                const maxTitleLength = 35;
+                const truncatedTitle = product.title.length > maxTitleLength 
+                  ? product.title.slice(0, maxTitleLength - 3) + '...' 
+                  : product.title;
+
+                const showPrice = store.displayPriceOnProducts !== false;
+                return (
+                  <div
+                    key={product.id}
+                    onClick={() => handleProductClickWithDetails(product)}
+                    className={`border-0 rounded-md shadow-lg overflow-hidden cursor-pointer hover:shadow-xl transition-shadow min-h-[44px] ${
+                      product.isSponsored 
+                        ? 'bg-yellow-50 ring-1 ring-yellow-200'
+                        : 'bg-white'
+                    }`}
+                  >
+                    <div className="aspect-square overflow-hidden relative">
+                      {product.images && product.images[0] && (
+                        <Image
+                          src={product.images[0]}
+                          alt={product.title}
+                          width={200}
+                          height={200}
+                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                        />
+                      )}
+                    </div>
+                    <div 
+                      className={`p-1 sm:p-[5px] ${showPrice ? 'min-h-[3.5rem] sm:min-h-[4rem]' : 'min-h-[2.5rem] sm:min-h-[3rem]'} flex flex-col ${showPrice ? 'justify-between' : 'justify-start'}`}
                     >
-                      {product.title}
-                    </h3>
-                    {store.displayPriceOnProducts !== false && (
-                      <div className="flex items-center justify-between mt-auto">
-                        <span 
-                          className="font-bold text-[0.7rem] sm:text-[0.8rem]"
-                          style={{ 
-                            color: priceColor,
-                            fontFamily: store.customization?.bodyFontFamily || store.customization?.fontFamily || 'inherit'
-                          }}
-                        >
-                          {currencySymbol}{product.price}
-                        </span>
-                      </div>
-                    )}
+                      <h3 
+                        className={`font-semibold text-[0.7rem] sm:text-[0.8rem] mb-1 sm:mb-[5px] flex-1 ${showPrice ? 'h-8 sm:h-10' : 'h-auto'} overflow-hidden text-ellipsis whitespace-nowrap`}
+                        style={{ 
+                          color: store.customization?.headingTextColor || '#1f2937',
+                          fontFamily: store.customization?.headingFontFamily || store.customization?.bodyFontFamily || store.customization?.fontFamily || 'inherit'
+                        }}
+                      >
+                        {truncatedTitle}
+                      </h3>
+                      {showPrice && (
+                        <div className="flex items-center justify-between mt-auto">
+                          <span 
+                            className="font-bold text-[0.7rem] sm:text-[0.8rem]"
+                            style={{ 
+                              color: priceColor,
+                              fontFamily: store.customization?.bodyFontFamily || store.customization?.fontFamily || 'inherit'
+                            }}
+                          >
+                            {currencySymbol}{product.price}
+                          </span>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
             
             {/* Load More Button */}
@@ -924,13 +934,6 @@ export default function StoreTemplate({ store, products, slides, categories, ini
         .category-scroller {
           -ms-overflow-style: none;
           scrollbar-width: none;
-        }
-        .line-clamp-2 {
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-          text-overflow: ellipsis;
         }
         @keyframes pulse-animation {
           0%, 100% {
