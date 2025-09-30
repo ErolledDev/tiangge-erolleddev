@@ -331,7 +331,7 @@ export default function StoreTemplate({ store, products, slides, categories, ini
 
   return (
     <main 
-      className="min-h-screen w-full max-w-md mx-auto px-2 sm:px-0"
+      className="min-h-screen w-full"
       style={{
         fontFamily: store.customization?.bodyFontFamily || store.customization?.fontFamily || 'Inter, system-ui, -apple-system, sans-serif',
         color: store.customization?.bodyTextColor || '#374151',
@@ -347,7 +347,7 @@ export default function StoreTemplate({ store, products, slides, categories, ini
           background: 'transparent'
         }}
       >
-        <div className="relative z-10">
+        <div className="relative z-10 max-w-screen-lg mx-auto px-3 sm:px-4">
           {/* Header layout based on user preference */}
           {store.headerLayout === 'center' ? (
             <div className="px-3 sm:px-4 mb-3 sm:mb-4">
@@ -462,7 +462,7 @@ export default function StoreTemplate({ store, products, slides, categories, ini
       {/* Slides Section */}
       {store.slidesEnabled !== false && slides.length > 0 && (
         <section className="py-3 sm:py-6">
-          <div className="relative h-48 sm:h-64 md:h-80 lg:h-96 overflow-hidden shadow-lg mx-2 sm:mx-0 rounded-lg sm:rounded-none">
+          <div className="relative h-48 sm:h-64 md:h-80 lg:h-96 overflow-hidden shadow-lg rounded-lg sm:rounded-none max-w-screen-lg mx-auto px-3 sm:px-4">
             <div 
               className="flex transition-transform duration-500 ease-in-out w-full h-full"
               style={{ transform: `translateX(-${currentSlide * 100}%)` }}
@@ -535,7 +535,7 @@ export default function StoreTemplate({ store, products, slides, categories, ini
 
       {/* Categories */}
       {store.showCategories !== false && categories.length > 0 && (
-        <section className="container mx-auto px-3 sm:px-4 pt-4 sm:pt-6 overflow-x-auto category-scroller">
+        <section className="max-w-screen-lg mx-auto px-3 sm:px-4 pt-4 sm:pt-6 overflow-x-auto category-scroller">
           <h2 className="sr-only">Product Categories</h2>
           <div className="flex space-x-1 sm:space-x-[5px] px-2 sm:px-4 pb-2">
             {categories.map((category) => {
@@ -607,7 +607,7 @@ export default function StoreTemplate({ store, products, slides, categories, ini
       )}
 
       {/* All Products Section */}
-      <section className="container mx-auto px-3 sm:px-4 py-4 sm:py-6" id="products" aria-labelledby="products-heading">
+      <section className="max-w-screen-lg mx-auto px-3 sm:px-4 py-4 sm:py-6" id="products" aria-labelledby="products-heading">
         <div className="mb-4 sm:mb-6">
           <h2
             id="products-heading"
@@ -665,7 +665,7 @@ export default function StoreTemplate({ store, products, slides, categories, ini
           </div>
         )}
         
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1 sm:gap-[5px]">
+        <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-3">
           {visibleProducts.map((product) => (
             <div
               key={product.id}
@@ -770,7 +770,7 @@ export default function StoreTemplate({ store, products, slides, categories, ini
 
       {/* All Products Section - Only show when category filtering is active (not for search) */}
       {store.showCategories !== false && selectedCategory !== 'all' && !searchTerm && (
-        <section className="container mx-auto px-3 sm:px-4 pt-4 sm:pt-6 pb-4 sm:pb-6" id="all-products">
+        <section className="max-w-screen-lg mx-auto px-3 sm:px-4 pt-4 sm:pt-6 pb-4 sm:pb-6" id="all-products">
           <div className="mb-4 sm:mb-6">
             <h2
               className="text-[0.8rem] sm:text-[0.9rem] font-bold mb-2"
@@ -783,7 +783,7 @@ export default function StoreTemplate({ store, products, slides, categories, ini
             </h2>
           </div>
           
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1 sm:gap-[5px]">
+          <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-3">
             {products.filter(p => !p.isSponsored).slice(0, visibleAllProductsCount).map((product) => (
               <div
                 key={`all-${product.id}`}
@@ -849,7 +849,7 @@ export default function StoreTemplate({ store, products, slides, categories, ini
 
       {/* Custom HTML Section */}
       {store.customHtml && store.customHtml.trim() && (
-        <section className="container mx-auto px-3 sm:px-4 py-4 sm:py-6">
+        <section className="max-w-screen-lg mx-auto px-3 sm:px-4 py-4 sm:py-6">
           <h2 className="sr-only">Custom Content</h2>
           <div 
             dangerouslySetInnerHTML={{ __html: store.customHtml }}
