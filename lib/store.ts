@@ -24,7 +24,7 @@ import {
 } from 'firebase/storage';
 import { fromBlob } from 'image-resize-compress';
 
-import { isPremium, getUserProfile, UserProfile } from './auth';
+import { isPremium, getUserProfile, UserProfile, isOnTrial, hasTrialExpired } from './auth';
 
 // Interfaces
 export interface Store {
