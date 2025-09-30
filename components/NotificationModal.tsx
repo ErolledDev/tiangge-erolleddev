@@ -60,19 +60,11 @@ export default function NotificationModal({
     };
   }, [isOpen, onClose]);
 
-  // Handle click outside modal to close
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
-
   if (!isOpen || !notification) return null;
 
   return (
     <div 
       className="fixed inset-0 bg-black bg-opacity-50 z-[9999] flex items-center justify-center p-4"
-      onClick={handleBackdropClick}
     >
       <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden relative">
         {/* Close Button */}
