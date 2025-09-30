@@ -688,11 +688,6 @@ export default function StoreTemplate({ store, products, slides, categories, ini
             
             <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-3">
               {visibleProducts.map((product) => {
-                const maxTitleLength = 35;
-                const truncatedTitle = product.title.length > maxTitleLength 
-                  ? product.title.slice(0, maxTitleLength - 3) + '...' 
-                  : product.title;
-
                 const showPrice = store.displayPriceOnProducts !== false;
                 return (
                   <div
@@ -719,13 +714,13 @@ export default function StoreTemplate({ store, products, slides, categories, ini
                       className={`p-1 sm:p-[5px] ${showPrice ? 'min-h-[3.5rem] sm:min-h-[4rem]' : 'min-h-[2.5rem] sm:min-h-[3rem]'} flex flex-col ${showPrice ? 'justify-between' : 'justify-start'}`}
                     >
                       <h3 
-                        className={`font-semibold text-[0.7rem] sm:text-[0.8rem] mb-1 sm:mb-[5px] flex-1 ${showPrice ? 'h-8 sm:h-10' : 'h-auto'} overflow-hidden text-ellipsis whitespace-nowrap`}
+                        className="font-semibold line-clamp-2 text-[0.7rem] sm:text-[0.8rem] mb-1 sm:mb-[5px]"
                         style={{ 
                           color: store.customization?.headingTextColor || '#1f2937',
                           fontFamily: store.customization?.headingFontFamily || store.customization?.bodyFontFamily || store.customization?.fontFamily || 'inherit'
                         }}
                       >
-                        {truncatedTitle}
+                        {product.title}
                       </h3>
                       {showPrice && (
                         <div className="flex items-center justify-between mt-auto">
