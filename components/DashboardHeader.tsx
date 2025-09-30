@@ -153,7 +153,7 @@ export default function DashboardHeader({ isSidebarOpen, toggleSidebar }: Dashbo
 
             {/* Notifications Dropdown */}
             {isNotificationMenuOpen && (
-              <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 max-h-[80vh] overflow-hidden">
+              <div className="absolute right-0 mt-2 w-72 sm:w-80 md:w-96 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 max-h-[80vh] overflow-hidden">
                 {/* Header */}
                 <div className="px-4 py-3 border-b border-gray-100">
                   <div className="flex items-center justify-between">
@@ -167,7 +167,7 @@ export default function DashboardHeader({ isSidebarOpen, toggleSidebar }: Dashbo
                 </div>
 
                 {/* Notifications List */}
-                <div className="max-h-96 overflow-y-auto">
+                <div className="max-h-80 sm:max-h-96 overflow-y-auto">
                   {notificationsLoading ? (
                     <div className="px-4 py-6 text-center">
                       <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-600 mx-auto"></div>
@@ -187,7 +187,7 @@ export default function DashboardHeader({ isSidebarOpen, toggleSidebar }: Dashbo
                         >
                           <div className="flex items-start justify-between">
                             <div className="flex-1 min-w-0">
-                              <p className={`text-sm font-medium truncate ${
+                              <p className={`text-xs sm:text-sm font-medium line-clamp-2 ${
                                 notification.isRead ? 'text-gray-700' : 'text-gray-900'
                               }`}>
                                 {notification.title}
@@ -237,7 +237,7 @@ export default function DashboardHeader({ isSidebarOpen, toggleSidebar }: Dashbo
 
             {/* User Dropdown Menu */}
             {isUserMenuOpen && (
-              <div className="absolute right-0 mt-2 w-72 sm:w-80 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 max-h-[80vh] overflow-y-auto">
+              <div className="absolute right-0 mt-2 w-64 sm:w-72 md:w-80 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 max-h-[80vh] overflow-y-auto">
                 {/* User Info Section */}
                 <div className="px-3 sm:px-4 py-3 border-b border-gray-100">
                   <div className="flex items-center space-x-2 sm:space-x-3">
@@ -271,11 +271,11 @@ export default function DashboardHeader({ isSidebarOpen, toggleSidebar }: Dashbo
                   <div className="flex items-center justify-between">
                     <div className="flex-1 min-w-0">
                       <p className="text-xs text-gray-500 mb-1">Email Address</p>
-                      <p className="text-xs sm:text-sm text-gray-900 truncate">{userProfile?.email}</p>
+                      <p className="text-xs sm:text-sm text-gray-900 break-all">{userProfile?.email}</p>
                     </div>
                     <button
                       onClick={() => copyToClipboard(userProfile?.email || '', 'Email')}
-                      className="ml-2 p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+                      className="ml-1 sm:ml-2 p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors min-h-[32px] min-w-[32px] flex items-center justify-center"
                       title="Copy email"
                     >
                       <Copy className="w-3 h-3 sm:w-4 sm:h-4" />
@@ -287,12 +287,12 @@ export default function DashboardHeader({ isSidebarOpen, toggleSidebar }: Dashbo
                     <div className="flex items-center justify-between">
                       <div className="flex-1 min-w-0">
                         <p className="text-xs text-gray-500 mb-1">Store URL</p>
-                        <p className="text-xs sm:text-sm text-gray-900 truncate">{storeUrl}</p>
+                        <p className="text-xs sm:text-sm text-gray-900 break-all">{storeUrl}</p>
                       </div>
                       <div className="flex items-center space-x-1 ml-1 sm:ml-2">
                         <button
                           onClick={() => copyToClipboard(storeUrl, 'Store URL')}
-                          className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+                          className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors min-h-[32px] min-w-[32px] flex items-center justify-center"
                           title="Copy store URL"
                         >
                           <Copy className="w-3 h-3 sm:w-4 sm:h-4" />
@@ -301,7 +301,7 @@ export default function DashboardHeader({ isSidebarOpen, toggleSidebar }: Dashbo
                           href={storeUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+                          className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors min-h-[32px] min-w-[32px] flex items-center justify-center"
                           title="Visit store"
                         >
                           <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
@@ -314,11 +314,11 @@ export default function DashboardHeader({ isSidebarOpen, toggleSidebar }: Dashbo
                   <div className="flex items-center justify-between">
                     <div className="flex-1 min-w-0">
                       <p className="text-xs text-gray-500 mb-1">User ID</p>
-                      <p className="text-xs sm:text-sm text-gray-900 font-mono truncate">{user?.uid}</p>
+                      <p className="text-xs sm:text-sm text-gray-900 font-mono break-all">{user?.uid}</p>
                     </div>
                     <button
                       onClick={() => copyToClipboard(user?.uid || '', 'User ID')}
-                      className="ml-2 p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+                      className="ml-1 sm:ml-2 p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors min-h-[32px] min-w-[32px] flex items-center justify-center"
                       title="Copy user ID"
                     >
                       <Copy className="w-3 h-3 sm:w-4 sm:h-4" />
