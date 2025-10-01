@@ -5,22 +5,7 @@ import { useRouter } from 'next/navigation';
 import { signIn, signUp } from '@/lib/auth';
 import { checkSlugAvailability } from '@/lib/store';
 import { useAuth } from '@/hooks/useAuth';
-import {
-  Store,
-  Package,
-  TrendingUp,
-  Users,
-  Eye,
-  MousePointer,
-  ArrowRight,
-  Star,
-  StarHalf,
-  RefreshCw,
-  AtSign,
-  Lock,
-  AlertCircle,
-  CheckCircle
-} from 'lucide-react';
+import { Store, Package, TrendingUp, Users, Eye, MousePointer, ArrowRight, Star, StarHalf, RefreshCw, AtSign, Lock, CircleAlert as AlertCircle, CircleCheck as CheckCircle } from 'lucide-react';
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
