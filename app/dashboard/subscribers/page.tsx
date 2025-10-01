@@ -59,7 +59,7 @@ export default function SubscribersPage() {
 
   const handleExportCSV = async () => {
     if (subscribers.length === 0) {
-      showInfo('No subscribers to export');
+      showWarning('No subscribers to export');
       return;
     }
 
