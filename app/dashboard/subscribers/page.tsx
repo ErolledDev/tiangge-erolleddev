@@ -49,7 +49,7 @@ export default function SubscribersPage() {
     setHasShownError(false); // Reset error flag when manually refreshing
     try {
       await fetchSubscribers();
-      showSuccess('Subscribers refreshed successfully');
+      showSuccess('Subscribers refreshed');
     } catch (error) {
       showError('Failed to refresh subscribers');
     } finally {
@@ -59,7 +59,7 @@ export default function SubscribersPage() {
 
   const handleExportCSV = async () => {
     if (subscribers.length === 0) {
-      showWarning('No subscribers to export');
+      showInfo('No subscribers to export');
       return;
     }
 
@@ -92,10 +92,10 @@ export default function SubscribersPage() {
       link.click();
       document.body.removeChild(link);
       
-      showSuccess(`Exported ${subscribers.length} subscribers to CSV`);
+      showSuccess('Subscribers exported successfully');
     } catch (error) {
       console.error('Error exporting CSV:', error);
-      showError('Failed to export subscribers');
+      showError('Export failed');
     } finally {
       setExporting(false);
     }
@@ -112,10 +112,10 @@ export default function SubscribersPage() {
       await deleteSubscriber(user.uid, subscriberId);
       // Remove the deleted subscriber from the local state
       setSubscribers(prev => prev.filter(sub => sub.id !== subscriberId));
-      showSuccess('Subscriber deleted successfully');
+      showSuccess('Subscriber removed successfully');
     } catch (error) {
       console.error('Error deleting subscriber:', error);
-      showError('Failed to delete subscriber');
+      showError('Failed to remove subscriber');
     }
   };
 

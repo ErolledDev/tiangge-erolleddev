@@ -134,7 +134,7 @@ export default function StoreSettingsPage() {
         }
       } catch (error) {
         console.error('Error fetching store:', error);
-        showError('Failed to load store settings');
+        showError('Failed to load settings');
       } finally {
         setLoading(false);
       }
@@ -252,10 +252,10 @@ export default function StoreSettingsPage() {
         customization: formData.customization
       });
 
-      showSuccess('Store settings updated successfully!');
+      showSuccess('Settings saved successfully');
     } catch (error) {
       console.error('Error updating store:', error);
-      showError('Failed to update store settings');
+      showError('Failed to save settings');
     } finally {
       setSaving(false);
     }

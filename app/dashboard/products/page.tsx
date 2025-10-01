@@ -62,16 +62,14 @@ export default function ProductsPage() {
 
   const handleDeleteProduct = async (productId: string) => {
     if (!user) return;
-    
-    showWarning('Deleting product...');
-    
+
     try {
       await deleteProduct(user.uid, productId);
       showSuccess('Product deleted successfully');
       fetchProducts();
     } catch (error) {
       console.error('Error deleting product:', error);
-      showError('Failed to delete product. Please try again.');
+      showError('Failed to delete product');
     }
   };
 
@@ -79,7 +77,7 @@ export default function ProductsPage() {
     setRefreshing(true);
     try {
       await fetchProducts();
-      showSuccess('Products refreshed successfully');
+      showSuccess('Products refreshed');
     } catch (error) {
       showError('Failed to refresh products');
     } finally {
@@ -137,7 +135,7 @@ export default function ProductsPage() {
             <button
               onClick={() => {
                 if (isAtProductLimit) {
-                  showError('Cannot add more products. You have reached the 30-product limit for normal users.');
+                  showError('Product limit reached (30/30)');
                   return;
                 }
                 router.push('/dashboard/products/add');

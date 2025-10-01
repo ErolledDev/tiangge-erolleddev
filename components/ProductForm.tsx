@@ -82,7 +82,7 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
         setIsAtProductLimit(atLimit);
         
         if (atLimit) {
-          showError('You have reached the 30-product limit for normal users. Upgrade to premium for unlimited products.');
+          showError('Product limit reached (30/30)');
         }
       } catch (error) {
         console.error('Error checking product limit:', error);
@@ -178,14 +178,14 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
       
       // Show appropriate success message
       if (scrapedData.price) {
-        showSuccess('Product information scraped successfully!');
+        showSuccess('Product information scraped');
       } else {
-        showInfo('Product metadata scraped successfully! Only meta data available, please manually enter the product price.');
+        showInfo('Product metadata scraped (price not available)');
       }
       
     } catch (error) {
       console.error('Error scraping product:', error);
-      showError('Failed to scrape product information. Please try again or enter details manually.');
+      showError('Failed to scrape product information');
     } finally {
       setIsScraping(false);
     }
@@ -201,7 +201,7 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
     
     // Check product limit for normal users when adding new products
     if (mode === 'add' && isAtProductLimit) {
-      showError('Cannot add more products. You have reached the 30-product limit for normal users.');
+      showError('Product limit reached (30/30)');
       return;
     }
     
@@ -266,12 +266,12 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
           images: [finalImageUrl]
         }, isPremium(userProfile));
       }
-      showSuccess('Product saved successfully!');
+      showSuccess(mode === 'edit' ? 'Product updated successfully' : 'Product added successfully');
       router.push('/dashboard/products');
     } catch (error) {
       console.error('Save error:', error);
       
-      showError('Failed to save product. Please try again.');
+      showError('Failed to save product');
     } finally {
       setIsLoading(false);
     }

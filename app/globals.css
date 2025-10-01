@@ -89,3 +89,33 @@ body {
 .animate-float-center {
   animation: card-float 5s ease-in-out infinite;
 }
+
+@keyframes toast-slide-in {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes toast-slide-out {
+  from {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(400px) scale(0.95);
+    opacity: 0;
+  }
+}
+
+.toast-enter {
+  animation: toast-slide-in 0.3s ease-out forwards;
+}
+
+.toast-exit {
+  animation: toast-slide-out 0.3s ease-in forwards;
+}

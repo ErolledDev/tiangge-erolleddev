@@ -66,7 +66,7 @@ export default function SlideForm({ slide, mode }: SlideFormProps) {
     if (!user) return;
 
     if (!imageFile && mode === 'add') {
-      showError('Please select an image for the slide.');
+      showError('Image required');
       return;
     }
 
@@ -99,12 +99,12 @@ export default function SlideForm({ slide, mode }: SlideFormProps) {
       }
 
 
-      showSuccess(mode === 'edit' ? 'Slide updated successfully!' : 'Slide created successfully!');
+      showSuccess(mode === 'edit' ? 'Slide updated successfully' : 'Slide created successfully');
       router.push('/dashboard/slides');
     } catch (error) {
       console.error('Error saving slide:', error);
       
-      showError('Failed to save slide. Please try again.');
+      showError('Failed to save slide');
     } finally {
       setSaving(false);
     }
