@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { Store, Package, TrendingUp, Users, Eye, MousePointer, ArrowRight, Star, ChartBar as BarChart3, Settings, Globe, Zap, Instagram, Facebook, Twitter, Search } from 'lucide-react';
+import FeatureShowcase from '@/components/FeatureShowcase';
 
 export default function Home() {
   const router = useRouter();
@@ -247,6 +248,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <FeatureShowcase />
 
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto">
