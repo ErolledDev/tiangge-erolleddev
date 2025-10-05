@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
-import { Store, Package, TrendingUp, Users, Eye, MousePointer, ArrowRight, Star, StarHalf, RefreshCw } from 'lucide-react';
+import { Store, Package, TrendingUp, Users, Eye, MousePointer, ArrowRight, Star, StarHalf, RefreshCw, CheckCircle, Crown, Lock, DollarSign, Zap, ShieldCheck, LayoutDashboard, Code, Globe, Mail, Settings, BarChart3, Image as ImageIcon, PlusCircle, SquarePlus, LogOut, X, User, Copy, ChevronDown, Calendar, Clock, CircleAlert as AlertCircle } from 'lucide-react';
 
 export default function HomePage() {
   const { user, loading } = useAuth();
@@ -56,29 +56,29 @@ export default function HomePage() {
         </div>
       </nav>
 
-      {/* Hero Section - Text and CTA Only */}
-      <section className="relative min-h-[70vh] pt-24 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden flex items-center">
+      {/* Hero Section - Enhanced Copy and CTA */}
+      <section className="relative min-h-[70vh] pt-24 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden flex items-center bg-gradient-to-br from-emerald-50 to-white">
         <div className="max-w-7xl mx-auto w-full text-center">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-            Create Your
-            <span className="text-emerald-600 block">Affiliate Store</span>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-6 leading-tight">
+            Launch Your Profitable
+            <span className="text-emerald-600 block">Affiliate Store Today</span>
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Build and customize your own affiliate store. Add products, create promotional slides, and start earning commissions through affiliate marketing.
+          <p className="text-xl text-gray-700 mb-8 max-w-3xl mx-auto">
+            Effortlessly build, customize, and manage your own high-converting affiliate store. Maximize your earnings with powerful tools designed for success.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/auth"
-              className="inline-flex items-center px-8 py-4 bg-emerald-600 text-white rounded-lg text-lg font-semibold hover:bg-emerald-700 transition-colors shadow-lg"
+              className="inline-flex items-center px-8 py-4 bg-emerald-600 text-white rounded-lg text-lg font-semibold hover:bg-emerald-700 transition-colors shadow-lg transform hover:scale-105"
             >
               Start Building Now
               <ArrowRight className="w-5 h-5 ml-2" />
             </Link>
             <Link
               href="/auth"
-              className="inline-flex items-center px-8 py-4 border-2 border-emerald-600 text-emerald-600 rounded-lg text-lg font-semibold hover:bg-emerald-50 transition-colors"
+              className="inline-flex items-center px-8 py-4 border-2 border-emerald-600 text-emerald-600 rounded-lg text-lg font-semibold hover:bg-emerald-50 transition-colors transform hover:scale-105"
             >
-              View Demo Store
+              Explore Features
             </Link>
           </div>
         </div>
@@ -87,21 +87,29 @@ export default function HomePage() {
       {/* Showcase Section - Mobile Mockup with Floating Cards on Desktop */}
       <section className="relative py-16 sm:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden bg-white">
         <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              See Your Store Come to Life
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Visualize the power of a fully customized, high-performance affiliate store.
+            </p>
+          </div>
           <div className="relative flex justify-center items-center min-h-[500px] sm:min-h-[600px] lg:min-h-[700px] xl:min-h-[800px]">
             {/* Floating Metric Cards Container - Hidden on Mobile */}
             <div className="absolute inset-0 hidden md:flex justify-center items-center pointer-events-none">
               <div className="relative w-full h-full max-w-[800px] lg:max-w-[1000px]">
                 {/* Top Left - Affiliate Earnings */}
-                <div className="absolute top-[8%] left-0 w-40 lg:w-48 xl:w-52 bg-white/95 backdrop-blur-sm border-2 border-white/80 rounded-xl p-4 lg:p-5 text-left shadow-2xl z-10 transform hover:scale-105 transition-all duration-300 pointer-events-auto animate-float-6 -translate-x-6 lg:-translate-x-8">
+                <div className="absolute top-[8%] left-0 w-40 lg:w-48 xl:w-52 bg-white/95 backdrop-blur-sm border-2 border-emerald-200 rounded-xl p-4 lg:p-5 text-left shadow-2xl z-10 transform hover:scale-105 transition-all duration-300 pointer-events-auto animate-float-6 -translate-x-6 lg:-translate-x-8">
                   <div className="flex items-center text-lg lg:text-xl xl:text-2xl font-bold mb-1 text-emerald-600">
                     <TrendingUp className="w-5 h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7 mr-1 flex-shrink-0" />
                     <span>$2,250</span>
                   </div>
-                  <div className="text-sm lg:text-base text-gray-700 font-medium">Affiliate Earnings</div>
+                  <div className="text-sm lg:text-base text-gray-700 font-medium">Monthly Earnings</div>
                 </div>
 
                 {/* Top Right - Store Visits */}
-                <div className="absolute top-[8%] right-0 w-40 lg:w-48 xl:w-52 bg-white/95 backdrop-blur-sm border-2 border-white/80 rounded-xl p-4 lg:p-5 text-left shadow-2xl z-10 transform hover:scale-105 transition-all duration-300 pointer-events-auto animate-float-1 translate-x-6 lg:translate-x-8">
+                <div className="absolute top-[8%] right-0 w-40 lg:w-48 xl:w-52 bg-white/95 backdrop-blur-sm border-2 border-emerald-200 rounded-xl p-4 lg:p-5 text-left shadow-2xl z-10 transform hover:scale-105 transition-all duration-300 pointer-events-auto animate-float-1 translate-x-6 lg:translate-x-8">
                   <div className="flex items-center text-lg lg:text-xl xl:text-2xl font-bold mb-1 text-emerald-600">
                     <Store className="w-5 h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7 mr-1 flex-shrink-0" />
                     <span>9,800</span>
@@ -110,16 +118,16 @@ export default function HomePage() {
                 </div>
 
                 {/* Middle Left - Total Clicks */}
-                <div className="absolute top-[40%] left-0 w-40 lg:w-48 xl:w-52 bg-white/95 backdrop-blur-sm border-2 border-white/80 rounded-xl p-4 lg:p-5 text-left shadow-2xl z-10 transform hover:scale-105 transition-all duration-300 pointer-events-auto animate-float-2 -translate-x-6 lg:-translate-x-8">
+                <div className="absolute top-[40%] left-0 w-40 lg:w-48 xl:w-52 bg-white/95 backdrop-blur-sm border-2 border-emerald-200 rounded-xl p-4 lg:p-5 text-left shadow-2xl z-10 transform hover:scale-105 transition-all duration-300 pointer-events-auto animate-float-2 -translate-x-6 lg:-translate-x-8">
                   <div className="flex items-center text-lg lg:text-xl xl:text-2xl font-bold mb-1 text-emerald-600">
                     <MousePointer className="w-5 h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7 mr-1 flex-shrink-0" />
                     <span>3,450</span>
                   </div>
-                  <div className="text-sm lg:text-base text-gray-700 font-medium">Total Clicks</div>
+                  <div className="text-sm lg:text-base text-gray-700 font-medium">Product Clicks</div>
                 </div>
 
                 {/* Middle Right - Conversion Rate */}
-                <div className="absolute top-[40%] right-0 w-40 lg:w-48 xl:w-52 bg-white/95 backdrop-blur-sm border-2 border-white/80 rounded-xl p-4 lg:p-5 text-left shadow-2xl z-10 transform hover:scale-105 transition-all duration-300 pointer-events-auto animate-float-4 translate-x-6 lg:translate-x-8">
+                <div className="absolute top-[40%] right-0 w-40 lg:w-48 xl:w-52 bg-white/95 backdrop-blur-sm border-2 border-emerald-200 rounded-xl p-4 lg:p-5 text-left shadow-2xl z-10 transform hover:scale-105 transition-all duration-300 pointer-events-auto animate-float-4 translate-x-6 lg:translate-x-8">
                   <div className="flex items-center text-lg lg:text-xl xl:text-2xl font-bold mb-1 text-emerald-600">
                     <RefreshCw className="w-5 h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7 mr-1 flex-shrink-0" />
                     <span>12%</span>
@@ -128,7 +136,7 @@ export default function HomePage() {
                 </div>
 
                 {/* Bottom Left - Average Rating */}
-                <div className="absolute bottom-[15%] left-0 w-40 lg:w-48 xl:w-52 bg-white/95 backdrop-blur-sm border-2 border-white/80 rounded-xl p-4 lg:p-5 text-left shadow-2xl z-10 transform hover:scale-105 transition-all duration-300 pointer-events-auto animate-float-3 -translate-x-6 lg:-translate-x-8">
+                <div className="absolute bottom-[15%] left-0 w-40 lg:w-48 xl:w-52 bg-white/95 backdrop-blur-sm border-2 border-emerald-200 rounded-xl p-4 lg:p-5 text-left shadow-2xl z-10 transform hover:scale-105 transition-all duration-300 pointer-events-auto animate-float-3 -translate-x-6 lg:-translate-x-8">
                   <div className="flex items-center text-base lg:text-lg xl:text-xl font-bold mb-1">
                     <div className="flex text-yellow-400 mr-1 flex-shrink-0">
                       <Star className="w-4 h-4 lg:w-5 lg:h-5 xl:w-6 xl:h-6 fill-current" />
@@ -143,7 +151,7 @@ export default function HomePage() {
                 </div>
 
                 {/* Bottom Right - Product Views */}
-                <div className="absolute bottom-[15%] right-0 w-40 lg:w-48 xl:w-52 bg-white/95 backdrop-blur-sm border-2 border-white/80 rounded-xl p-4 lg:p-5 text-left shadow-2xl z-10 transform hover:scale-105 transition-all duration-300 pointer-events-auto animate-float-5 translate-x-6 lg:translate-x-8">
+                <div className="absolute bottom-[15%] right-0 w-40 lg:w-48 xl:w-52 bg-white/95 backdrop-blur-sm border-2 border-emerald-200 rounded-xl p-4 lg:p-5 text-left shadow-2xl z-10 transform hover:scale-105 transition-all duration-300 pointer-events-auto animate-float-5 translate-x-6 lg:translate-x-8">
                   <div className="flex items-center text-lg lg:text-xl xl:text-2xl font-bold mb-1 text-emerald-600">
                     <Eye className="w-5 h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7 mr-1 flex-shrink-0" />
                     <span>5,600</span>
@@ -406,7 +414,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* Features Section - Refined Content */}
       <section className="py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -423,32 +431,32 @@ export default function HomePage() {
               {
                 icon: Store,
                 title: 'Custom Store Builder',
-                description: 'Create a beautiful, professional store with our easy-to-use customization tools.'
+                description: 'Create a beautiful, professional store with our easy-to-use customization tools. No coding required.'
               },
               {
                 icon: Package,
-                title: 'Product Management',
-                description: 'Add unlimited products with bulk import, auto-scraping, and advanced organization.'
+                title: 'Smart Product Management',
+                description: 'Add products with ease, auto-fill details by scraping URLs, and manage your inventory efficiently.'
               },
               {
                 icon: TrendingUp,
-                title: 'Analytics Dashboard',
-                description: 'Track performance with detailed insights on clicks, views, and conversions.'
+                title: 'Actionable Analytics',
+                description: 'Track store views, product clicks, and conversions with a detailed, real-time dashboard.'
               },
               {
                 icon: Users,
-                title: 'Customer Engagement',
-                description: 'Build your audience with email subscriptions and promotional tools.'
+                title: 'Engage Your Audience',
+                description: 'Build your mailing list with subscription forms and keep customers informed with notifications.'
               },
               {
-                icon: Eye,
-                title: 'SEO Optimized',
-                description: 'Get found on search engines with built-in SEO optimization and meta tags.'
+                icon: ShieldCheck,
+                title: 'Secure & Optimized',
+                description: 'Benefit from robust security, image optimization, and SEO-friendly features for better visibility.'
               },
               {
-                icon: MousePointer,
-                title: 'Click Tracking',
-                description: 'Monitor every interaction to optimize your store for maximum conversions.'
+                icon: Zap,
+                title: 'Boost Conversions',
+                description: 'Utilize promotional slides, widgets, and banners to highlight offers and drive sales.'
               }
             ].map((feature, index) => (
               <div key={index} className="bg-white rounded-xl p-8 shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
@@ -459,6 +467,182 @@ export default function HomePage() {
                 <p className="text-gray-600">{feature.description}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section - New Section */}
+      <section className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              What Our Users Say
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Hear from successful affiliate marketers who are growing their businesses with Tiangge.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="bg-gray-50 rounded-xl p-8 shadow-sm border border-gray-200">
+              <div className="flex items-center mb-4">
+                <img src="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="User Avatar" className="w-12 h-12 rounded-full object-cover mr-4" />
+                <div>
+                  <p className="font-semibold text-gray-900">Jane Doe</p>
+                  <p className="text-sm text-gray-600">Affiliate Marketing Pro</p>
+                </div>
+              </div>
+              <p className="text-lg text-gray-700 italic">
+                &ldquo;Tiangge transformed my affiliate business. The customization options are incredible, and the analytics help me optimize everything. My earnings have doubled!&rdquo;
+              </p>
+            </div>
+            <div className="bg-gray-50 rounded-xl p-8 shadow-sm border border-gray-200">
+              <div className="flex items-center mb-4">
+                <img src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="User Avatar" className="w-12 h-12 rounded-full object-cover mr-4" />
+                <div>
+                  <p className="font-semibold text-gray-900">John Smith</p>
+                  <p className="text-sm text-gray-600">E-commerce Entrepreneur</p>
+                </div>
+              </div>
+              <p className="text-lg text-gray-700 italic">
+                &ldquo;I love how easy it is to add products and create stunning slides. The product scraping feature saves me so much time. Highly recommend!&rdquo;
+              </p>
+            </div>
+            <div className="bg-gray-50 rounded-xl p-8 shadow-sm border border-gray-200">
+              <div className="flex items-center mb-4">
+                <img src="https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="User Avatar" className="w-12 h-12 rounded-full object-cover mr-4" />
+                <div>
+                  <p className="font-semibold text-gray-900">Sarah Lee</p>
+                  <p className="text-sm text-gray-600">Content Creator</p>
+                </div>
+              </div>
+              <p className="text-lg text-gray-700 italic">
+                &ldquo;Finally, a platform that understands affiliate marketing. The built-in SEO and responsive design mean my stores look great and perform well on any device.&rdquo;
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Section - New Section */}
+      <section className="py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              Simple, Transparent Pricing
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Choose the plan that fits your ambition. Upgrade anytime for more power.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* Standard Plan */}
+            <div className="bg-white rounded-xl p-8 shadow-lg border border-gray-200 flex flex-col">
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Standard</h3>
+              <p className="text-gray-600 mb-6">Perfect for new affiliate marketers getting started.</p>
+              <div className="text-4xl font-extrabold text-emerald-600 mb-6">
+                Free
+                <span className="text-xl text-gray-500 font-medium"> / forever</span>
+              </div>
+              <ul className="space-y-3 text-gray-700 flex-grow">
+                <li className="flex items-center">
+                  <CheckCircle className="w-5 h-5 text-emerald-500 mr-2 flex-shrink-0" />
+                  Up to 30 Products
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="w-5 h-5 text-emerald-500 mr-2 flex-shrink-0" />
+                  Store Customization & Theming
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="w-5 h-5 text-emerald-500 mr-2 flex-shrink-0" />
+                  Product Scraping
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="w-5 h-5 text-emerald-500 mr-2 flex-shrink-0" />
+                  Promotional Slides
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="w-5 h-5 text-emerald-500 mr-2 flex-shrink-0" />
+                  Basic Analytics Dashboard
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="w-5 h-5 text-emerald-500 mr-2 flex-shrink-0" />
+                  Email Subscriptions
+                </li>
+                <li className="flex items-center text-gray-500">
+                  <X className="w-5 h-5 text-red-500 mr-2 flex-shrink-0" />
+                  No Bulk Import
+                </li>
+                <li className="flex items-center text-gray-500">
+                  <X className="w-5 h-5 text-red-500 mr-2 flex-shrink-0" />
+                  No Data Export
+                </li>
+                <li className="flex items-center text-gray-500">
+                  <X className="w-5 h-5 text-red-500 mr-2 flex-shrink-0" />
+                  No Floating Widget / Pop-up Banner
+                </li>
+              </ul>
+              <Link
+                href="/auth"
+                className="mt-8 w-full inline-flex items-center justify-center px-8 py-4 bg-emerald-600 text-white rounded-lg text-lg font-semibold hover:bg-emerald-700 transition-colors shadow-md"
+              >
+                Get Started Free
+              </Link>
+            </div>
+
+            {/* Premium Plan */}
+            <div className="bg-emerald-600 text-white rounded-xl p-8 shadow-lg border border-emerald-700 flex flex-col relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-emerald-700 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
+                Most Popular
+              </div>
+              <h3 className="text-2xl font-bold mb-4">Premium</h3>
+              <p className="text-emerald-100 mb-6">Unlock advanced features for serious growth.</p>
+              <div className="text-4xl font-extrabold mb-6">
+                $29
+                <span className="text-xl text-emerald-200 font-medium"> / month</span>
+              </div>
+              <ul className="space-y-3 flex-grow">
+                <li className="flex items-center">
+                  <CheckCircle className="w-5 h-5 text-white mr-2 flex-shrink-0" />
+                  Unlimited Products
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="w-5 h-5 text-white mr-2 flex-shrink-0" />
+                  Advanced Customization
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="w-5 h-5 text-white mr-2 flex-shrink-0" />
+                  Bulk Product Import (CSV)
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="w-5 h-5 text-white mr-2 flex-shrink-0" />
+                  Floating Widget & Pop-up Banner
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="w-5 h-5 text-white mr-2 flex-shrink-0" />
+                  Advanced Analytics & Data Export
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="w-5 h-5 text-white mr-2 flex-shrink-0" />
+                  Priority Support
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="w-5 h-5 text-white mr-2 flex-shrink-0" />
+                  Custom Domain Support (Coming Soon)
+                </li>
+                <li className="flex items-center">
+                  <CheckCircle className="w-5 h-5 text-white mr-2 flex-shrink-0" />
+                  All Standard Features
+                </li>
+              </ul>
+              <Link
+                href="/auth"
+                className="mt-8 w-full inline-flex items-center justify-center px-8 py-4 bg-white text-emerald-600 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors shadow-md"
+              >
+                Upgrade to Premium
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -474,7 +658,7 @@ export default function HomePage() {
           </p>
           <Link
             href="/auth"
-            className="inline-flex items-center px-8 py-4 bg-white text-emerald-600 rounded-lg text-lg font-semibold hover:bg-gray-50 transition-colors shadow-lg"
+            className="inline-flex items-center px-8 py-4 bg-white text-emerald-600 rounded-lg text-lg font-semibold hover:bg-gray-50 transition-colors shadow-lg transform hover:scale-105"
           >
             Create Your Store Now
             <ArrowRight className="w-5 h-5 ml-2" />
