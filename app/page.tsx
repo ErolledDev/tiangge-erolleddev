@@ -46,7 +46,7 @@ export default function HomePage() {
                 Sign In
               </Link>
               <Link
-                href="/auth"
+                href="#pricing"
                 className="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors"
               >
                 Get Started
@@ -68,7 +68,7 @@ export default function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/auth"
+              href="#pricing"
               className="inline-flex items-center px-8 py-4 bg-emerald-600 text-white rounded-lg text-lg font-semibold hover:bg-emerald-700 transition-colors shadow-lg transform hover:scale-105"
             >
               Start Building Now
@@ -525,7 +525,7 @@ export default function HomePage() {
       </section>
 
       {/* Pricing Section - New Section */}
-      <section className="py-24 bg-gray-50">
+      <section id="pricing" className="py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
@@ -703,6 +703,9 @@ export default function HomePage() {
       </footer>
 
       <style jsx>{`
+        html {
+          scroll-behavior: smooth;
+        }
         @keyframes float-1 {
           0%, 100% { transform: translateY(0px) rotate(0deg); }
           50% { transform: translateY(-10px) rotate(2deg); }
