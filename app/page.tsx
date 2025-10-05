@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
-import { Store, Package, TrendingUp, Users, Eye, MousePointer, ArrowRight, Star, StarHalf, RefreshCw, AtSign, Lock, CircleAlert as AlertCircle, CircleCheck as CheckCircle } from 'lucide-react';
+import { Store, Package, TrendingUp, Users, Eye, MousePointer, ArrowRight, Star, StarHalf, RefreshCw } from 'lucide-react';
 
 export default function HomePage() {
   const { user, loading } = useAuth();
@@ -56,105 +56,106 @@ export default function HomePage() {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="relative pt-20 pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        <div className="max-w-7xl mx-auto relative z-10">
-          {/* Main Content */}
-          <div className="text-center mb-16">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-              Create Your
-              <span className="text-emerald-600 block">Affiliate Store</span>
-            </h1>
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              Build and customize your own affiliate store. Add products, create promotional slides, and start earning commissions through affiliate marketing.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/auth"
-                className="inline-flex items-center px-8 py-4 bg-emerald-600 text-white rounded-lg text-lg font-semibold hover:bg-emerald-700 transition-colors shadow-lg"
-              >
-                Start Building Now
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Link>
-              <Link
-                href="/auth"
-                className="inline-flex items-center px-8 py-4 border-2 border-emerald-600 text-emerald-600 rounded-lg text-lg font-semibold hover:bg-emerald-50 transition-colors"
-              >
-                View Demo Store
-              </Link>
-            </div>
+      {/* Hero Section - Text and CTA Only */}
+      <section className="relative min-h-[70vh] pt-24 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden flex items-center">
+        <div className="max-w-7xl mx-auto w-full text-center">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+            Create Your
+            <span className="text-emerald-600 block">Affiliate Store</span>
+          </h1>
+          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+            Build and customize your own affiliate store. Add products, create promotional slides, and start earning commissions through affiliate marketing.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/auth"
+              className="inline-flex items-center px-8 py-4 bg-emerald-600 text-white rounded-lg text-lg font-semibold hover:bg-emerald-700 transition-colors shadow-lg"
+            >
+              Start Building Now
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Link>
+            <Link
+              href="/auth"
+              className="inline-flex items-center px-8 py-4 border-2 border-emerald-600 text-emerald-600 rounded-lg text-lg font-semibold hover:bg-emerald-50 transition-colors"
+            >
+              View Demo Store
+            </Link>
           </div>
+        </div>
+      </section>
 
-          {/* Phone Mockup with Floating Cards */}
-          <div className="relative flex justify-center items-center min-h-[900px] lg:min-h-[1000px]">
-            {/* Floating Metric Cards Container */}
+      {/* Showcase Section - Mobile Mockup with Floating Cards on Desktop */}
+      <section className="relative py-16 sm:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="relative flex justify-center items-center min-h-[500px] sm:min-h-[600px] lg:min-h-[700px] xl:min-h-[800px]">
+            {/* Floating Metric Cards Container - Hidden on Mobile */}
             <div className="absolute inset-0 hidden md:flex justify-center items-center pointer-events-none">
               <div className="relative w-full h-full max-w-[800px] lg:max-w-[1000px]">
                 {/* Top Left - Affiliate Earnings */}
-                <div className="absolute top-[8%] left-[5%] w-36 lg:w-44 xl:w-48 bg-white/95 backdrop-blur-sm border-2 border-white/80 rounded-xl p-4 lg:p-5 text-left shadow-2xl z-10 transform hover:scale-105 transition-all duration-300 pointer-events-auto animate-float-6">
-                  <div className="flex items-center text-lg lg:text-xl xl:text-2xl font-bold mb-2 text-emerald-600">
-                    <TrendingUp className="w-5 h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7 mr-2 flex-shrink-0" />
+                <div className="absolute top-[8%] left-0 w-40 lg:w-48 xl:w-52 bg-white/95 backdrop-blur-sm border-2 border-white/80 rounded-xl p-4 lg:p-5 text-left shadow-2xl z-10 transform hover:scale-105 transition-all duration-300 pointer-events-auto animate-float-6 -translate-x-6 lg:-translate-x-8">
+                  <div className="flex items-center text-lg lg:text-xl xl:text-2xl font-bold mb-1 text-emerald-600">
+                    <TrendingUp className="w-5 h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7 mr-1 flex-shrink-0" />
                     <span>$2,250</span>
                   </div>
-                  <div className="text-xs lg:text-sm text-gray-700 font-medium">Affiliate Earnings</div>
+                  <div className="text-sm lg:text-base text-gray-700 font-medium">Affiliate Earnings</div>
                 </div>
 
                 {/* Top Right - Store Visits */}
-                <div className="absolute top-[8%] right-[5%] w-36 lg:w-44 xl:w-48 bg-white/95 backdrop-blur-sm border-2 border-white/80 rounded-xl p-4 lg:p-5 text-left shadow-2xl z-10 transform hover:scale-105 transition-all duration-300 pointer-events-auto animate-float-1">
-                  <div className="flex items-center text-lg lg:text-xl xl:text-2xl font-bold mb-2 text-emerald-600">
-                    <Store className="w-5 h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7 mr-2 flex-shrink-0" />
+                <div className="absolute top-[8%] right-0 w-40 lg:w-48 xl:w-52 bg-white/95 backdrop-blur-sm border-2 border-white/80 rounded-xl p-4 lg:p-5 text-left shadow-2xl z-10 transform hover:scale-105 transition-all duration-300 pointer-events-auto animate-float-1 translate-x-6 lg:translate-x-8">
+                  <div className="flex items-center text-lg lg:text-xl xl:text-2xl font-bold mb-1 text-emerald-600">
+                    <Store className="w-5 h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7 mr-1 flex-shrink-0" />
                     <span>9,800</span>
                   </div>
-                  <div className="text-xs lg:text-sm text-gray-700 font-medium">Store Visits</div>
+                  <div className="text-sm lg:text-base text-gray-700 font-medium">Store Visits</div>
                 </div>
 
                 {/* Middle Left - Total Clicks */}
-                <div className="absolute top-[35%] left-[2%] w-36 lg:w-44 xl:w-48 bg-white/95 backdrop-blur-sm border-2 border-white/80 rounded-xl p-4 lg:p-5 text-left shadow-2xl z-10 transform hover:scale-105 transition-all duration-300 pointer-events-auto animate-float-2">
-                  <div className="flex items-center text-lg lg:text-xl xl:text-2xl font-bold mb-2 text-emerald-600">
-                    <MousePointer className="w-5 h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7 mr-2 flex-shrink-0" />
+                <div className="absolute top-[40%] left-0 w-40 lg:w-48 xl:w-52 bg-white/95 backdrop-blur-sm border-2 border-white/80 rounded-xl p-4 lg:p-5 text-left shadow-2xl z-10 transform hover:scale-105 transition-all duration-300 pointer-events-auto animate-float-2 -translate-x-6 lg:-translate-x-8">
+                  <div className="flex items-center text-lg lg:text-xl xl:text-2xl font-bold mb-1 text-emerald-600">
+                    <MousePointer className="w-5 h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7 mr-1 flex-shrink-0" />
                     <span>3,450</span>
                   </div>
-                  <div className="text-xs lg:text-sm text-gray-700 font-medium">Total Clicks</div>
+                  <div className="text-sm lg:text-base text-gray-700 font-medium">Total Clicks</div>
                 </div>
 
                 {/* Middle Right - Conversion Rate */}
-                <div className="absolute top-[35%] right-[2%] w-36 lg:w-44 xl:w-48 bg-white/95 backdrop-blur-sm border-2 border-white/80 rounded-xl p-4 lg:p-5 text-left shadow-2xl z-10 transform hover:scale-105 transition-all duration-300 pointer-events-auto animate-float-4">
-                  <div className="flex items-center text-lg lg:text-xl xl:text-2xl font-bold mb-2 text-emerald-600">
-                    <RefreshCw className="w-5 h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7 mr-2 flex-shrink-0" />
+                <div className="absolute top-[40%] right-0 w-40 lg:w-48 xl:w-52 bg-white/95 backdrop-blur-sm border-2 border-white/80 rounded-xl p-4 lg:p-5 text-left shadow-2xl z-10 transform hover:scale-105 transition-all duration-300 pointer-events-auto animate-float-4 translate-x-6 lg:translate-x-8">
+                  <div className="flex items-center text-lg lg:text-xl xl:text-2xl font-bold mb-1 text-emerald-600">
+                    <RefreshCw className="w-5 h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7 mr-1 flex-shrink-0" />
                     <span>12%</span>
                   </div>
-                  <div className="text-xs lg:text-sm text-gray-700 font-medium">Conversion Rate</div>
+                  <div className="text-sm lg:text-base text-gray-700 font-medium">Conversion Rate</div>
                 </div>
 
                 {/* Bottom Left - Average Rating */}
-                <div className="absolute bottom-[15%] left-[5%] w-36 lg:w-44 xl:w-48 bg-white/95 backdrop-blur-sm border-2 border-white/80 rounded-xl p-4 lg:p-5 text-left shadow-2xl z-10 transform hover:scale-105 transition-all duration-300 pointer-events-auto animate-float-3">
-                  <div className="flex items-center text-base lg:text-lg xl:text-xl font-bold mb-2">
-                    <div className="flex text-yellow-400 mr-2 flex-shrink-0">
-                      <Star className="w-3 h-3 lg:w-4 lg:h-4 xl:w-5 xl:h-5 fill-current" />
-                      <Star className="w-3 h-3 lg:w-4 lg:h-4 xl:w-5 xl:h-5 fill-current" />
-                      <Star className="w-3 h-3 lg:w-4 lg:h-4 xl:w-5 xl:h-5 fill-current" />
-                      <Star className="w-3 h-3 lg:w-4 lg:h-4 xl:w-5 xl:h-5 fill-current" />
-                      <StarHalf className="w-3 h-3 lg:w-4 lg:h-4 xl:w-5 xl:h-5 fill-current" />
+                <div className="absolute bottom-[15%] left-0 w-40 lg:w-48 xl:w-52 bg-white/95 backdrop-blur-sm border-2 border-white/80 rounded-xl p-4 lg:p-5 text-left shadow-2xl z-10 transform hover:scale-105 transition-all duration-300 pointer-events-auto animate-float-3 -translate-x-6 lg:-translate-x-8">
+                  <div className="flex items-center text-base lg:text-lg xl:text-xl font-bold mb-1">
+                    <div className="flex text-yellow-400 mr-1 flex-shrink-0">
+                      <Star className="w-4 h-4 lg:w-5 lg:h-5 xl:w-6 xl:h-6 fill-current" />
+                      <Star className="w-4 h-4 lg:w-5 lg:h-5 xl:w-6 xl:h-6 fill-current" />
+                      <Star className="w-4 h-4 lg:w-5 lg:h-5 xl:w-6 xl:h-6 fill-current" />
+                      <Star className="w-4 h-4 lg:w-5 lg:h-5 xl:w-6 xl:h-6 fill-current" />
+                      <StarHalf className="w-4 h-4 lg:w-5 lg:h-5 xl:w-6 xl:h-6 fill-current" />
                     </div>
                     <span className="text-emerald-600 text-lg lg:text-xl xl:text-2xl font-extrabold">4.5</span>
                   </div>
-                  <div className="text-xs lg:text-sm text-gray-700 font-medium">Average Rating</div>
+                  <div className="text-sm lg:text-base text-gray-700 font-medium">Average Rating</div>
                 </div>
 
                 {/* Bottom Right - Product Views */}
-                <div className="absolute bottom-[15%] right-[5%] w-36 lg:w-44 xl:w-48 bg-white/95 backdrop-blur-sm border-2 border-white/80 rounded-xl p-4 lg:p-5 text-left shadow-2xl z-10 transform hover:scale-105 transition-all duration-300 pointer-events-auto animate-float-5">
-                  <div className="flex items-center text-lg lg:text-xl xl:text-2xl font-bold mb-2 text-emerald-600">
-                    <Eye className="w-5 h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7 mr-2 flex-shrink-0" />
+                <div className="absolute bottom-[15%] right-0 w-40 lg:w-48 xl:w-52 bg-white/95 backdrop-blur-sm border-2 border-white/80 rounded-xl p-4 lg:p-5 text-left shadow-2xl z-10 transform hover:scale-105 transition-all duration-300 pointer-events-auto animate-float-5 translate-x-6 lg:translate-x-8">
+                  <div className="flex items-center text-lg lg:text-xl xl:text-2xl font-bold mb-1 text-emerald-600">
+                    <Eye className="w-5 h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7 mr-1 flex-shrink-0" />
                     <span>5,600</span>
                   </div>
-                  <div className="text-xs lg:text-sm text-gray-700 font-medium">Product Views</div>
+                  <div className="text-sm lg:text-base text-gray-700 font-medium">Product Views</div>
                 </div>
 
-                {/* Central Phone Mockup */}
-                <div className="relative z-30 w-full max-w-sm lg:max-w-md xl:max-w-lg mx-auto">
+                {/* Central Phone Mockup - Desktop */}
+                <div className="relative z-30 w-full max-w-xs lg:max-w-sm xl:max-w-md mx-auto">
                   <div className="relative bg-gray-900 rounded-[3rem] p-2 shadow-2xl border border-gray-800/50">
                     <div className="bg-white rounded-[2.5rem] overflow-hidden relative">
-                      <div className="bg-gradient-to-br from-emerald-50 via-white to-emerald-50 relative overflow-hidden h-[600px] lg:h-[700px] xl:h-[800px]">
+                      <div className="bg-gradient-to-br from-emerald-50 via-white to-emerald-50 relative overflow-hidden h-[500px] lg:h-[600px] xl:h-[700px]">
                         {/* Phone Content */}
                         <div className="text-center pt-6 lg:pt-8 py-0 px-4 scale-90 lg:scale-95 origin-top">
                           {/* Store Avatar */}
@@ -194,35 +195,35 @@ export default function HomePage() {
                             <div className="flex-shrink-0 mx-1">
                               <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-full shadow-md overflow-hidden border-2 border-emerald-500 grid grid-cols-2 grid-rows-2 gap-0">
                                 <div className="w-full h-full">
-                                  <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=100&h=100&fit=crop" alt="" className="w-full h-full object-cover" />
+                                  <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=100&h=100&fit=crop" alt="Product collage" className="w-full h-full object-cover" />
                                 </div>
                                 <div className="w-full h-full">
-                                  <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=100&h=100&fit=crop" alt="" className="w-full h-full object-cover" />
+                                  <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=100&h=100&fit=crop" alt="Product collage" className="w-full h-full object-cover" />
                                 </div>
                                 <div className="w-full h-full">
-                                  <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=100&h=100&fit=crop" alt="" className="w-full h-full object-cover" />
+                                  <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=100&h=100&fit=crop" alt="Product collage" className="w-full h-full object-cover" />
                                 </div>
                                 <div className="w-full h-full">
-                                  <img src="https://images.unsplash.com/photo-1608043152269-423dbba4e7e4?w=100&h=100&fit=crop" alt="" className="w-full h-full object-cover" />
+                                  <img src="https://images.unsplash.com/photo-1608043152269-423dbba4e7e4?w=100&h=100&fit=crop" alt="Product collage" className="w-full h-full object-cover" />
                                 </div>
                               </div>
                               <p className="text-xs text-center mt-1 font-medium text-emerald-600">All</p>
                             </div>
                             <div className="flex-shrink-0 mx-1">
                               <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-full shadow-md overflow-hidden bg-gray-200">
-                                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=100&h=100&fit=crop" alt="" className="w-full h-full object-cover" />
+                                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=100&h=100&fit=crop" alt="Fashion category" className="w-full h-full object-cover" />
                               </div>
                               <p className="text-xs text-center mt-1 font-medium text-gray-600">Fashion</p>
                             </div>
                             <div className="flex-shrink-0 mx-1">
                               <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-full shadow-md overflow-hidden bg-gray-200">
-                                <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=100&h=100&fit=crop" alt="" className="w-full h-full object-cover" />
+                                <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=100&h=100&fit=crop" alt="Health category" className="w-full h-full object-cover" />
                               </div>
                               <p className="text-xs text-center mt-1 font-medium text-gray-600">Health</p>
                             </div>
                             <div className="flex-shrink-0 mx-1">
                               <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-full shadow-md overflow-hidden bg-gray-200">
-                                <img src="https://images.unsplash.com/photo-1484788984921-03950022c9ef?w=100&h=100&fit=crop" alt="" className="w-full h-full object-cover" />
+                                <img src="https://images.unsplash.com/photo-1484788984921-03950022c9ef?w=100&h=100&fit=crop" alt="Office category" className="w-full h-full object-cover" />
                               </div>
                               <p className="text-xs text-center mt-1 font-medium text-gray-600">Office</p>
                             </div>
@@ -260,7 +261,7 @@ export default function HomePage() {
                             ].map((product, index) => (
                               <div key={index} className="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100">
                                 <div className="aspect-square overflow-hidden">
-                                  <img src={product.image} alt="" className="w-full h-full object-cover" />
+                                  <img src={product.image} alt={product.name} className="w-full h-full object-cover" loading="lazy" />
                                 </div>
                                 <div className="p-2">
                                   <p className="text-xs font-semibold text-gray-900 line-clamp-2 mb-1">{product.name}</p>
@@ -276,13 +277,133 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
+
+            {/* Central Phone Mockup - Mobile Only */}
+            <div className="block md:hidden relative z-30 w-full max-w-[280px] sm:max-w-xs mx-auto">
+              <div className="relative bg-gray-900 rounded-[3rem] p-2 shadow-2xl border border-gray-800/50">
+                <div className="bg-white rounded-[2.5rem] overflow-hidden relative">
+                  <div className="bg-gradient-to-br from-emerald-50 via-white to-emerald-50 relative overflow-hidden h-[400px] sm:h-[450px]">
+                    {/* Phone Content */}
+                    <div className="text-center pt-4 sm:pt-6 py-0 px-3 sm:px-4 scale-85 sm:scale-90 origin-top">
+                      {/* Store Avatar */}
+                      <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full mx-auto mb-3 sm:mb-4 flex items-center justify-center border-4 border-white shadow-xl">
+                        <Store className="w-5 h-5 text-white" />
+                      </div>
+
+                      {/* Social Icons */}
+                      <div className="flex justify-center space-x-2 sm:space-x-3 mb-2 sm:mb-3">
+                        <div className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700">
+                          <svg viewBox="0 0 24 24" fill="currentColor">
+                            <rect width="20" height="20" x="2" y="2" rx="5" ry="5" fill="none" stroke="currentColor" strokeWidth="2"/>
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" fill="none" stroke="currentColor" strokeWidth="2"/>
+                            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" stroke="currentColor" strokeWidth="2"/>
+                          </svg>
+                        </div>
+                        <div className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700">
+                          <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" fill="none" stroke="currentColor" strokeWidth="2"/>
+                          </svg>
+                        </div>
+                        <div className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700">
+                          <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z" fill="none" stroke="currentColor" strokeWidth="2"/>
+                          </svg>
+                        </div>
+                      </div>
+
+                      {/* Store Name and Description */}
+                      <h2 className="text-base sm:text-lg font-bold text-gray-900 mb-1 sm:mb-2">The Coffee Maker</h2>
+                      <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">Welcome to my awesome store! Discover unique products curated just for you.</p>
+                    </div>
+
+                    {/* Categories */}
+                    <div className="px-3 sm:px-4 mb-3 sm:mb-4">
+                      <div className="flex space-x-1 sm:space-x-2 overflow-x-auto pb-2 -mx-0.5 sm:-mx-1">
+                        <div className="flex-shrink-0 mx-0.5 sm:mx-1">
+                          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full shadow-md overflow-hidden border-2 border-emerald-500 grid grid-cols-2 grid-rows-2 gap-0">
+                            <div className="w-full h-full">
+                              <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=100&h=100&fit=crop" alt="Product collage" className="w-full h-full object-cover" />
+                            </div>
+                            <div className="w-full h-full">
+                              <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=100&h=100&fit=crop" alt="Product collage" className="w-full h-full object-cover" />
+                            </div>
+                            <div className="w-full h-full">
+                              <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=100&h=100&fit=crop" alt="Product collage" className="w-full h-full object-cover" />
+                            </div>
+                            <div className="w-full h-full">
+                              <img src="https://images.unsplash.com/photo-1608043152269-423dbba4e7e4?w=100&h=100&fit=crop" alt="Product collage" className="w-full h-full object-cover" />
+                            </div>
+                          </div>
+                          <p className="text-xs text-center mt-1 font-medium text-emerald-600">All</p>
+                        </div>
+                        <div className="flex-shrink-0 mx-0.5 sm:mx-1">
+                          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full shadow-md overflow-hidden bg-gray-200">
+                            <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=100&h=100&fit=crop" alt="Fashion category" className="w-full h-full object-cover" />
+                          </div>
+                          <p className="text-xs text-center mt-1 font-medium text-gray-600">Fashion</p>
+                        </div>
+                        <div className="flex-shrink-0 mx-0.5 sm:mx-1">
+                          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full shadow-md overflow-hidden bg-gray-200">
+                            <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=100&h=100&fit=crop" alt="Health category" className="w-full h-full object-cover" />
+                          </div>
+                          <p className="text-xs text-center mt-1 font-medium text-gray-600">Health</p>
+                        </div>
+                        <div className="flex-shrink-0 mx-0.5 sm:mx-1">
+                          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full shadow-md overflow-hidden bg-gray-200">
+                            <img src="https://images.unsplash.com/photo-1484788984921-03950022c9ef?w=100&h=100&fit=crop" alt="Office category" className="w-full h-full object-cover" />
+                          </div>
+                          <p className="text-xs text-center mt-1 font-medium text-gray-600">Office</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Products Section */}
+                    <div className="px-3 sm:px-4 pb-6 sm:pb-8">
+                      <h3 className="text-xs sm:text-sm font-bold text-gray-900 mb-2 sm:mb-3">All Products</h3>
+                      
+                      {/* Search Bar */}
+                      <div className="mb-3 sm:mb-4 relative">
+                        <div className="absolute inset-y-0 left-0 pl-2 sm:pl-3 flex items-center pointer-events-none">
+                          <svg className="h-3 w-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.34-4.34M11 19a8 8 0 100-16 8 8 0 000 16z" />
+                          </svg>
+                        </div>
+                        <input
+                          placeholder="Search products..."
+                          className="w-full pl-7 sm:pl-8 pr-2 sm:pr-3 py-1.5 sm:py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-400 text-xs bg-white text-gray-900 placeholder-gray-500"
+                          readOnly
+                          type="text"
+                        />
+                      </div>
+
+                      {/* Product Grid - 3 columns for consistency */}
+                      <div className="grid grid-cols-3 gap-1 sm:gap-1.5">
+                        {[
+                          { name: 'Wireless Headphones', price: '$149.99', image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200&h=200&fit=crop' },
+                          { name: 'Smart Watch Pro', price: '$299.99', image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=200&h=200&fit=crop' },
+                          { name: 'Designer Backpack', price: '$89.99', image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=200&h=200&fit=crop' },
+                          { name: 'Sunglasses', price: '$129.99', image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200&h=200&fit=crop' },
+                          { name: 'Laptop Computer', price: '$999.99', image: 'https://images.unsplash.com/photo-1484788984921-03950022c9ef?w=200&h=200&fit=crop' },
+                          { name: 'Bluetooth Speaker', price: '$79.99', image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e4?w=200&h=200&fit=crop' }
+                        ].map((product, index) => (
+                          <div key={index} className="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100">
+                            <div className="aspect-square overflow-hidden">
+                              <img src={product.image} alt={product.name} className="w-full h-full object-cover" loading="lazy" />
+                            </div>
+                            <div className="p-1 sm:p-1.5">
+                              <p className="text-xs font-semibold text-gray-900 line-clamp-2 mb-1">{product.name}</p>
+                              <p className="text-xs font-bold text-emerald-600">{product.price}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-
-        {/* Background Elements */}
-        <div className="absolute top-10 left-10 w-72 h-72 bg-emerald-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-        <div className="absolute top-0 right-4 w-72 h-72 bg-yellow-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
       </section>
 
       {/* Features Section */}
@@ -396,6 +517,39 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
+
+      <style jsx>{`
+        @keyframes float-1 {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-10px) rotate(2deg); }
+        }
+        @keyframes float-2 {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-15px) rotate(-1deg); }
+        }
+        @keyframes float-3 {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-5px) rotate(1deg); }
+        }
+        @keyframes float-4 {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-20px) rotate(3deg); }
+        }
+        @keyframes float-5 {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-8px) rotate(-2deg); }
+        }
+        @keyframes float-6 {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-12px) rotate(1deg); }
+        }
+        .animate-float-1 { animation: float-1 6s ease-in-out infinite; }
+        .animate-float-2 { animation: float-2 6s ease-in-out infinite; }
+        .animate-float-3 { animation: float-3 6s ease-in-out infinite; }
+        .animate-float-4 { animation: float-4 6s ease-in-out infinite; }
+        .animate-float-5 { animation: float-5 6s ease-in-out infinite; }
+        .animate-float-6 { animation: float-6 6s ease-in-out infinite; }
+      `}</style>
     </div>
   );
 }
