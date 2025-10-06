@@ -607,8 +607,7 @@ export default function StoreSettingsPage() {
         <div className="space-y-8">
           {/* Font Settings */}
           <div>
-            <h3 className="text-lg font-medium text-gray-900">Font Settings</h3>
-
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Font Settings</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
@@ -694,7 +693,7 @@ export default function StoreSettingsPage() {
           {/* Text Colors */}
           <div>
             <h3 className="text-lg font-medium text-gray-900 mb-4">Text Colors</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-900 mb-2">
                   Store Name Color
@@ -727,6 +726,30 @@ export default function StoreSettingsPage() {
                   type="color"
                   value={formData.customization.priceFontColor}
                   onChange={(e) => handleCustomizationChange('priceFontColor', e.target.value)}
+                  className="w-full h-10 border border-gray-300 rounded-lg cursor-pointer"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-900 mb-2">
+                  Heading Text Color
+                </label>
+                <input
+                  type="color"
+                  value={formData.customization.headingTextColor}
+                  onChange={(e) => handleCustomizationChange('headingTextColor', e.target.value)}
+                  className="w-full h-10 border border-gray-300 rounded-lg cursor-pointer"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-900 mb-2">
+                  Body Text Color
+                </label>
+                <input
+                  type="color"
+                  value={formData.customization.bodyTextColor}
+                  onChange={(e) => handleCustomizationChange('bodyTextColor', e.target.value)}
                   className="w-full h-10 border border-gray-300 rounded-lg cursor-pointer"
                 />
               </div>

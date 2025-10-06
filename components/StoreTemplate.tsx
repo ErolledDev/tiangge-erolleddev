@@ -348,7 +348,7 @@ export default function StoreTemplate({ store, products, slides, categories, ini
                   <div className="flex justify-center mb-3 sm:mb-4">
                     {store.avatar && (
                       <div 
-                        className="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-3 sm:border-4 shadow-lg"
+                        className="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-4 shadow-lg"
                         style={{
                           borderColor: store.customization?.avatarBorderColor || '#ffffff'
                         }}
@@ -390,7 +390,7 @@ export default function StoreTemplate({ store, products, slides, categories, ini
                   <div className="flex items-center">
                     {store.avatar && (
                       <div 
-                        className="w-12 h-12 sm:w-16 sm:h-16 rounded-full overflow-hidden border-3 sm:border-4 shadow-lg"
+                        className="w-12 h-12 sm:w-16 sm:h-16 rounded-full overflow-hidden border-4 shadow-lg"
                         style={{
                           borderColor: store.customization?.avatarBorderColor || '#ffffff'
                         }}
@@ -839,7 +839,10 @@ export default function StoreTemplate({ store, products, slides, categories, ini
             alt={`${store.name} Store`}
             width={48}
             height={48}
-            className="w-12 h-12 sm:w-16 sm:h-16 rounded-full shadow-lg"
+            className="w-12 h-12 sm:w-16 sm:h-16 rounded-full shadow-lg border-2"
+            style={{
+              borderColor: store.customization?.avatarBorderColor || '#ffffff'
+            }}
           />
         </button>
       )}
