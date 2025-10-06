@@ -8,12 +8,12 @@ interface ToastMessage extends Omit<ToastProps, 'onClose'> {
   duration?: number;
 }
 
-interface ToastContextType {
+export interface ToastContextType {
   addToast: (message: string, type?: ToastType, duration?: number) => void;
   removeToast: (id: string) => void;
 }
 
-const ToastContext = createContext<ToastContextType | undefined>(undefined);
+export const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
 const MAX_TOASTS = 5;
 
@@ -51,6 +51,3 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     </ToastContext.Provider>
   );
 };
-
-export { ToastContext };
-export type { ToastContextType };
