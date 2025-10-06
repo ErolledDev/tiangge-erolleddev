@@ -14,7 +14,7 @@ import {
   Product,
   getUserStore
 } from '@/lib/store';
-import { CreditCard as Edit, Trash2, Plus, Check, X, Users, Clock, Crown } from 'lucide-react';
+import { Edit, Trash2, Plus, Check, X, Users, Clock, Crown } from 'lucide-react';
 import { RefreshCcw } from 'lucide-react';
 import ProductCSVImporter from '@/components/ProductCSVImporter';
 
