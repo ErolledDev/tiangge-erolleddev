@@ -271,7 +271,9 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
     } catch (error) {
       console.error('Save error:', error);
       
-      showError('Failed to save product');
+      // Display the specific error message from the backend
+      const errorMessage = error instanceof Error ? error.message : 'Failed to save product: An unexpected error occurred. Please try again.';
+      showError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -552,7 +554,7 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
                         : 'text-blue-600'
                   }`}>
                     {isAtProductLimit
-                      ? 'You have reached the 30-product limit. Contact an administrator for enhanced access.'
+                      ? 'You have reached the 30-product limit for standard users. To add more products, please upgrade to premium access or contact an administrator for assistance.'
                       : `${currentProductCount}/30 products used. ${30 - currentProductCount} remaining.`
                     }
                   </p>

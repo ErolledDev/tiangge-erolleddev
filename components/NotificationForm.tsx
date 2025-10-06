@@ -87,7 +87,9 @@ export default function NotificationForm({ notification, mode, onSave, onCancel 
       }
     } catch (error) {
       console.error('Error saving notification:', error);
-      showError('Failed to save notification. Please try again.');
+      // Display the specific error message from the backend
+      const errorMessage = error instanceof Error ? error.message : 'Failed to save notification: An unexpected error occurred. Please try again.';
+      showError(errorMessage);
     } finally {
       setSaving(false);
     }

@@ -176,7 +176,9 @@ export default function SponsoredProductForm({ sponsoredProduct, mode }: Sponsor
       router.push('/dashboard/system-management/sponsor-products');
     } catch (error) {
       console.error('Save error:', error);
-      showError('Failed to save sponsored product. Please try again.');
+      // Display the specific error message from the backend
+      const errorMessage = error instanceof Error ? error.message : 'Failed to save sponsored product: An unexpected error occurred. Please try again.';
+      showError(errorMessage);
     } finally {
       setIsLoading(false);
     }

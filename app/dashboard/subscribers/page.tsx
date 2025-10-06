@@ -95,7 +95,9 @@ export default function SubscribersPage() {
       showSuccess('Subscribers exported successfully');
     } catch (error) {
       console.error('Error exporting CSV:', error);
-      showError('Export failed');
+      // Display more specific error message for CSV export
+      const errorMessage = error instanceof Error ? error.message : 'Export failed: Unable to generate CSV file. Please try again.';
+      showError(errorMessage);
     } finally {
       setExporting(false);
     }
@@ -115,7 +117,9 @@ export default function SubscribersPage() {
       showSuccess('Subscriber removed successfully');
     } catch (error) {
       console.error('Error deleting subscriber:', error);
-      showError('Failed to remove subscriber');
+      // Display the specific error message from the backend
+      const errorMessage = error instanceof Error ? error.message : 'Failed to remove subscriber: An unexpected error occurred. Please try again.';
+      showError(errorMessage);
     }
   };
 

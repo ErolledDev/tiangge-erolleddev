@@ -151,11 +151,13 @@ export default function ProductCSVImporter() {
               window.location.reload();
             }, 2000);
           } else {
-            showError('No valid products found to import. Please check your CSV file.');
+            showError('Import failed: No valid products found in your CSV file. Please check the validation errors below and ensure your CSV file follows the correct format. Download the template for reference.');
           }
         } catch (error) {
           console.error('Error importing products:', error);
-          showError(error instanceof Error ? error.message : 'Failed to import products. Please try again.');
+          // Display the specific error message from the backend
+          const errorMessage = error instanceof Error ? error.message : 'Failed to import products: An unexpected error occurred during the import process. Please check your CSV file format and try again.';
+          showError(errorMessage);
         } finally {
           setIsImporting(false);
           // Reset file input
@@ -166,7 +168,7 @@ export default function ProductCSVImporter() {
       },
       error: (error) => {
         console.error('CSV parsing error:', error);
-        showError('Failed to parse CSV file. Please check the file format.');
+        showError('CSV parsing failed: Unable to read your CSV file. Please ensure the file is properly formatted, uses UTF-8 encoding, and follows the template structure. Try downloading and using our template.');
         setIsImporting(false);
       }
     });

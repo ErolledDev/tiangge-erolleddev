@@ -109,7 +109,9 @@ export default function UserManagementPage() {
       showSuccess(`User role updated to ${newRole}`);
     } catch (error) {
       console.error('Error updating user role:', error);
-      showError('Failed to update user role');
+      // Display the specific error message from the backend
+      const errorMessage = error instanceof Error ? error.message : 'Failed to update user role: An unexpected error occurred. Please try again.';
+      showError(errorMessage);
     } finally {
       setUpdatingUserId(null);
     }
@@ -127,7 +129,9 @@ export default function UserManagementPage() {
       showSuccess(`User premium status ${isPremium ? 'granted' : 'revoked'}`);
     } catch (error) {
       console.error('Error updating user premium status:', error);
-      showError('Failed to update user premium status');
+      // Display the specific error message from the backend
+      const errorMessage = error instanceof Error ? error.message : 'Failed to update user premium status: An unexpected error occurred. Please try again.';
+      showError(errorMessage);
     } finally {
       setUpdatingUserId(null);
     }
@@ -173,7 +177,9 @@ export default function UserManagementPage() {
       
     } catch (error) {
       console.error('Error migrating premium users:', error);
-      showError(`Failed to migrate premium users: ${error instanceof Error ? error.message : 'Unknown error'}. Check console for details.`);
+      // Display the specific error message from the backend
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred during migration';
+      showError(`Failed to migrate premium users: ${errorMessage}. Please check the console for detailed error information and try again.`);
     } finally {
       setIsMigrating(false);
     }
@@ -207,7 +213,9 @@ export default function UserManagementPage() {
       }
     } catch (error) {
       console.error('Error fixing user premium status:', error);
-      showError('Failed to fix user premium status');
+      // Display the specific error message from the backend
+      const errorMessage = error instanceof Error ? error.message : 'Failed to fix user premium status: An unexpected error occurred. Please try again.';
+      showError(errorMessage);
     } finally {
       setUpdatingUserId(null);
     }
@@ -243,7 +251,9 @@ export default function UserManagementPage() {
       }
     } catch (error) {
       console.error(`Error ${action}ing user trial:`, error);
-      showError(error instanceof Error ? error.message : `Failed to ${action} user trial`);
+      // Display the specific error message from the backend
+      const errorMessage = error instanceof Error ? error.message : `Failed to ${action} user trial: An unexpected error occurred. Please try again.`;
+      showError(errorMessage);
     } finally {
       setUpdatingUserId(null);
     }

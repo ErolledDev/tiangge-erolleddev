@@ -10,7 +10,7 @@ import {
   deleteSponsoredProduct, 
   SponsoredProduct 
 } from '@/lib/store';
-import { Edit, Trash2, Plus, ExternalLink, RefreshCcw, DollarSign } from 'lucide-react';
+import { CreditCard as Edit, Trash2, Plus, ExternalLink, RefreshCcw, DollarSign } from 'lucide-react';
 
 export default function SponsorProductsPage() {
   const { user } = useAuth();
@@ -54,7 +54,9 @@ export default function SponsorProductsPage() {
       await fetchSponsoredProducts();
     } catch (error) {
       console.error('Error deleting sponsored product:', error);
-      showError('Failed to delete sponsored product. Please try again.');
+      // Display the specific error message from the backend
+      const errorMessage = error instanceof Error ? error.message : 'Failed to delete sponsored product: An unexpected error occurred. Please try again.';
+      showError(errorMessage);
     }
   };
 

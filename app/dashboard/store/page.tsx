@@ -183,12 +183,24 @@ export default function StoreSettingsPage() {
   const handleImageUpload = async (file: File, type: 'avatar' | 'banner' | 'widget' | 'subscription') => {
     if (!user) throw new Error('User not authenticated');
 
+    // Validate file size (5MB limit)
+    const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+    if (file.size > maxSize) {
+      throw new Error(`Image file is too large. Maximum size allowed is 5MB. Your file is ${(file.size / 1024 / 1024).toFixed(1)}MB.`);
+    }
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      throw new Error('Invalid file type. Please select an image file (JPG, PNG, GIF, WebP).');
+    }
     let imageUrl: string;
     
     if (type === 'widget') {
       imageUrl = await uploadWidgetImage(user.uid, file);
     } else if (type === 'avatar' || type === 'banner') {
       imageUrl = await uploadStoreImage(user.uid, file, type);
+    } else {
+      throw new Error(`Unsupported image upload type: ${type}`);
     }
 
     // Update form data
@@ -255,7 +267,9 @@ export default function StoreSettingsPage() {
       showSuccess('Settings saved successfully');
     } catch (error) {
       console.error('Error updating store:', error);
-      showError('Failed to save settings');
+      // Display the specific error message from the backend
+      const errorMessage = error instanceof Error ? error.message : 'Failed to save settings: An unexpected error occurred. Please check your connection and try again.';
+      showError(errorMessage);
     } finally {
       setSaving(false);
     }

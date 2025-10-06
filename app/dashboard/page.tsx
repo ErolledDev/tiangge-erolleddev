@@ -254,7 +254,7 @@ export default function DashboardOverview() {
               onClick={(e) => {
                 if (isAtProductLimit) {
                   e.preventDefault();
-                  showError('Cannot add more products. You have reached the 30-product limit for normal users.');
+                  showError('Cannot add more products: You have reached the 30-product limit for standard users. Please upgrade to premium for unlimited products or contact an administrator for assistance.');
                 }
               }}
               aria-label="Add New Product"
@@ -278,7 +278,7 @@ export default function DashboardOverview() {
                     : 'text-gray-500'
                 }`}>
                   {isAtProductLimit 
-                    ? 'Upgrade to premium for unlimited products' 
+                    ? 'Upgrade to premium for unlimited products and advanced features' 
                     : 'Add affiliate products to your store'
                   }
                 </p>

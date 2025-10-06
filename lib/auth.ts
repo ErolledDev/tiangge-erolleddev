@@ -243,10 +243,11 @@ export const updateUserRoleAndPremiumStatus = async (userId: string, updates: { 
       }
       
       await updateDoc(storeRef, storeUpdateData);
-       console.log('✅ Store document updated with premium status sync for public access');
+      console.log('✅ Store document updated with premium status sync for public access');
     } catch (storeError) {
-      console.warn('⚠️ Failed to update store document with premium status:', storeError);
-      // Don't throw error here as the main user update succeeded
+      console.error('❌ Failed to update store document with premium status:', storeError);
+      // Re-throw the error to ensure it's caught by the calling component
+      throw new Error(`Failed to sync premium status to store: ${storeError instanceof Error ? storeError.message : 'Unknown error'}`);
     }
   } catch (error) {
     console.error('Error updating user role/premium status:', error);
@@ -562,9 +563,10 @@ export const updateUserTrialStatus = async (userId: string, action: 'end' | 'res
           ownerTrialEndDate: new Date(0), // Set to past date to end trial
           updatedAt: new Date()
         });
-         console.log('✅ Store document updated with trial end for public access enforcement');
+        console.log('✅ Store document updated with trial end for public access enforcement');
       } catch (storeError) {
-        console.warn('⚠️ Failed to update store document with trial end:', storeError);
+        console.error('❌ Failed to update store document with trial end:', storeError);
+        throw new Error(`Failed to sync trial end to store: ${storeError instanceof Error ? storeError.message : 'Unknown error'}`);
       }
       
     } else if (action === 'reset') {
@@ -600,9 +602,10 @@ export const updateUserTrialStatus = async (userId: string, action: 'end' | 'res
           ownerTrialEndDate: newTrialEndDate,
           updatedAt: new Date()
         });
-         console.log('✅ Store document updated with trial reset for public access');
+        console.log('✅ Store document updated with trial reset for public access');
       } catch (storeError) {
-        console.warn('⚠️ Failed to update store document with trial reset:', storeError);
+        console.error('❌ Failed to update store document with trial reset:', storeError);
+        throw new Error(`Failed to sync trial reset to store: ${storeError instanceof Error ? storeError.message : 'Unknown error'}`);
       }
     }
     

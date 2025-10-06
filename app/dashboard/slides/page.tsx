@@ -52,7 +52,9 @@ export default function SlidesPage() {
       await fetchSlides();
     } catch (error) {
       console.error('Error deleting slide:', error);
-      showError('Failed to delete slide');
+      // Display the specific error message from the backend
+      const errorMessage = error instanceof Error ? error.message : 'Failed to delete slide: An unexpected error occurred. Please try again.';
+      showError(errorMessage);
     }
   };
 

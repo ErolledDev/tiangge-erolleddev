@@ -10,7 +10,7 @@ import {
   Notification
 } from '@/lib/store';
 import NotificationForm from '@/components/NotificationForm';
-import { Bell, Plus, PenSquare as Edit, Trash2, RefreshCw, ToggleLeft, ToggleRight } from 'lucide-react';
+import { Bell, Plus, SquarePen as Edit, Trash2, RefreshCw, ToggleLeft, ToggleRight } from 'lucide-react';
 
 export default function BroadcastNotificationsPage() {
   const { user, userProfile } = useAuth();
@@ -76,7 +76,9 @@ export default function BroadcastNotificationsPage() {
       showSuccess('Notification deleted successfully');
     } catch (error) {
       console.error('Error deleting notification:', error);
-      showError('Failed to delete notification');
+      // Display the specific error message from the backend
+      const errorMessage = error instanceof Error ? error.message : 'Failed to delete notification: An unexpected error occurred. Please try again.';
+      showError(errorMessage);
     }
   };
 

@@ -166,7 +166,9 @@ export default function GlobalBroadcastPage() {
       });
     } catch (error) {
       console.error('Error saving banner:', error);
-      showError('Failed to save global banner');
+      // Display the specific error message from the backend
+      const errorMessage = error instanceof Error ? error.message : 'Failed to save global banner: An unexpected error occurred. Please try again.';
+      showError(errorMessage);
     } finally {
       setSavingBanner(false);
     }
@@ -200,7 +202,9 @@ export default function GlobalBroadcastPage() {
       showSuccess('Global banner deleted successfully');
     } catch (error) {
       console.error('Error deleting banner:', error);
-      showError('Failed to delete global banner');
+      // Display the specific error message from the backend
+      const errorMessage = error instanceof Error ? error.message : 'Failed to delete global banner: An unexpected error occurred. Please try again.';
+      showError(errorMessage);
     }
   };
 

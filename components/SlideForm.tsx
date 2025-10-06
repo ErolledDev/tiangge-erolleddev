@@ -104,7 +104,9 @@ export default function SlideForm({ slide, mode }: SlideFormProps) {
     } catch (error) {
       console.error('Error saving slide:', error);
       
-      showError('Failed to save slide');
+      // Display the specific error message from the backend
+      const errorMessage = error instanceof Error ? error.message : 'Failed to save slide: An unexpected error occurred. Please try again.';
+      showError(errorMessage);
     } finally {
       setSaving(false);
     }

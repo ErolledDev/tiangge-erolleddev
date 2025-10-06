@@ -262,7 +262,11 @@ export const updateStore = async (userId: string, updates: Partial<Store>): Prom
     });
   } catch (error) {
     console.error('Error updating store:', error);
-    throw error;
+    // Provide more specific error messages for store updates
+    if (error instanceof Error) {
+      throw new Error(`Failed to save store settings: ${error.message}`);
+    }
+    throw new Error('Failed to save store settings: An unexpected error occurred. Please check your connection and try again.');
   }
 };
 
@@ -287,7 +291,11 @@ export const uploadStoreImage = async (userId: string, file: File, type: 'avatar
     return await getDownloadURL(imageRef);
   } catch (error) {
     console.error('Error uploading store image:', error);
-    throw error;
+    // Provide more specific error messages for image uploads
+    if (error instanceof Error) {
+      throw new Error(`Failed to upload ${type} image: ${error.message}`);
+    }
+    throw new Error(`Failed to upload ${type} image: Please check your internet connection and try again.`);
   }
 };
 
@@ -310,7 +318,11 @@ export const uploadWidgetImage = async (userId: string, file: File): Promise<str
     return await getDownloadURL(imageRef);
   } catch (error) {
     console.error('Error uploading widget image:', error);
-    throw error;
+    // Provide more specific error messages for widget image uploads
+    if (error instanceof Error) {
+      throw new Error(`Failed to upload widget image: ${error.message}`);
+    }
+    throw new Error('Failed to upload widget image: Please check your internet connection and try again.');
   }
 };
 
@@ -459,7 +471,7 @@ export const addProduct = async (product: Omit<Product, 'id' | 'createdAt' | 'up
     if (!isPremiumUser) {
       const currentProducts = await getStoreProducts(product.storeId);
       if (currentProducts.length >= 30) {
-        throw new Error('Product limit reached. Normal users can add up to 30 products. Upgrade to premium for unlimited products.');
+        throw new Error(`Product limit exceeded: You have reached the maximum of 30 products allowed for standard users. You currently have ${currentProducts.length} products. To add more products and unlock unlimited storage, please upgrade to premium access. Contact an administrator for assistance with upgrading your account.`);
       }
     }
     
@@ -475,7 +487,15 @@ export const addProduct = async (product: Omit<Product, 'id' | 'createdAt' | 'up
     return docRef.id;
   } catch (error) {
     console.error('Error adding product:', error);
-    throw error;
+    // Provide more specific error messages for product creation
+    if (error instanceof Error) {
+      throw new Error(`Failed to create product: ${error.message}`);
+    }
+    throw new Error('Failed to create product: An unexpected error occurred. Please try again.');
+    if (error instanceof Error) {
+      throw new Error(`Failed to add product: ${error.message}`);
+    }
+    throw new Error('Failed to add product: An unexpected error occurred. Please try again.');
   }
 };
 
@@ -490,7 +510,11 @@ export const updateProduct = async (storeId: string, productId: string, updates:
     });
   } catch (error) {
     console.error('Error updating product:', error);
-    throw error;
+    // Provide more specific error messages for product updates
+    if (error instanceof Error) {
+      throw new Error(`Failed to update product: ${error.message}`);
+    }
+    throw new Error('Failed to update product: An unexpected error occurred. Please try again.');
   }
 };
 
@@ -502,7 +526,11 @@ export const deleteProduct = async (storeId: string, productId: string): Promise
     await deleteDoc(productRef);
   } catch (error) {
     console.error('Error deleting product:', error);
-    throw error;
+    // Provide more specific error messages for product deletion
+    if (error instanceof Error) {
+      throw new Error(`Failed to delete product: ${error.message}`);
+    }
+    throw new Error('Failed to delete product: An unexpected error occurred. Please try again.');
   }
 };
 
@@ -525,7 +553,11 @@ export const uploadProductImage = async (userId: string, file: File, productId: 
     return await getDownloadURL(imageRef);
   } catch (error) {
     console.error('Error uploading product image:', error);
-    throw error;
+    // Provide more specific error messages for product image uploads
+    if (error instanceof Error) {
+      throw new Error(`Failed to upload product image: ${error.message}`);
+    }
+    throw new Error('Failed to upload product image: Please check your internet connection and try again.');
   }
 };
 
@@ -540,7 +572,7 @@ export const addProductsBatch = async (products: Omit<Product, 'id' | 'createdAt
       
       if (totalAfterImport > 30) {
         const remainingSlots = Math.max(0, 30 - currentProducts.length);
-        throw new Error(`Product limit exceeded. Normal users can have up to 30 products. You currently have ${currentProducts.length} products and can add ${remainingSlots} more. Upgrade to premium for unlimited products.`);
+        throw new Error(`Bulk import failed: Product limit exceeded. Standard users can have up to 30 products total. You currently have ${currentProducts.length} products and can only add ${remainingSlots} more. You're trying to import ${products.length} products, which would exceed the limit by ${totalAfterImport - 30} products. Please upgrade to premium for unlimited products or reduce the number of products in your import file.`);
       }
     }
     
@@ -561,7 +593,11 @@ export const addProductsBatch = async (products: Omit<Product, 'id' | 'createdAt
     await batch.commit();
   } catch (error) {
     console.error('Error adding products batch:', error);
-    throw error;
+    // Provide more specific error messages for batch operations
+    if (error instanceof Error) {
+      throw new Error(`Failed to import products: ${error.message}`);
+    }
+    throw new Error('Failed to import products: An unexpected error occurred during batch processing. Please try again.');
   }
 };
 
@@ -625,7 +661,11 @@ export const addSlide = async (slide: Omit<Slide, 'id' | 'createdAt' | 'updatedA
     return docRef.id;
   } catch (error) {
     console.error('Error adding slide:', error);
-    throw error;
+    // Provide more specific error messages for slide creation
+    if (error instanceof Error) {
+      throw new Error(`Failed to create slide: ${error.message}`);
+    }
+    throw new Error('Failed to create slide: An unexpected error occurred. Please try again.');
   }
 };
 
@@ -640,7 +680,11 @@ export const updateSlide = async (storeId: string, slideId: string, updates: Par
     });
   } catch (error) {
     console.error('Error updating slide:', error);
-    throw error;
+    // Provide more specific error messages for slide updates
+    if (error instanceof Error) {
+      throw new Error(`Failed to update slide: ${error.message}`);
+    }
+    throw new Error('Failed to update slide: An unexpected error occurred. Please try again.');
   }
 };
 
@@ -652,7 +696,11 @@ export const deleteSlide = async (storeId: string, slideId: string): Promise<voi
     await deleteDoc(slideRef);
   } catch (error) {
     console.error('Error deleting slide:', error);
-    throw error;
+    // Provide more specific error messages for slide deletion
+    if (error instanceof Error) {
+      throw new Error(`Failed to delete slide: ${error.message}`);
+    }
+    throw new Error('Failed to delete slide: An unexpected error occurred. Please try again.');
   }
 };
 
@@ -675,7 +723,11 @@ export const uploadSlideImage = async (userId: string, file: File, slideId: stri
     return await getDownloadURL(imageRef);
   } catch (error) {
     console.error('Error uploading slide image:', error);
-    throw error;
+    // Provide more specific error messages for slide image uploads
+    if (error instanceof Error) {
+      throw new Error(`Failed to upload slide image: ${error.message}`);
+    }
+    throw new Error('Failed to upload slide image: Please check your internet connection and try again.');
   }
 };
 
@@ -693,7 +745,11 @@ export const addSubscriber = async (subscriber: Omit<Subscriber, 'id' | 'created
     return docRef.id;
   } catch (error) {
     console.error('Error adding subscriber:', error);
-    throw error;
+    // Provide more specific error messages for subscriber creation
+    if (error instanceof Error) {
+      throw new Error(`Failed to add subscriber: ${error.message}`);
+    }
+    throw new Error('Failed to add subscriber: An unexpected error occurred. Please try again.');
   }
 };
 
@@ -722,7 +778,11 @@ export const deleteSubscriber = async (storeId: string, subscriberId: string): P
     await deleteDoc(subscriberRef);
   } catch (error) {
     console.error('Error deleting subscriber:', error);
-    throw error;
+    // Provide more specific error messages for subscriber deletion
+    if (error instanceof Error) {
+      throw new Error(`Failed to delete subscriber: ${error.message}`);
+    }
+    throw new Error('Failed to delete subscriber: An unexpected error occurred. Please try again.');
   }
 };
 
@@ -788,7 +848,11 @@ export const addGlobalBanner = async (banner: Omit<GlobalBanner, 'id' | 'created
     return docRef.id;
   } catch (error) {
     console.error('Error adding global banner:', error);
-    throw error;
+    // Provide more specific error messages for global banner creation
+    if (error instanceof Error) {
+      throw new Error(`Failed to create global banner: ${error.message}`);
+    }
+    throw new Error('Failed to create global banner: An unexpected error occurred. Please try again.');
   }
 };
 
@@ -803,7 +867,11 @@ export const updateGlobalBanner = async (bannerId: string, updates: Partial<Glob
     });
   } catch (error) {
     console.error('Error updating global banner:', error);
-    throw error;
+    // Provide more specific error messages for global banner updates
+    if (error instanceof Error) {
+      throw new Error(`Failed to update global banner: ${error.message}`);
+    }
+    throw new Error('Failed to update global banner: An unexpected error occurred. Please try again.');
   }
 };
 
@@ -815,7 +883,11 @@ export const deleteGlobalBanner = async (bannerId: string): Promise<void> => {
     await deleteDoc(bannerRef);
   } catch (error) {
     console.error('Error deleting global banner:', error);
-    throw error;
+    // Provide more specific error messages for global banner deletion
+    if (error instanceof Error) {
+      throw new Error(`Failed to delete global banner: ${error.message}`);
+    }
+    throw new Error('Failed to delete global banner: An unexpected error occurred. Please try again.');
   }
 };
 
@@ -838,7 +910,11 @@ export const uploadGlobalBannerImage = async (file: File): Promise<string> => {
     return await getDownloadURL(imageRef);
   } catch (error) {
     console.error('Error uploading global banner image:', error);
-    throw error;
+    // Provide more specific error messages for global banner image uploads
+    if (error instanceof Error) {
+      throw new Error(`Failed to upload global banner image: ${error.message}`);
+    }
+    throw new Error('Failed to upload global banner image: Please check your internet connection and try again.');
   }
 };
 
@@ -924,7 +1000,11 @@ export const addSponsoredProduct = async (sponsoredProduct: Omit<SponsoredProduc
     return docRef.id;
   } catch (error) {
     console.error('Error adding sponsored product:', error);
-    throw error;
+    // Provide more specific error messages for sponsored product creation
+    if (error instanceof Error) {
+      throw new Error(`Failed to create sponsored product: ${error.message}`);
+    }
+    throw new Error('Failed to create sponsored product: An unexpected error occurred. Please try again.');
   }
 };
 
@@ -939,7 +1019,11 @@ export const updateSponsoredProduct = async (sponsoredProductId: string, updates
     });
   } catch (error) {
     console.error('Error updating sponsored product:', error);
-    throw error;
+    // Provide more specific error messages for sponsored product updates
+    if (error instanceof Error) {
+      throw new Error(`Failed to update sponsored product: ${error.message}`);
+    }
+    throw new Error('Failed to update sponsored product: An unexpected error occurred. Please try again.');
   }
 };
 
@@ -951,7 +1035,11 @@ export const deleteSponsoredProduct = async (sponsoredProductId: string): Promis
     await deleteDoc(sponsoredProductRef);
   } catch (error) {
     console.error('Error deleting sponsored product:', error);
-    throw error;
+    // Provide more specific error messages for sponsored product deletion
+    if (error instanceof Error) {
+      throw new Error(`Failed to delete sponsored product: ${error.message}`);
+    }
+    throw new Error('Failed to delete sponsored product: An unexpected error occurred. Please try again.');
   }
 };
 
@@ -974,7 +1062,11 @@ export const uploadSponsoredProductImage = async (file: File, sponsoredProductId
     return await getDownloadURL(imageRef);
   } catch (error) {
     console.error('Error uploading sponsored product image:', error);
-    throw error;
+    // Provide more specific error messages for sponsored product image uploads
+    if (error instanceof Error) {
+      throw new Error(`Failed to upload sponsored product image: ${error.message}`);
+    }
+    throw new Error('Failed to upload sponsored product image: Please check your internet connection and try again.');
   }
 };
 
@@ -989,7 +1081,11 @@ export const incrementSponsoredProductClickCount = async (sponsoredProductId: st
     });
   } catch (error) {
     console.error('Error incrementing sponsored product click count:', error);
-    throw error;
+    // Provide more specific error messages for click count updates
+    if (error instanceof Error) {
+      throw new Error(`Failed to update click count: ${error.message}`);
+    }
+    throw new Error('Failed to update click count: An unexpected error occurred.');
   }
 };
 
@@ -1009,7 +1105,11 @@ export const addNotification = async (notification: Omit<Notification, 'id' | 'c
     return docRef.id;
   } catch (error) {
     console.error('Error adding notification:', error);
-    throw error;
+    // Provide more specific error messages for notification creation
+    if (error instanceof Error) {
+      throw new Error(`Failed to create notification: ${error.message}`);
+    }
+    throw new Error('Failed to create notification: An unexpected error occurred. Please try again.');
   }
 };
 
@@ -1068,7 +1168,11 @@ export const updateNotification = async (notificationId: string, updates: Partia
     });
   } catch (error) {
     console.error('Error updating notification:', error);
-    throw error;
+    // Provide more specific error messages for notification updates
+    if (error instanceof Error) {
+      throw new Error(`Failed to update notification: ${error.message}`);
+    }
+    throw new Error('Failed to update notification: An unexpected error occurred. Please try again.');
   }
 };
 
@@ -1080,7 +1184,11 @@ export const deleteNotification = async (notificationId: string): Promise<void> 
     await deleteDoc(notificationRef);
   } catch (error) {
     console.error('Error deleting notification:', error);
-    throw error;
+    // Provide more specific error messages for notification deletion
+    if (error instanceof Error) {
+      throw new Error(`Failed to delete notification: ${error.message}`);
+    }
+    throw new Error('Failed to delete notification: An unexpected error occurred. Please try again.');
   }
 };
 
@@ -1098,7 +1206,11 @@ export const markNotificationAsRead = async (userId: string, notificationId: str
     await addDoc(collection(db, 'users', userId, 'read_notifications'), readNotificationData);
   } catch (error) {
     console.error('Error marking notification as read:', error);
-    throw error;
+    // Provide more specific error messages for marking notifications as read
+    if (error instanceof Error) {
+      throw new Error(`Failed to mark notification as read: ${error.message}`);
+    }
+    throw new Error('Failed to mark notification as read: An unexpected error occurred.');
   }
 };
 
