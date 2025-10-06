@@ -30,6 +30,7 @@ export default function GlobalBroadcastPage() {
   const [allGlobalBanners, setAllGlobalBanners] = useState<GlobalBanner[]>([]);
   const [selectedBanner, setSelectedBanner] = useState<GlobalBanner | null>(null);
   const [bannerClickCounts, setBannerClickCounts] = useState<Record<string, number>>({});
+  const [showBannerForm, setShowBannerForm] = useState(false);
   const [bannerForm, setBannerForm] = useState({
     imageUrl: '',
     description: '',
@@ -157,6 +158,7 @@ export default function GlobalBroadcastPage() {
       }
       
       // Reset form and selection
+      setShowBannerForm(false);
       setSelectedBanner(null);
       setBannerForm({
         imageUrl: '',
@@ -192,6 +194,7 @@ export default function GlobalBroadcastPage() {
       }
       
       // Reset form and selection
+      setShowBannerForm(false);
       setSelectedBanner(null);
       setBannerForm({
         imageUrl: '',
@@ -209,6 +212,7 @@ export default function GlobalBroadcastPage() {
   };
 
   const handleEditBanner = (banner: GlobalBanner) => {
+    setShowBannerForm(true);
     setSelectedBanner(banner);
     setBannerForm({
       imageUrl: banner.imageUrl,
@@ -219,6 +223,7 @@ export default function GlobalBroadcastPage() {
   };
 
   const handleCreateNewBanner = () => {
+    setShowBannerForm(true);
     setSelectedBanner(null);
     setBannerForm({
       imageUrl: '',
@@ -383,7 +388,7 @@ export default function GlobalBroadcastPage() {
                 </div>
 
                 {/* Banner Form - Only show when creating/editing */}
-                {(selectedBanner !== null || (!selectedBanner && (bannerForm.imageUrl || bannerForm.description || bannerForm.link))) && (
+                {showBannerForm && (
                   <div className="border-t pt-4 sm:pt-6">
                     <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-3 sm:mb-4">
                       {selectedBanner ? 'Edit Banner' : 'Create New Banner'}
@@ -463,6 +468,7 @@ export default function GlobalBroadcastPage() {
                           
                           <button
                             onClick={() => {
+                              setShowBannerForm(false);
                               setSelectedBanner(null);
                               setBannerForm({
                                 imageUrl: '',
