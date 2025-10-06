@@ -216,7 +216,8 @@ export const getStoreBySlug = async (slug: string): Promise<Store | null> => {
         id: doc.id,
         ...data,
         createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : data.createdAt,
-        updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : data.updatedAt
+        updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : data.updatedAt,
+        ownerTrialEndDate: data.ownerTrialEndDate?.toDate ? data.ownerTrialEndDate.toDate() : data.ownerTrialEndDate
       } as Store;
     }
     

@@ -23,26 +23,10 @@ service cloud.firestore {
       match /stores/{storeId} {
         allow read; // Anyone can read store details
         allow create: if request.auth != null && request.auth.uid == userId && request.resource.data.ownerId == userId;
+        // Allow basic store updates for authenticated owners
         allow update: if request.auth != null && request.auth.uid == userId && resource.data.ownerId == userId;
         allow delete: if request.auth != null && request.auth.uid == userId && resource.data.ownerId == userId;
         
-        // Prevent non-premium users from enabling premium features
-        allow update: if request.auth != null && 
-                      request.auth.uid == userId && 
-                      resource.data.ownerId == userId &&
-                      (
-                        // Allow if user is admin
-                        get(/databases/$(database)/documents/users/$(userId)).data.role == 'admin' ||
-                        // Allow if premium was set by admin
-                        get(/databases/$(database)/documents/users/$(userId)).data.isPremiumAdminSet == true ||
-                        // Allow if trial is still active
-                        (get(/databases/$(database)/documents/users/$(userId)).data.trialEndDate != null &&
-                         get(/databases/$(database)/documents/users/$(userId)).data.trialEndDate > request.time) ||
-                        // Allow if not trying to enable premium features
-                        !(request.resource.data.widgetEnabled == true || 
-                          request.resource.data.bannerEnabled == true || 
-                          request.resource.data.showCategories == true)
-                      );
 
         // Products subcollection: Public read, owner write
         match /products/{productId} {
