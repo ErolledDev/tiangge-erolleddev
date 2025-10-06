@@ -256,6 +256,13 @@ export const updateStore = async (userId: string, updates: Partial<Store>): Prom
       updates.ownerTrialEndDate = userProfile.trialEndDate;
     }
     
+    // Clean up undefined values that Firestore doesn't accept
+    Object.keys(updates).forEach(key => {
+      if (updates[key as keyof typeof updates] === undefined) {
+        delete updates[key as keyof typeof updates];
+      }
+    });
+    
     const storeRef = doc(db, 'users', userId, 'stores', userId);
     await updateDoc(storeRef, {
       ...updates,
