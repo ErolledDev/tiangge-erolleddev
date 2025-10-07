@@ -13,7 +13,7 @@ export interface ToastProps {
   duration?: number;
 }
 
-const Toast: React.FC<ToastProps> = ({ id, message, type, onClose, duration = 4000 }) => {
+const Toast: React.FC<ToastProps> = ({ id, message, type, onClose, duration = 5000 }) => {
   const [isExiting, setIsExiting] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [progress, setProgress] = useState(100);
@@ -109,7 +109,7 @@ const Toast: React.FC<ToastProps> = ({ id, message, type, onClose, duration = 40
   return (
     <div
       className={`
-        flex items-start justify-between p-4 rounded-lg shadow-xl mb-3 min-w-[320px] max-w-md
+        flex items-start justify-between p-4 rounded-lg shadow-2xl min-w-[280px] sm:min-w-[320px] max-w-[calc(100vw-2rem)] sm:max-w-md
         transition-all duration-300 ease-out transform relative overflow-hidden
         ${getColors()}
         ${isExiting ? 'toast-exit' : 'toast-enter'}

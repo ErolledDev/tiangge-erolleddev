@@ -1,6 +1,5 @@
 import { useContext } from 'react';
-import { ToastContext } from '@/context/ToastContext';
-import { ToastType } from '@/components/Toast';
+import { ToastContext, ToastType } from '@/context/ToastContext';
 
 export const useToast = () => {
   const context = useContext(ToastContext);
@@ -12,6 +11,7 @@ export const useToast = () => {
   return {
     showToast: context.addToast,
     hideToast: context.removeToast,
+    clearAll: context.clearAllToasts,
     showSuccess: (message: string, duration?: number) => context.addToast(message, 'success', duration),
     showError: (message: string, duration?: number) => context.addToast(message, 'error', duration),
     showInfo: (message: string, duration?: number) => context.addToast(message, 'info', duration),

@@ -77,13 +77,17 @@ export default function NotificationForm({ notification, mode, onSave, onCancel 
           ...notificationData,
           ownerId: user.uid
         }, user.uid);
-        showSuccess('Notification created successfully!');
+        showSuccess('Successfully created new notification!');
       }
 
       if (onSave) {
-        onSave();
+        setTimeout(() => {
+          onSave();
+        }, 1500);
       } else {
-        router.push('/dashboard/system-management/broadcast-notifications');
+        setTimeout(() => {
+          router.push('/dashboard/system-management/broadcast-notifications');
+        }, 1500);
       }
     } catch (error) {
       console.error('Error saving notification:', error);

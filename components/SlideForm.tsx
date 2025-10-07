@@ -98,9 +98,11 @@ export default function SlideForm({ slide, mode }: SlideFormProps) {
         });
       }
 
+      showSuccess(mode === 'edit' ? 'Slide updated successfully!' : 'Successfully added new slide!');
 
-      showSuccess(mode === 'edit' ? 'Slide updated successfully' : 'Slide created successfully');
-      router.push('/dashboard/slides');
+      setTimeout(() => {
+        router.push('/dashboard/slides');
+      }, 2000);
     } catch (error) {
       console.error('Error saving slide:', error);
       

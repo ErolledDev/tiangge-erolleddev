@@ -18,6 +18,7 @@ import {
 import { getGlobalBannerClickEvents } from '@/lib/analytics';
 import ImageUploadWithDelete from '@/components/ImageUploadWithDelete';
 import CustomToggle from '@/components/CustomToggle';
+import ConfirmModal from '@/components/ConfirmModal';
 import { Radio, Save, Trash2, TriangleAlert as AlertTriangle, CircleCheck as CheckCircle, Circle as XCircle, ExternalLink, ArrowLeft, Settings, Megaphone } from 'lucide-react';
 
 export default function GlobalBroadcastPage() {
@@ -39,6 +40,8 @@ export default function GlobalBroadcastPage() {
   });
   const [bannerLoading, setBannerLoading] = useState(false);
   const [savingBanner, setSavingBanner] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [bannerToDelete, setBannerToDelete] = useState<GlobalBanner | null>(null);
 
   // Load current global banner
   useEffect(() => {
@@ -177,31 +180,32 @@ export default function GlobalBroadcastPage() {
   };
 
   const handleDeleteBanner = async () => {
-    if (!selectedBanner) return;
-
-    const confirmed = window.confirm('Are you sure you want to delete this global banner? This action cannot be undone.');
-    if (!confirmed) return;
+    if (!bannerToDelete) return;
 
     try {
-      await deleteGlobalBanner(selectedBanner.id);
+      await deleteGlobalBanner(bannerToDelete.id);
       
       // Remove from allGlobalBanners
-      setAllGlobalBanners(prev => prev.filter(banner => banner.id !== selectedBanner.id));
-      
-      // Clear currentBanner if it's the same as selectedBanner
-      if (currentBanner?.id === selectedBanner.id) {
+      setAllGlobalBanners(prev => prev.filter(banner => banner.id !== bannerToDelete.id));
+
+      // Clear currentBanner if it's the same as bannerToDelete
+      if (currentBanner?.id === bannerToDelete.id) {
         setCurrentBanner(null);
       }
-      
-      // Reset form and selection
-      setShowBannerForm(false);
-      setSelectedBanner(null);
-      setBannerForm({
-        imageUrl: '',
-        description: '',
-        link: '',
-        isActive: false
-      });
+
+      // Reset form and selection if deleting the currently selected banner
+      if (selectedBanner?.id === bannerToDelete.id) {
+        setShowBannerForm(false);
+        setSelectedBanner(null);
+        setBannerForm({
+          imageUrl: '',
+          description: '',
+          link: '',
+          isActive: false
+        });
+      }
+
+      setBannerToDelete(null);
       showSuccess('Global banner deleted successfully');
     } catch (error) {
       console.error('Error deleting banner:', error);
@@ -362,8 +366,8 @@ export default function GlobalBroadcastPage() {
                                   </button>
                                   <button
                                     onClick={() => {
-                                      setSelectedBanner(banner);
-                                      handleDeleteBanner();
+                                      setBannerToDelete(banner);
+                                      setShowDeleteModal(true);
                                     }}
                                     className="inline-flex items-center justify-center px-2 sm:px-3 py-1.5 border border-red-300 shadow-sm text-xs font-medium rounded text-red-700 bg-red-50 hover:bg-red-100 transition-colors min-h-[36px] min-w-[36px]"
                                     title="Delete banner"
@@ -485,7 +489,10 @@ export default function GlobalBroadcastPage() {
 
                         {selectedBanner && (
                           <button
-                            onClick={handleDeleteBanner}
+                            onClick={() => {
+                              setBannerToDelete(selectedBanner);
+                              setShowDeleteModal(true);
+                            }}
                             className="flex items-center justify-center px-4 sm:px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium text-sm min-h-[44px]"
                           >
                             <Trash2 className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
@@ -501,6 +508,20 @@ export default function GlobalBroadcastPage() {
           </div>
         </div>
       </div>
+
+      <ConfirmModal
+        isOpen={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setBannerToDelete(null);
+        }}
+        onConfirm={handleDeleteBanner}
+        title="Delete Global Banner"
+        message="Are you sure you want to delete this global banner? This action cannot be undone."
+        confirmText="Delete Banner"
+        cancelText="Cancel"
+        isDangerous={true}
+      />
     </AdminRoute>
   );
 }

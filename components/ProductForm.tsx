@@ -266,8 +266,11 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
           images: [finalImageUrl]
         }, isPremium(userProfile));
       }
-      showSuccess(mode === 'edit' ? 'Product updated successfully' : 'Product added successfully');
-      router.push('/dashboard/products');
+      showSuccess(mode === 'edit' ? 'Product updated successfully!' : 'Successfully added new product!');
+
+      setTimeout(() => {
+        router.push('/dashboard/products');
+      }, 2000);
     } catch (error) {
       console.error('Save error:', error);
       

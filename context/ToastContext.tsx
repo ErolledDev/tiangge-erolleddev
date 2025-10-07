@@ -1,53 +1,81 @@
 'use client';
 
-import React, { createContext, useState, useContext, useCallback } from 'react';
-import Toast, { ToastProps, ToastType } from '@/components/Toast';
+import React, { createContext, useContext, useCallback, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
+import { ToastContainer, toast, ToastOptions, Id } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-interface ToastMessage extends Omit<ToastProps, 'onClose'> {
-  id: string;
-  duration?: number;
-}
+export type ToastType = 'success' | 'error' | 'info' | 'warning';
 
 export interface ToastContextType {
   addToast: (message: string, type?: ToastType, duration?: number) => void;
-  removeToast: (id: string) => void;
+  removeToast: (id: Id) => void;
+  clearAllToasts: () => void;
 }
 
 export const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
-const MAX_TOASTS = 5;
-
 export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const pathname = usePathname();
 
-  const addToast = useCallback((message: string, type: ToastType = 'info', duration: number = 4000) => {
-    const id = Date.now().toString() + Math.random().toString(36).substr(2, 9);
-    setToasts((prevToasts) => {
-      const newToasts = [...prevToasts, { id, message, type, duration }];
-      if (newToasts.length > MAX_TOASTS) {
-        return newToasts.slice(-MAX_TOASTS);
-      }
-      return newToasts;
-    });
+  const addToast = useCallback((message: string, type: ToastType = 'info', duration: number = 5000) => {
+    const options: ToastOptions = {
+      position: 'top-right',
+      autoClose: duration,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    };
+
+    switch (type) {
+      case 'success':
+        toast.success(message, options);
+        break;
+      case 'error':
+        toast.error(message, options);
+        break;
+      case 'warning':
+        toast.warning(message, options);
+        break;
+      case 'info':
+      default:
+        toast.info(message, options);
+        break;
+    }
   }, []);
 
-  const removeToast = useCallback((id: string) => {
-    setToasts((prevToasts) => prevToasts.filter((toast) => toast.id !== id));
+  const removeToast = useCallback((id: Id) => {
+    toast.dismiss(id);
   }, []);
+
+  const clearAllToasts = useCallback(() => {
+    toast.dismiss();
+  }, []);
+
+  useEffect(() => {
+    if (pathname === '/auth' || pathname === '/') {
+      clearAllToasts();
+    }
+  }, [pathname, clearAllToasts]);
 
   return (
-    <ToastContext.Provider value={{ addToast, removeToast }}>
+    <ToastContext.Provider value={{ addToast, removeToast, clearAllToasts }}>
       {children}
-      <div
-        className="fixed top-4 right-4 z-[9999] pointer-events-none"
-        style={{ maxWidth: 'calc(100vw - 2rem)' }}
-      >
-        <div className="flex flex-col items-end space-y-2 pointer-events-auto">
-          {toasts.map((toast) => (
-            <Toast key={toast.id} {...toast} onClose={removeToast} />
-          ))}
-        </div>
-      </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        limit={5}
+      />
     </ToastContext.Provider>
   );
 };
