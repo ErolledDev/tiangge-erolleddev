@@ -495,13 +495,8 @@ export const addProduct = async (product: Omit<Product, 'id' | 'createdAt' | 'up
     return docRef.id;
   } catch (error) {
     console.error('Error adding product:', error);
-    // Provide more specific error messages for product creation
     if (error instanceof Error) {
-      throw new Error(`Failed to create product: ${error.message}`);
-    }
-    throw new Error('Failed to create product: An unexpected error occurred. Please try again.');
-    if (error instanceof Error) {
-      throw new Error(`Failed to add product: ${error.message}`);
+      throw error;
     }
     throw new Error('Failed to add product: An unexpected error occurred. Please try again.');
   }
