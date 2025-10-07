@@ -96,7 +96,7 @@ export const signUp = async (email: string, password: string, displayName?: stri
       createdAt: new Date(),
       updatedAt: new Date(),
       role: 'user',
-      isPremium: false,
+      isPremium: true,  // Start with premium access during trial
       trialEndDate: trialEndDate,
     };
     
@@ -352,7 +352,7 @@ export const isPremium = (userProfile: UserProfile | null): boolean => {
     isPremium: userProfile.isPremium,
     isPremiumAdminSet: userProfile.isPremiumAdminSet,
     trialEndDate: userProfile.trialEndDate,
-    trialEndDateTimestamp: userProfile.trialEndDate instanceof Date ? userProfile.trialEndDate.getTime() : undefined,
+    trialEndDateTimestamp: userProfile.trialEndDate instanceof Date ? userProfile.trialEndDate.getTime() : null,
     currentTimestamp: Date.now(),
     isTrialActive: userProfile.trialEndDate instanceof Date ? userProfile.trialEndDate.getTime() > Date.now() : false
   });
@@ -370,7 +370,7 @@ export const isPremium = (userProfile: UserProfile | null): boolean => {
   }
   
   // Check if trial is still active
-  if (userProfile.trialEndDate instanceof Date && userProfile.trialEndDate.getTime() > Date.now()) {
+  if (userProfile.trialEndDate && userProfile.trialEndDate instanceof Date && userProfile.trialEndDate.getTime() > Date.now()) {
     console.log('✅ User trial is still active');
     return true;
   }
@@ -388,7 +388,7 @@ export const hasTrialExpired = (userProfile: UserProfile | null): boolean => {
   if (userProfile.isPremiumAdminSet === true) return false;
 
   // Check if trial end date exists and has passed
-  if (userProfile.trialEndDate instanceof Date && userProfile.trialEndDate.getTime() < Date.now()) {
+  if (userProfile.trialEndDate && userProfile.trialEndDate instanceof Date && userProfile.trialEndDate.getTime() < Date.now()) {
     return true;
   }
 
@@ -403,7 +403,7 @@ export const isOnTrial = (userProfile: UserProfile | null): boolean => {
   if (userProfile.isPremiumAdminSet === true) return false;
 
   // Check if trial end date exists and is still valid
-  if (userProfile.trialEndDate instanceof Date && userProfile.trialEndDate.getTime() > Date.now()) {
+  if (userProfile.trialEndDate && userProfile.trialEndDate instanceof Date && userProfile.trialEndDate.getTime() > Date.now()) {
     return true;
   }
 
@@ -417,6 +417,7 @@ export const getTrialDaysRemaining = (userProfile: UserProfile | null): number =
   // If premium was set by admin, return 0 (not on trial)
   if (userProfile.isPremiumAdminSet === true) return 0;
 
+  // Check if trialEndDate is a valid Date object
   if (!(userProfile.trialEndDate instanceof Date)) return 0;
 
   const now = Date.now();
