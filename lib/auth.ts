@@ -204,54 +204,74 @@ export const getUserProfile = async (uid: string): Promise<UserProfile | null> =
 export const updateUserRoleAndPremiumStatus = async (userId: string, updates: { role?: 'user' | 'admin', isPremium?: boolean }): Promise<void> => {
   try {
     if (!db) throw new Error('Firebase not initialized');
-    
+
+    console.log('🔄 Starting user update for userId:', userId, 'with updates:', updates);
+
     // Prepare the update object
     const updateData: any = {
       ...updates,
       updatedAt: new Date()
     };
-    
+
     // If admin is granting premium access, make it permanent and clear trial
     if (updates.isPremium === true) {
       updateData.isPremiumAdminSet = true;
-      updateData.trialEndDate = null; // Clear trial end date
+      updateData.trialEndDate = null;
+      console.log('✅ Setting permanent premium access');
     }
-    
+
     // If admin is revoking premium access, clear all premium-related fields
     if (updates.isPremium === false) {
       updateData.isPremiumAdminSet = false;
-      updateData.trialEndDate = null; // Clear trial end date
+      updateData.trialEndDate = null;
+      console.log('✅ Revoking premium access');
     }
-    
+
+    // Update user document first
+    console.log('🔄 Updating user document...');
     const userRef = doc(db, 'users', userId);
     await updateDoc(userRef, updateData);
-    
-    // Also update the store document to keep premium status synchronized for public access
-    try {
-      const storeRef = doc(db, 'users', userId, 'stores', userId);
-      const storeUpdateData: any = {
-        updatedAt: new Date()
-      };
-      
-      // Sync premium status fields to store document
-      if (updates.isPremium === true) {
-        storeUpdateData.ownerIsPremiumAdminSet = true;
-        storeUpdateData.ownerTrialEndDate = null;
-      } else if (updates.isPremium === false) {
-        storeUpdateData.ownerIsPremiumAdminSet = false;
-        storeUpdateData.ownerTrialEndDate = null;
+    console.log('✅ User document updated successfully');
+
+    // Update store document if premium status changed
+    if (updates.isPremium !== undefined) {
+      console.log('🔄 Updating store document...');
+      try {
+        const storeRef = doc(db, 'users', userId, 'stores', userId);
+        const storeUpdateData: any = {
+          updatedAt: new Date()
+        };
+
+        // Sync premium status fields to store document
+        if (updates.isPremium === true) {
+          storeUpdateData.ownerIsPremiumAdminSet = true;
+          storeUpdateData.ownerTrialEndDate = null;
+        } else if (updates.isPremium === false) {
+          storeUpdateData.ownerIsPremiumAdminSet = false;
+          storeUpdateData.ownerTrialEndDate = null;
+        }
+
+        await updateDoc(storeRef, storeUpdateData);
+        console.log('✅ Store document updated successfully');
+      } catch (storeError: any) {
+        console.error('❌ Failed to update store document:', storeError);
+
+        // Check if it's a not-found error (store doesn't exist yet)
+        if (storeError.code === 'not-found') {
+          console.log('⚠️ Store document not found - user may not have created a store yet');
+          // Don't throw error if store doesn't exist
+          return;
+        }
+
+        // For other errors, throw
+        throw new Error(`Failed to sync premium status to store: ${storeError.message || 'Unknown error'}`);
       }
-      
-      await updateDoc(storeRef, storeUpdateData);
-      console.log('✅ Store document updated with premium status sync for public access');
-    } catch (storeError) {
-      console.error('❌ Failed to update store document with premium status:', storeError);
-      // Re-throw the error to ensure it's caught by the calling component
-      throw new Error(`Failed to sync premium status to store: ${storeError instanceof Error ? storeError.message : 'Unknown error'}`);
     }
-  } catch (error) {
-    console.error('Error updating user role/premium status:', error);
-    throw error;
+
+    console.log('✅ All updates completed successfully');
+  } catch (error: any) {
+    console.error('❌ Error updating user role/premium status:', error);
+    throw new Error(error.message || 'Failed to update user status');
   }
 };
 
@@ -533,67 +553,80 @@ export const isOriginalTrialWindowValid = (userProfile: UserProfile | null): boo
 export const updateUserTrialStatus = async (userId: string, action: 'end' | 'reset'): Promise<void> => {
   try {
     if (!db) throw new Error('Firebase not initialized');
-    
+
+    console.log(`🔄 Starting trial ${action} for userId:`, userId);
+
     // Use getUserProfile to properly convert Firestore timestamps to Date objects
     const userData = await getUserProfile(userId);
-    
+
     if (!userData) {
       throw new Error('User not found');
     }
-    
+
     if (action === 'end') {
       // End the user's trial immediately
       if (!isOnTrial(userData)) {
         throw new Error('User is not currently on trial');
       }
-      
+
+      console.log('🔄 Ending trial...');
       const userRef = doc(db, 'users', userId);
       await updateDoc(userRef, {
-        trialEndDate: new Date(0), // Set to past date to end trial
+        trialEndDate: new Date(0),
         isPremium: false,
         isPremiumAdminSet: false,
         updatedAt: new Date()
       });
-      
+      console.log('✅ User document updated - trial ended');
+
       // Also update the store document
       try {
         const storeRef = doc(db, 'users', userId, 'stores', userId);
         await updateDoc(storeRef, {
           ownerIsPremiumAdminSet: false,
-          ownerTrialEndDate: new Date(0), // Set to past date to end trial
+          ownerTrialEndDate: new Date(0),
           updatedAt: new Date()
         });
-        console.log('✅ Store document updated with trial end for public access enforcement');
-      } catch (storeError) {
+        console.log('✅ Store document updated with trial end');
+      } catch (storeError: any) {
         console.error('❌ Failed to update store document with trial end:', storeError);
-        throw new Error(`Failed to sync trial end to store: ${storeError instanceof Error ? storeError.message : 'Unknown error'}`);
+
+        // Check if it's a not-found error
+        if (storeError.code === 'not-found') {
+          console.log('⚠️ Store document not found - skipping store update');
+          return;
+        }
+
+        throw new Error(`Failed to sync trial end to store: ${storeError.message || 'Unknown error'}`);
       }
-      
+
     } else if (action === 'reset') {
       // Reset the user's trial for another 7 days
-      
+
       // Check if user has permanent premium (cannot reset trial)
       if (userData.isPremiumAdminSet === true) {
         throw new Error('Cannot reset trial for users with permanent premium access');
       }
-      
+
       // Check if original 7-day window has passed
       if (!isOriginalTrialWindowValid(userData)) {
         throw new Error('Cannot reset trial: Original 7-day trial window has expired');
       }
-      
+
       // Calculate new trial end date (7 days from now)
       const newTrialEndDate = new Date();
       newTrialEndDate.setDate(newTrialEndDate.getDate() + 7);
-      
+
+      console.log('🔄 Resetting trial...');
       const userRef = doc(db, 'users', userId);
       await updateDoc(userRef, {
         trialEndDate: newTrialEndDate,
         isPremium: true,
-        isPremiumAdminSet: false, // Ensure this is a trial, not permanent premium
+        isPremiumAdminSet: false,
         updatedAt: new Date()
       });
-      
+      console.log('✅ User document updated - trial reset');
+
       // Also update the store document
       try {
         const storeRef = doc(db, 'users', userId, 'stores', userId);
@@ -602,15 +635,24 @@ export const updateUserTrialStatus = async (userId: string, action: 'end' | 'res
           ownerTrialEndDate: newTrialEndDate,
           updatedAt: new Date()
         });
-        console.log('✅ Store document updated with trial reset for public access');
-      } catch (storeError) {
+        console.log('✅ Store document updated with trial reset');
+      } catch (storeError: any) {
         console.error('❌ Failed to update store document with trial reset:', storeError);
-        throw new Error(`Failed to sync trial reset to store: ${storeError instanceof Error ? storeError.message : 'Unknown error'}`);
+
+        // Check if it's a not-found error
+        if (storeError.code === 'not-found') {
+          console.log('⚠️ Store document not found - skipping store update');
+          return;
+        }
+
+        throw new Error(`Failed to sync trial reset to store: ${storeError.message || 'Unknown error'}`);
       }
     }
-    
-  } catch (error) {
-    console.error('Error updating user trial status:', error);
-    throw error;
+
+    console.log(`✅ Trial ${action} completed successfully`);
+
+  } catch (error: any) {
+    console.error(`❌ Error updating user trial status (${action}):`, error);
+    throw new Error(error.message || `Failed to ${action} trial`);
   }
 };

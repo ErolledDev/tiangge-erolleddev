@@ -19,14 +19,13 @@ import {
 } from '@/lib/auth';
 import { getAllStoreSlugs } from '@/lib/store';
 import { Users, Search, Shield, Crown, RefreshCw, ExternalLink, ArrowLeft, Clock, CircleStop as StopCircle, RotateCcw, Settings } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 export default function UserManagementPage() {
   const { user, userProfile } = useAuth();
   const { showSuccess, showError, showWarning, showInfo } = useToast();
   const router = useRouter();
-  const searchParams = useSearchParams();
-
+  
   // User Management State
   const [searchEmail, setSearchEmail] = useState('');
   const [foundUser, setFoundUser] = useState<UserProfile | null>(null);
@@ -35,16 +34,7 @@ export default function UserManagementPage() {
   const [allUsersLoading, setAllUsersLoading] = useState(false);
   const [updatingUserId, setUpdatingUserId] = useState<string | null>(null);
   const [isMigrating, setIsMigrating] = useState(false);
-
-  // Handle URL search parameters
-  useEffect(() => {
-    const emailParam = searchParams.get('search');
-    if (emailParam && emailParam !== searchEmail) {
-      setSearchEmail(emailParam);
-      // Automatically search when URL has search parameter
-      handleSearchUser(emailParam);
-    }
-  }, [searchParams]);
+  const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
 
   // Load all users for admin
   useEffect(() => {
@@ -53,7 +43,7 @@ export default function UserManagementPage() {
         setAllUsers([]);
         return;
       }
-
+      
       setAllUsersLoading(true);
       try {
         // Fetch users and store slugs in parallel
@@ -61,13 +51,13 @@ export default function UserManagementPage() {
           getAllUserProfiles(),
           getAllStoreSlugs()
         ]);
-
+        
         // Enrich user profiles with store slugs
         const enrichedUsers = users.map(user => ({
           ...user,
           storeSlug: storeSlugsMap.get(user.uid) || undefined
         }));
-
+        
         setAllUsers(enrichedUsers);
       } catch (error) {
         console.error('Error loading all users:', error);
@@ -84,21 +74,17 @@ export default function UserManagementPage() {
   }, [userProfile]);
 
   // User Management Functions
-  const handleSearchUser = async (email?: string) => {
-    const emailToSearch = email || searchEmail;
-    if (!emailToSearch.trim()) {
+  const handleSearchUser = async () => {
+    if (!searchEmail.trim()) {
       showWarning('Please enter an email address to search');
       return;
     }
 
-    // Update URL with search parameter
-    router.push(`/dashboard/system-management/users?search=${encodeURIComponent(emailToSearch.trim())}`);
-
     setSearchLoading(true);
     try {
-      const user = await getUserByEmail(emailToSearch.trim());
+      const user = await getUserByEmail(searchEmail.trim());
       setFoundUser(user);
-
+      
       if (!user) {
         showInfo('No user found with that email address');
       } else {
@@ -110,13 +96,6 @@ export default function UserManagementPage() {
     } finally {
       setSearchLoading(false);
     }
-  };
-
-  const handleUserClick = (userEmail: string) => {
-    setSearchEmail(userEmail);
-    handleSearchUser(userEmail);
-    // Scroll to search section
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleUpdateUserRole = async (userId: string, newRole: 'user' | 'admin') => {
@@ -313,6 +292,13 @@ export default function UserManagementPage() {
     }
   };
 
+  const toggleUserSelection = (user: UserProfile) => {
+    if (selectedUser?.uid === user.uid) {
+      setSelectedUser(null); // Close if already selected
+    } else {
+      setSelectedUser(user); // Open the selected user
+    }
+  };
 
   return (
     <AdminRoute>
@@ -344,7 +330,7 @@ export default function UserManagementPage() {
                 />
               </div>
               <button
-                onClick={() => handleSearchUser()}
+                onClick={handleSearchUser}
                 disabled={searchLoading}
                 className="flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium text-sm min-h-[44px]"
               >
@@ -458,59 +444,6 @@ export default function UserManagementPage() {
                     </div>
                   </div>
                 </div>
-
-                {/* Trial Management Section */}
-                {(isOnTrial(foundUser) || (isOriginalTrialWindowValid(foundUser) && foundUser.isPremiumAdminSet !== true)) && (
-                  <div className="mt-4 pt-4 border-t border-gray-200">
-                    <p className="text-xs sm:text-sm text-gray-600 mb-3">Trial Management</p>
-                    <div className="flex flex-wrap items-center gap-2">
-                      {isOnTrial(foundUser) && (
-                        <button
-                          onClick={() => handleUpdateTrialStatus(foundUser.uid, 'end')}
-                          disabled={updatingUserId === foundUser.uid}
-                          className="inline-flex items-center px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-lg bg-red-100 text-red-700 hover:bg-red-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-h-[36px]"
-                        >
-                          {updatingUserId === foundUser.uid ? (
-                            <>
-                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
-                              Ending...
-                            </>
-                          ) : (
-                            <>
-                              <StopCircle className="w-4 h-4 mr-2" />
-                              End Trial
-                            </>
-                          )}
-                        </button>
-                      )}
-
-                      {isOriginalTrialWindowValid(foundUser) && foundUser.isPremiumAdminSet !== true && (
-                        <button
-                          onClick={() => handleUpdateTrialStatus(foundUser.uid, 'reset')}
-                          disabled={updatingUserId === foundUser.uid}
-                          className="inline-flex items-center px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-h-[36px]"
-                        >
-                          {updatingUserId === foundUser.uid ? (
-                            <>
-                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
-                              Resetting...
-                            </>
-                          ) : (
-                            <>
-                              <RotateCcw className="w-4 h-4 mr-2" />
-                              Re-enable Trial
-                            </>
-                          )}
-                        </button>
-                      )}
-                    </div>
-                    {isOriginalTrialWindowValid(foundUser) && foundUser.isPremiumAdminSet !== true && (
-                      <p className="text-xs text-gray-500 mt-2">
-                        Trial can be re-enabled because the account is still within 7 days of creation
-                      </p>
-                    )}
-                  </div>
-                )}
               </div>
             )}
           </div>
@@ -619,7 +552,8 @@ export default function UserManagementPage() {
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                       {allUsers.map((user) => (
-                        <tr key={user.uid} className="hover:bg-gray-50 transition-colors">
+                        <React.Fragment key={user.uid}>
+                          <tr className="hover:bg-gray-50 transition-colors">
                           <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                             <div className="text-xs sm:text-sm font-medium text-gray-900 truncate max-w-[100px] sm:max-w-none">
                               {user.displayName || 'Not set'}
@@ -708,14 +642,205 @@ export default function UserManagementPage() {
                           </td>
                           <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-center">
                             <button
-                              onClick={() => handleUserClick(user.email)}
-                              className="inline-flex items-center justify-center p-2 text-gray-600 hover:text-primary-600 hover:bg-gray-100 rounded-lg transition-colors"
-                              title="Search and Manage User"
+                              onClick={() => toggleUserSelection(user)}
+                              className={`inline-flex items-center justify-center p-2 rounded-lg transition-colors ${
+                                selectedUser?.uid === user.uid
+                                  ? 'text-primary-600 bg-primary-50'
+                                  : 'text-gray-600 hover:text-primary-600 hover:bg-gray-100'
+                              }`}
+                              title="Manage User"
                             >
                               <Settings className="w-5 h-5" />
                             </button>
                           </td>
                         </tr>
+                        {/* Inline User Management Section */}
+                        {selectedUser?.uid === user.uid && (
+                          <tr>
+                            <td colSpan={6} className="px-3 sm:px-6 py-4 bg-gray-50">
+                              <div className="space-y-4">
+                                {/* Fix Needed Warning */}
+                                {selectedUser.isPremium && selectedUser.isPremiumAdminSet === undefined && (
+                                  <div className="p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                                    <div className="flex items-center space-x-2">
+                                      <span className="text-yellow-600">🔧</span>
+                                      <div className="flex-1">
+                                        <p className="text-sm font-medium text-yellow-800">Premium Status Needs Migration</p>
+                                        <p className="text-xs text-yellow-700">
+                                          This user has premium access but is missing the isPremiumAdminSet field.
+                                        </p>
+                                      </div>
+                                      <button
+                                        onClick={() => handleFixUserPremiumStatus(selectedUser.uid)}
+                                        disabled={updatingUserId === selectedUser.uid}
+                                        className="px-3 py-1 text-xs bg-yellow-600 text-white rounded hover:bg-yellow-700 disabled:opacity-50 min-h-[32px]"
+                                      >
+                                        {updatingUserId === selectedUser.uid ? 'Fixing...' : 'Fix Now'}
+                                      </button>
+                                    </div>
+                                  </div>
+                                )}
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  {/* Role Management */}
+                                  <div>
+                                    <p className="text-sm text-gray-600 mb-2">Role Management</p>
+                                    <div className="flex items-center space-x-3">
+                                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                        selectedUser.role === 'admin'
+                                          ? 'bg-red-100 text-red-800'
+                                          : 'bg-gray-100 text-gray-800'
+                                      }`}>
+                                        {selectedUser.role === 'admin' ? (
+                                          <>
+                                            <Shield className="w-3 h-3 mr-1" />
+                                            Admin
+                                          </>
+                                        ) : (
+                                          'User'
+                                        )}
+                                      </span>
+                                      <button
+                                        onClick={() => handleUpdateUserRole(selectedUser.uid, selectedUser.role === 'admin' ? 'user' : 'admin')}
+                                        disabled={updatingUserId === selectedUser.uid}
+                                        className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                                          selectedUser.role === 'admin'
+                                            ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                            : 'bg-red-100 text-red-700 hover:bg-red-200'
+                                        } disabled:opacity-50 disabled:cursor-not-allowed min-h-[36px]`}
+                                      >
+                                        {updatingUserId === selectedUser.uid ? 'Updating...' : (selectedUser.role === 'admin' ? 'Remove Admin' : 'Make Admin')}
+                                      </button>
+                                    </div>
+                                  </div>
+
+                                  {/* Premium Status Management */}
+                                  <div>
+                                    <p className="text-sm text-gray-600 mb-2">Premium Status</p>
+                                    <div className="flex items-center space-x-3">
+                                      <div className="flex flex-col space-y-1">
+                                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                          selectedUser.isPremiumAdminSet === true || (selectedUser.isPremium && selectedUser.isPremiumAdminSet === undefined)
+                                            ? 'bg-yellow-100 text-yellow-800'
+                                            : isOnTrial(selectedUser)
+                                              ? 'bg-blue-100 text-blue-800'
+                                              : 'bg-gray-100 text-gray-800'
+                                        }`}>
+                                          {selectedUser.isPremiumAdminSet === true || (selectedUser.isPremium && selectedUser.isPremiumAdminSet === undefined) ? (
+                                            <>
+                                              <Crown className="w-3 h-3 mr-1" />
+                                              Premium
+                                            </>
+                                          ) : isOnTrial(selectedUser) ? (
+                                            <>
+                                              <Clock className="w-3 h-3 mr-1" />
+                                              Trial
+                                            </>
+                                          ) : (
+                                            'Basic'
+                                          )}
+                                        </span>
+
+                                        {isOnTrial(selectedUser) && selectedUser.isPremiumAdminSet !== true && (
+                                          <span className="text-xs text-blue-600 font-medium">
+                                            {getTrialDaysRemaining(selectedUser)} days left
+                                          </span>
+                                        )}
+
+                                        {hasTrialExpired(selectedUser) && selectedUser.isPremiumAdminSet !== true && (
+                                          <span className="text-xs text-red-600 font-medium">
+                                            Trial expired
+                                          </span>
+                                        )}
+                                      </div>
+
+                                      <button
+                                        onClick={() => handleUpdateUserPremium(selectedUser.uid, !selectedUser.isPremium)}
+                                        disabled={updatingUserId === selectedUser.uid}
+                                        className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                                          selectedUser.isPremium
+                                            ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                            : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
+                                        } disabled:opacity-50 disabled:cursor-not-allowed min-h-[36px]`}
+                                      >
+                                        {updatingUserId === selectedUser.uid ? 'Updating...' : (selectedUser.isPremium ? 'Revoke Premium' : 'Grant Premium')}
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* Trial Management */}
+                                {(isOnTrial(selectedUser) || (isOriginalTrialWindowValid(selectedUser) && selectedUser.isPremiumAdminSet !== true)) && (
+                                  <div>
+                                    <p className="text-sm text-gray-600 mb-2">Trial Management</p>
+                                    <div className="flex items-center flex-wrap gap-2">
+                                      {isOnTrial(selectedUser) && (
+                                        <button
+                                          onClick={() => handleUpdateTrialStatus(selectedUser.uid, 'end')}
+                                          disabled={updatingUserId === selectedUser.uid}
+                                          className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg bg-red-100 text-red-700 hover:bg-red-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-h-[36px]"
+                                        >
+                                          {updatingUserId === selectedUser.uid ? (
+                                            <>
+                                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
+                                              Ending...
+                                            </>
+                                          ) : (
+                                            <>
+                                              <StopCircle className="w-4 h-4 mr-2" />
+                                              End Trial
+                                            </>
+                                          )}
+                                        </button>
+                                      )}
+
+                                      {isOriginalTrialWindowValid(selectedUser) && selectedUser.isPremiumAdminSet !== true && (
+                                        <button
+                                          onClick={() => handleUpdateTrialStatus(selectedUser.uid, 'reset')}
+                                          disabled={updatingUserId === selectedUser.uid}
+                                          className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-h-[36px]"
+                                        >
+                                          {updatingUserId === selectedUser.uid ? (
+                                            <>
+                                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
+                                              Resetting...
+                                            </>
+                                          ) : (
+                                            <>
+                                              <RotateCcw className="w-4 h-4 mr-2" />
+                                              Re-enable Trial
+                                            </>
+                                          )}
+                                        </button>
+                                      )}
+                                    </div>
+                                    {isOriginalTrialWindowValid(selectedUser) && selectedUser.isPremiumAdminSet !== true && (
+                                      <p className="text-xs text-gray-500 mt-2">
+                                        Trial can be re-enabled because the account is still within 7 days of creation
+                                      </p>
+                                    )}
+                                  </div>
+                                )}
+
+                                {/* Store Link */}
+                                {selectedUser.storeSlug && (
+                                  <div>
+                                    <p className="text-sm text-gray-600 mb-2">Store</p>
+                                    <a
+                                      href={`/${selectedUser.storeSlug}`}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="inline-flex items-center text-primary-600 hover:text-primary-900 transition-colors font-medium text-sm"
+                                    >
+                                      View Store <ExternalLink className="w-4 h-4 ml-1" />
+                                    </a>
+                                  </div>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                        </React.Fragment>
                       ))}
                     </tbody>
                   </table>
