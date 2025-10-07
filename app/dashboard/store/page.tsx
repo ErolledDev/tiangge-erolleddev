@@ -206,20 +206,24 @@ export default function StoreSettingsPage() {
     // Update form data
     if (type === 'widget') {
       handleInputChange('widgetImage', imageUrl);
-    } else if (type === 'avatar' || type === 'banner') {
-      handleInputChange(type, imageUrl);
+    } else if (type === 'avatar') {
+      handleInputChange('avatar', imageUrl);
+    } else if (type === 'banner') {
+      handleInputChange('bannerImage', imageUrl);
     }
 
     return imageUrl;
   };
 
   const handleImageDelete = async (type: 'avatar' | 'banner' | 'widget' | 'subscription') => {
-    let currentImageUrl: string;
-    
+    let currentImageUrl: string = '';
+
     if (type === 'widget') {
       currentImageUrl = formData.widgetImage;
-    } else if (type === 'avatar' || type === 'banner') {
-      currentImageUrl = formData[type];
+    } else if (type === 'avatar') {
+      currentImageUrl = formData.avatar;
+    } else if (type === 'banner') {
+      currentImageUrl = formData.bannerImage;
     }
 
     if (currentImageUrl) {
@@ -233,8 +237,10 @@ export default function StoreSettingsPage() {
     // Update form data
     if (type === 'widget') {
       handleInputChange('widgetImage', '');
-    } else if (type === 'avatar' || type === 'banner') {
-      handleInputChange(type, '');
+    } else if (type === 'avatar') {
+      handleInputChange('avatar', '');
+    } else if (type === 'banner') {
+      handleInputChange('bannerImage', '');
     }
   };
 
