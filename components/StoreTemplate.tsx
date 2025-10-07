@@ -839,10 +839,7 @@ export default function StoreTemplate({ store, products, slides, categories, ini
             alt={`${store.name} Store`}
             width={48}
             height={48}
-            className="w-12 h-12 sm:w-16 sm:h-16 rounded-full shadow-lg border-2"
-            style={{
-              borderColor: store.customization?.avatarBorderColor || '#ffffff'
-            }}
+            className="w-12 h-12 sm:w-16 sm:h-16 shadow-lg"
           />
         </button>
       )}
