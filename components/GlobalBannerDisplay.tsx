@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
 import { useAuth } from '@/hooks/useAuth';
 import { getActiveGlobalBanner, GlobalBanner } from '@/lib/store';
 import { trackEvent } from '@/lib/analytics';
@@ -107,15 +106,11 @@ export default function GlobalBannerDisplay() {
           onClick={handleBannerClick}
         >
           {/* Banner Image */}
-          <div className="aspect-video overflow-hidden rounded-lg">
-            <Image
+          <div className="overflow-hidden rounded-lg">
+            <img
               src={banner.imageUrl}
               alt="Global Announcement"
-              width={1200}
-              height={600}
-              className="w-full h-full"
-              style={{ objectFit: 'fill' }}
-              priority
+              className="w-full h-auto"
             />
           </div>
         </div>
