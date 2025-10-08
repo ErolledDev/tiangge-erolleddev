@@ -897,18 +897,22 @@ export const deleteGlobalBanner = async (bannerId: string): Promise<void> => {
 export const uploadGlobalBannerImage = async (file: File): Promise<string> => {
   try {
     if (!storage) throw new Error('Firebase Storage not initialized');
-    
+
+    const isPNG = file.type === 'image/png';
+    const fileExtension = isPNG ? 'png' : 'webp';
+    const targetFormat = isPNG ? 'png' : 'webp';
+
     const compressedFile = await fromBlob(
       file,
-      75, // quality (0-100)
+      isPNG ? 100 : 75, // quality (100 for PNG to preserve transparency, 75 for others)
       1200, // width
       'auto', // height
-      'webp' // format
+      targetFormat // format
     );
-    
-    const fileName = `global_banner_${Date.now()}.webp`;
+
+    const fileName = `global_banner_${Date.now()}.${fileExtension}`;
     const imageRef = ref(storage, `global_banners/${fileName}`);
-    
+
     await uploadBytes(imageRef, compressedFile);
     return await getDownloadURL(imageRef);
   } catch (error) {

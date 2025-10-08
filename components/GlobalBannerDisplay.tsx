@@ -89,8 +89,8 @@ export default function GlobalBannerDisplay() {
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-[9999] flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-hidden relative">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 pointer-events-none">
+      <div className="relative max-w-2xl w-full pointer-events-auto">
         {/* Close Button */}
         <button
           onClick={handleClose}
@@ -106,7 +106,7 @@ export default function GlobalBannerDisplay() {
           onClick={handleBannerClick}
         >
           {/* Banner Image */}
-          <div className="overflow-hidden rounded-lg">
+          <div className="overflow-hidden rounded-lg shadow-2xl">
             <img
               src={banner.imageUrl}
               alt="Global Announcement"
