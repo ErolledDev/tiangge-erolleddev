@@ -255,16 +255,19 @@ export default function GlobalBroadcastPage() {
               </div>
             ) : (
               <div className="space-y-6">
-                {/* All Banners Table */}
+                {/* Single Global Banner */}
                 <div>
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-3 sm:gap-0">
-                    <h3 className="text-base sm:text-lg font-medium text-gray-900">All Global Banners</h3>
+                    <div>
+                      <h3 className="text-base sm:text-lg font-medium text-gray-900">Global Banner</h3>
+                      <p className="text-xs sm:text-sm text-gray-500 mt-1">Only 1 global banner is allowed. Creating a new one will replace the existing banner.</p>
+                    </div>
                     <button
                       onClick={handleCreateNewBanner}
                       className="flex items-center justify-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium text-sm min-h-[44px]"
                     >
                       <Megaphone className="w-4 h-4 mr-2" />
-                      Create New Banner
+                      {allGlobalBanners.length > 0 ? 'Replace Banner' : 'Create Banner'}
                     </button>
                   </div>
 
@@ -374,8 +377,8 @@ export default function GlobalBroadcastPage() {
                   ) : (
                     <div className="text-center py-8 text-gray-500">
                       <Megaphone className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-                      <p>No global banners created yet</p>
-                      <p className="text-sm">Click "Create New Banner" to get started</p>
+                      <p>No global banner created yet</p>
+                      <p className="text-sm">Click "Create Banner" to get started</p>
                     </div>
                   )}
                 </div>
@@ -384,8 +387,15 @@ export default function GlobalBroadcastPage() {
                 {showBannerForm && (
                   <div className="border-t pt-4 sm:pt-6">
                     <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-3 sm:mb-4">
-                      {selectedBanner ? 'Edit Banner' : 'Create New Banner'}
+                      {selectedBanner ? 'Edit Global Banner' : 'Create Global Banner'}
                     </h3>
+                    {!selectedBanner && allGlobalBanners.length > 0 && (
+                      <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                        <p className="text-sm text-yellow-800">
+                          <strong>Note:</strong> Creating a new banner will automatically replace the existing banner.
+                        </p>
+                      </div>
+                    )}
 
                     <div className="space-y-4 sm:space-y-6">
                       {/* Banner Image Upload */}

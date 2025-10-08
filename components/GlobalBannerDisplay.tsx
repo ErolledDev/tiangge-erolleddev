@@ -24,18 +24,11 @@ export default function GlobalBannerDisplay() {
         const activeBanner = await getActiveGlobalBanner();
         if (activeBanner && activeBanner.isActive) {
           setBanner(activeBanner);
-          
-          // Check if banner was already dismissed in this session
-          const dismissedBanners = JSON.parse(
-            sessionStorage.getItem('dismissedBanners') || '[]'
-          );
-          
-          if (!dismissedBanners.includes(activeBanner.id)) {
-            // Show banner after a delay to ensure dashboard is loaded
-            setTimeout(() => {
-              setIsVisible(true);
-            }, 3000); // 3 second delay
-          }
+
+          // Show banner after a delay to ensure dashboard is loaded
+          setTimeout(() => {
+            setIsVisible(true);
+          }, 2000); // 2 second delay
         }
       } catch (error) {
         console.error('Error loading global banner:', error);
@@ -52,15 +45,6 @@ export default function GlobalBannerDisplay() {
 
   const handleClose = () => {
     setIsVisible(false);
-    
-    // Remember that this banner was dismissed for this session
-    if (banner) {
-      const dismissedBanners = JSON.parse(
-        sessionStorage.getItem('dismissedBanners') || '[]'
-      );
-      dismissedBanners.push(banner.id);
-      sessionStorage.setItem('dismissedBanners', JSON.stringify(dismissedBanners));
-    }
   };
 
   const handleBannerClick = () => {

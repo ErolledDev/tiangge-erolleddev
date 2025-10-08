@@ -839,14 +839,24 @@ export const getAllGlobalBanners = async (): Promise<GlobalBanner[]> => {
 export const addGlobalBanner = async (banner: Omit<GlobalBanner, 'id' | 'createdAt' | 'updatedAt'>, userId: string): Promise<string> => {
   try {
     if (!db) throw new Error('Firebase not initialized');
-    
+
+    // Delete all existing global banners before creating new one (limit to 1 banner)
+    const bannersRef = collection(db, 'global_banners');
+    const existingBanners = await getDocs(bannersRef);
+
+    const batch = writeBatch(db);
+    existingBanners.docs.forEach(doc => {
+      batch.delete(doc.ref);
+    });
+    await batch.commit();
+
     const bannerData = {
       ...banner,
       ownerId: userId,
       createdAt: new Date(),
       updatedAt: new Date()
     };
-    
+
     const docRef = await addDoc(collection(db, 'global_banners'), bannerData);
     return docRef.id;
   } catch (error) {
