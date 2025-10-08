@@ -106,7 +106,7 @@ export default function GlobalBannerDisplay() {
           onClick={handleBannerClick}
         >
           {/* Banner Image */}
-          <div className="overflow-hidden rounded-lg shadow-2xl">
+          <div className="overflow-hidden rounded-lg">
             <img
               src={banner.imageUrl}
               alt="Global Announcement"
