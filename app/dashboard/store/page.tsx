@@ -73,7 +73,6 @@ export default function StoreSettingsPage() {
     widgetEnabled: true,
     bannerEnabled: true,
     bannerImage: '',
-    bannerDescription: '',
     bannerLink: '',
     subscriptionEnabled: true,
     slidesEnabled: true,
@@ -123,7 +122,6 @@ export default function StoreSettingsPage() {
             widgetEnabled: isPremiumUser ? (storeData.widgetEnabled !== false) : false,
             bannerEnabled: isPremiumUser ? (storeData.bannerEnabled !== false) : false,
             bannerImage: storeData.bannerImage || '',
-            bannerDescription: storeData.bannerDescription || '',
             bannerLink: storeData.bannerLink || '',
             subscriptionEnabled: storeData.subscriptionEnabled !== false,
             slidesEnabled: storeData.slidesEnabled !== false,
@@ -264,7 +262,6 @@ export default function StoreSettingsPage() {
         widgetEnabled: formData.widgetEnabled,
         bannerEnabled: formData.bannerEnabled,
         bannerImage: formData.bannerImage,
-        bannerDescription: formData.bannerDescription,
         bannerLink: formData.bannerLink,
         subscriptionEnabled: formData.subscriptionEnabled,
         slidesEnabled: formData.slidesEnabled,
@@ -509,25 +506,13 @@ export default function StoreSettingsPage() {
             <>
               <ImageUploadWithDelete
                 label="Banner Image"
-                description="Upload an image for your promotional banner popup."
+                description="Upload an image for your promotional banner popup. PNG images with transparency are supported."
                 currentImageUrl={formData.bannerImage}
                 onImageUpload={(file) => handleImageUpload(file, 'banner')}
                 onImageDelete={() => handleImageDelete('banner')}
-                maxSizeText="Recommended: 400x300px, Max: 5MB"
+                maxSizeText="Recommended: 1200x600px, Max: 5MB, PNG or JPG"
+                accept="image/png,image/jpeg,image/jpg,image/webp"
               />
-
-              <div>
-                <label className="block text-sm font-medium text-gray-900 mb-2">
-                  Banner Description
-                </label>
-                <textarea
-                  value={formData.bannerDescription}
-                  onChange={(e) => handleInputChange('bannerDescription', e.target.value)}
-                  rows={3}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
-                  placeholder="Special offer! Get 20% off your first purchase..."
-                />
-              </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-900 mb-2">
@@ -540,6 +525,9 @@ export default function StoreSettingsPage() {
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   placeholder="https://example.com/special-offer"
                 />
+                <p className="mt-1 text-sm text-gray-500">
+                  The banner image will be clickable and redirect to this URL
+                </p>
               </div>
             </>
           )}

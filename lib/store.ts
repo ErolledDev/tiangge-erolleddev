@@ -42,7 +42,6 @@ export interface Store {
   widgetEnabled?: boolean;
   bannerEnabled?: boolean;
   bannerImage?: string;
-  bannerDescription?: string;
   bannerLink?: string;
   subscriptionEnabled?: boolean;
   slidesEnabled?: boolean;
@@ -282,19 +281,24 @@ export const updateStore = async (userId: string, updates: Partial<Store>): Prom
 export const uploadStoreImage = async (userId: string, file: File, type: 'avatar' | 'banner'): Promise<string> => {
   try {
     if (!storage) throw new Error('Firebase Storage not initialized');
-    
+
+    // For banners, preserve PNG transparency
+    const isPNG = file.type === 'image/png' && type === 'banner';
+    const fileExtension = isPNG ? 'png' : 'webp';
+    const targetFormat = isPNG ? 'png' : 'webp';
+
     // Compress image
     const compressedFile = await fromBlob(
       file,
-      75, // quality (0-100)
+      isPNG ? 100 : 75, // quality (100 for PNG banners to preserve transparency, 75 for others)
       type === 'avatar' ? 200 : 1200, // width
       type === 'avatar' ? 200 : 'auto', // height
-      'webp' // format
+      targetFormat // format
     );
-    
-    const fileName = `${type}_${Date.now()}.webp`;
+
+    const fileName = `${type}_${Date.now()}.${fileExtension}`;
     const imageRef = ref(storage, `users/${userId}/images/store/${fileName}`);
-    
+
     await uploadBytes(imageRef, compressedFile);
     return await getDownloadURL(imageRef);
   } catch (error) {

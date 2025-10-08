@@ -859,8 +859,8 @@ export default function StoreTemplate({ store, products, slides, categories, ini
 
       {/* Pop-up Banner */}
       {store.bannerEnabled !== false && isOwnerPremiumActive && showBannerPopup && store.bannerImage && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-3 sm:p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-xs sm:max-w-md w-full max-h-[80vh] overflow-hidden relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 pointer-events-none">
+          <div className="relative max-w-xs sm:max-w-2xl w-full pointer-events-auto">
             {/* Close Button */}
             <button
               onClick={handleBannerClose}
@@ -868,7 +868,7 @@ export default function StoreTemplate({ store, products, slides, categories, ini
             >
               ✕
             </button>
-            
+
             {/* Banner Content */}
             <div
               className={store.bannerLink ? 'cursor-pointer' : ''}
@@ -876,7 +876,6 @@ export default function StoreTemplate({ store, products, slides, categories, ini
                 if (store.bannerLink) {
                   trackEvent('banner_click', store.ownerId, {
                     banner_image_url: store.bannerImage,
-                    banner_description: store.bannerDescription,
                     store_slug: store.slug,
                     store_name: store.name,
                     destination_link: store.bannerLink,
@@ -886,30 +885,13 @@ export default function StoreTemplate({ store, products, slides, categories, ini
                 }
               }}
             >
-              <div className="aspect-video overflow-hidden">
-                <Image
+              <div className="overflow-hidden rounded-lg">
+                <img
                   src={store.bannerImage}
-                  alt="Banner"
-                  width={320}
-                  height={240}
-                  className="w-full h-full object-cover"
+                  alt="Store Banner"
+                  className="w-full h-auto"
                 />
               </div>
-              
-              {store.bannerDescription && (
-                <div className="p-3 sm:p-4">
-                  <p className="text-gray-800 text-xs sm:text-sm leading-relaxed">
-                    {store.bannerDescription}
-                  </p>
-                  {store.bannerLink && (
-                    <div className="mt-2 sm:mt-3">
-                      <span className="inline-flex items-center text-primary-600 text-xs sm:text-sm font-medium">
-                        Click to learn more →
-                      </span>
-                    </div>
-                  )}
-                </div>
-              )}
             </div>
           </div>
         </div>
