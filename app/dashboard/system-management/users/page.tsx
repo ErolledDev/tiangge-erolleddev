@@ -12,10 +12,11 @@ import {
   isOnTrial,
   hasTrialExpired,
   getTrialDaysRemaining,
-  migratePremiumUsers,
   fixUserPremiumStatus,
   updateUserTrialStatus,
-  isOriginalTrialWindowValid
+  isOriginalTrialWindowValid,
+  getUserStatistics,
+  UserStatistics
 } from '@/lib/auth';
 import { getAllStoreSlugs } from '@/lib/store';
 import { Users, Search, Shield, Crown, RefreshCw, ExternalLink, ArrowLeft, Clock, CircleStop as StopCircle, RotateCcw, Settings } from 'lucide-react';
@@ -34,7 +35,9 @@ export default function UserManagementPage() {
   const [allUsers, setAllUsers] = useState<UserProfile[]>([]);
   const [allUsersLoading, setAllUsersLoading] = useState(false);
   const [updatingUserId, setUpdatingUserId] = useState<string | null>(null);
-  const [isMigrating, setIsMigrating] = useState(false);
+  const [userStatistics, setUserStatistics] = useState<UserStatistics | null>(null);
+  const [statsLoading, setStatsLoading] = useState(false);
+  const [userFilter, setUserFilter] = useState<'all' | 'trial' | 'premium' | 'admin' | 'basic'>('all');
 
   // Handle URL search parameters
   useEffect(() => {
@@ -95,20 +98,27 @@ export default function UserManagementPage() {
     router.push(`/dashboard/system-management/users?search=${encodeURIComponent(emailToSearch.trim())}`);
 
     setSearchLoading(true);
+    setStatsLoading(true);
     try {
       const user = await getUserByEmail(emailToSearch.trim());
       setFoundUser(user);
 
       if (!user) {
         showInfo('No user found with that email address');
+        setUserStatistics(null);
       } else {
         showSuccess('User found successfully');
+        // Load user statistics
+        const stats = await getUserStatistics(user.uid);
+        setUserStatistics(stats);
       }
     } catch (error) {
       console.error('Error searching user:', error);
       showError('Failed to search for user');
+      setUserStatistics(null);
     } finally {
       setSearchLoading(false);
+      setStatsLoading(false);
     }
   };
 
@@ -191,54 +201,6 @@ export default function UserManagementPage() {
     }
   };
 
-  const handleMigratePremiumUsers = async () => {
-    const confirmed = window.confirm(
-      'This will migrate all existing premium users to fix any trial display issues and ensure unlimited product access.\n\nThis will:\n• Set isPremiumAdminSet=true for all premium users\n• Clear trialEndDate for permanent premium access\n• Enable unlimited products for affected users\n\nContinue?'
-    );
-    
-    if (!confirmed) return;
-    
-    setIsMigrating(true);
-    try {
-      console.log('🔧 Starting premium users migration...');
-      console.log('🔧 Current user count before migration:', allUsers.length);
-      
-      await migratePremiumUsers();
-      showSuccess('Premium users migrated successfully! Check console for details. All premium users now have unlimited product access.');
-      
-      // Refresh the users list
-      console.log('🔧 Refreshing user list after migration...');
-      const [users, storeSlugsMap] = await Promise.all([
-        getAllUserProfiles(),
-        getAllStoreSlugs()
-      ]);
-      
-      const enrichedUsers = users.map(user => ({
-        ...user,
-        storeSlug: storeSlugsMap.get(user.uid) || undefined
-      }));
-      
-      setAllUsers(enrichedUsers);
-      console.log('✅ User list refreshed after migration. New count:', enrichedUsers.length);
-      
-      // Show detailed results
-      const premiumUsers = enrichedUsers.filter(u => u.isPremium === true);
-      const fixedUsers = enrichedUsers.filter(u => u.isPremium === true && u.isPremiumAdminSet === true);
-      console.log(`📊 Migration Results:`);
-      console.log(`   - Total users: ${enrichedUsers.length}`);
-      console.log(`   - Premium users: ${premiumUsers.length}`);
-      console.log(`   - Fixed premium users: ${fixedUsers.length}`);
-      
-    } catch (error) {
-      console.error('Error migrating premium users:', error);
-      // Display the specific error message from the backend
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred during migration';
-      showError(`Failed to migrate premium users: ${errorMessage}. Please check the console for detailed error information and try again.`);
-    } finally {
-      setIsMigrating(false);
-    }
-  };
-  
   const handleFixUserPremiumStatus = async (userId: string) => {
     setUpdatingUserId(userId);
     try {
@@ -388,7 +350,7 @@ export default function UserManagementPage() {
                 )}
                 
                 <h3 className="font-medium text-gray-900 mb-3 text-sm sm:text-base">User Found</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Name</p>
                     <p className="font-medium text-sm sm:text-base">{foundUser.displayName || 'Not set'}</p>
@@ -396,6 +358,10 @@ export default function UserManagementPage() {
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Email</p>
                     <p className="font-medium text-sm sm:text-base break-all">{foundUser.email}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs sm:text-sm text-gray-600">Account Created</p>
+                    <p className="font-medium text-sm sm:text-base">{foundUser.createdAt ? new Date(foundUser.createdAt).toLocaleDateString() : 'N/A'}</p>
                   </div>
                   <div>
                     <p className="text-xs sm:text-sm text-gray-600">Role</p>
@@ -459,58 +425,112 @@ export default function UserManagementPage() {
                   </div>
                 </div>
 
-                {/* Trial Management Section */}
-                {(isOnTrial(foundUser) || (isOriginalTrialWindowValid(foundUser) && foundUser.isPremiumAdminSet !== true)) && (
+                {/* User Statistics Section */}
+                {statsLoading ? (
                   <div className="mt-4 pt-4 border-t border-gray-200">
-                    <p className="text-xs sm:text-sm text-gray-600 mb-3">Trial Management</p>
-                    <div className="flex flex-wrap items-center gap-2">
-                      {isOnTrial(foundUser) && (
-                        <button
-                          onClick={() => handleUpdateTrialStatus(foundUser.uid, 'end')}
-                          disabled={updatingUserId === foundUser.uid}
-                          className="inline-flex items-center px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-lg bg-red-100 text-red-700 hover:bg-red-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-h-[36px]"
-                        >
-                          {updatingUserId === foundUser.uid ? (
-                            <>
-                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
-                              Ending...
-                            </>
-                          ) : (
-                            <>
-                              <StopCircle className="w-4 h-4 mr-2" />
-                              End Trial
-                            </>
-                          )}
-                        </button>
-                      )}
-
-                      {isOriginalTrialWindowValid(foundUser) && foundUser.isPremiumAdminSet !== true && (
-                        <button
-                          onClick={() => handleUpdateTrialStatus(foundUser.uid, 'reset')}
-                          disabled={updatingUserId === foundUser.uid}
-                          className="inline-flex items-center px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-h-[36px]"
-                        >
-                          {updatingUserId === foundUser.uid ? (
-                            <>
-                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
-                              Resetting...
-                            </>
-                          ) : (
-                            <>
-                              <RotateCcw className="w-4 h-4 mr-2" />
-                              Re-enable Trial
-                            </>
-                          )}
-                        </button>
-                      )}
+                    <div className="flex items-center justify-center py-4">
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-600"></div>
+                      <p className="text-xs text-gray-500 ml-2">Loading statistics...</p>
                     </div>
-                    {isOriginalTrialWindowValid(foundUser) && foundUser.isPremiumAdminSet !== true && (
-                      <p className="text-xs text-gray-500 mt-2">
-                        Trial can be re-enabled because the account is still within 7 days of creation
-                      </p>
-                    )}
+                  </div>
+                ) : userStatistics && (
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <p className="text-xs sm:text-sm text-gray-600 mb-3">User Statistics</p>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+                      <div className="bg-blue-50 rounded-lg p-3">
+                        <p className="text-xs text-gray-600">Products</p>
+                        <p className="text-lg font-semibold text-gray-900">{userStatistics.totalProducts}</p>
+                      </div>
+                      <div className="bg-green-50 rounded-lg p-3">
+                        <p className="text-xs text-gray-600">Slides</p>
+                        <p className="text-lg font-semibold text-gray-900">{userStatistics.totalSlides}</p>
+                      </div>
+                      <div className="bg-purple-50 rounded-lg p-3">
+                        <p className="text-xs text-gray-600">Banners</p>
+                        <p className="text-lg font-semibold text-gray-900">{userStatistics.totalBanners}</p>
+                      </div>
+                      <div className="bg-yellow-50 rounded-lg p-3">
+                        <p className="text-xs text-gray-600">Subscribers</p>
+                        <p className="text-lg font-semibold text-gray-900">{userStatistics.totalSubscribers}</p>
+                      </div>
+                      <div className="bg-red-50 rounded-lg p-3">
+                        <p className="text-xs text-gray-600">Store Visits</p>
+                        <p className="text-lg font-semibold text-gray-900">{userStatistics.totalStoreVisits}</p>
+                      </div>
+                    </div>
                   </div>
                 )}
+
+                {/* Trial Management Section */}
+                <div className="mt-4 pt-4 border-t border-gray-200">
+                  <p className="text-xs sm:text-sm text-gray-600 mb-3">Trial Management</p>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      onClick={() => {
+                        if (!isOnTrial(foundUser)) {
+                          showWarning('User is not currently on trial');
+                        } else {
+                          handleUpdateTrialStatus(foundUser.uid, 'end');
+                        }
+                      }}
+                      disabled={!isOnTrial(foundUser) || updatingUserId === foundUser.uid}
+                      className="inline-flex items-center px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-lg bg-red-100 text-red-700 hover:bg-red-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-h-[36px]"
+                      title={!isOnTrial(foundUser) ? 'User is not on trial' : 'End user trial immediately'}
+                    >
+                      {updatingUserId === foundUser.uid ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
+                          Ending...
+                        </>
+                      ) : (
+                        <>
+                          <StopCircle className="w-4 h-4 mr-2" />
+                          End Trial
+                        </>
+                      )}
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        if (!isOriginalTrialWindowValid(foundUser)) {
+                          showWarning('Cannot re-enable trial: Original 7-day trial window has expired');
+                        } else if (foundUser.isPremiumAdminSet === true) {
+                          showWarning('Cannot re-enable trial: User has permanent premium access');
+                        } else {
+                          handleUpdateTrialStatus(foundUser.uid, 'reset');
+                        }
+                      }}
+                      disabled={!isOriginalTrialWindowValid(foundUser) || foundUser.isPremiumAdminSet === true || updatingUserId === foundUser.uid}
+                      className="inline-flex items-center px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-h-[36px]"
+                      title={
+                        foundUser.isPremiumAdminSet === true
+                          ? 'Cannot reset trial for users with permanent premium'
+                          : !isOriginalTrialWindowValid(foundUser)
+                          ? '7-day window has expired'
+                          : 'Reset trial for another 7 days'
+                      }
+                    >
+                      {updatingUserId === foundUser.uid ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
+                          Resetting...
+                        </>
+                      ) : (
+                        <>
+                          <RotateCcw className="w-4 h-4 mr-2" />
+                          Re-enable Trial
+                        </>
+                      )}
+                    </button>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-2">
+                    {foundUser.isPremiumAdminSet === true
+                      ? 'User has permanent premium access - trial management disabled'
+                      : isOriginalTrialWindowValid(foundUser)
+                      ? 'Trial can be re-enabled (account is within 7 days of creation)'
+                      : 'Trial cannot be re-enabled (7-day window has expired)'}
+                  </p>
+                </div>
               </div>
             )}
           </div>
@@ -522,24 +542,29 @@ export default function UserManagementPage() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 gap-4">
               <div className="flex items-center space-x-2 sm:space-x-3">
                 <Users className="w-5 h-5 sm:w-6 sm:h-6 text-primary-600" />
-                <h2 className="text-lg sm:text-xl font-semibold text-gray-900">All Users ({allUsers.length})</h2>
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-900">All Users ({
+                  allUsers.filter(u => {
+                    if (userFilter === 'all') return true;
+                    if (userFilter === 'trial') return isOnTrial(u) && u.isPremiumAdminSet !== true;
+                    if (userFilter === 'premium') return u.isPremiumAdminSet === true || (u.isPremium && u.isPremiumAdminSet === undefined);
+                    if (userFilter === 'admin') return u.role === 'admin';
+                    if (userFilter === 'basic') return !u.isPremium && !isOnTrial(u);
+                    return true;
+                  }).length
+                })</h2>
               </div>
-              <div className="flex items-center space-x-2 sm:space-x-3">
-                <button
-                  onClick={handleMigratePremiumUsers}
-                  disabled={isMigrating}
-                  className="flex items-center justify-center px-3 py-1.5 text-xs sm:text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors min-h-[44px]"
-                  title="Fix all premium users with trial display issues and ensure unlimited product access"
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
+                <select
+                  value={userFilter}
+                  onChange={(e) => setUserFilter(e.target.value as any)}
+                  className="px-3 py-1.5 text-xs sm:text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent min-h-[44px]"
                 >
-                  {isMigrating ? (
-                    <>
-                      <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-b-2 border-white mr-1"></div>
-                      Migrating...
-                    </>
-                  ) : (
-                    '🔧 Fix Premium Users'
-                  )}
-                </button>
+                  <option value="all">All Users</option>
+                  <option value="trial">Trial Users</option>
+                  <option value="premium">Premium Users</option>
+                  <option value="admin">Admins</option>
+                  <option value="basic">Basic Users</option>
+                </select>
                 <button
                   onClick={() => {
                     setAllUsersLoading(true);
@@ -618,7 +643,14 @@ export default function UserManagementPage() {
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                      {allUsers.map((user) => (
+                      {allUsers.filter(u => {
+                        if (userFilter === 'all') return true;
+                        if (userFilter === 'trial') return isOnTrial(u) && u.isPremiumAdminSet !== true;
+                        if (userFilter === 'premium') return u.isPremiumAdminSet === true || (u.isPremium && u.isPremiumAdminSet === undefined);
+                        if (userFilter === 'admin') return u.role === 'admin';
+                        if (userFilter === 'basic') return !u.isPremium && !isOnTrial(u);
+                        return true;
+                      }).map((user) => (
                         <tr key={user.uid} className="hover:bg-gray-50 transition-colors">
                           <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                             <div className="text-xs sm:text-sm font-medium text-gray-900 truncate max-w-[100px] sm:max-w-none">

@@ -659,3 +659,70 @@ export const updateUserTrialStatus = async (userId: string, action: 'end' | 'res
     throw new Error(error.message || `Failed to ${action} trial`);
   }
 };
+
+// Interface for user statistics
+export interface UserStatistics {
+  totalProducts: number;
+  totalSlides: number;
+  totalBanners: number;
+  totalSubscribers: number;
+  totalStoreVisits: number;
+  lastLogin?: Date;
+}
+
+// Get user statistics
+export const getUserStatistics = async (userId: string): Promise<UserStatistics> => {
+  try {
+    if (!db) throw new Error('Firebase not initialized');
+
+    const statistics: UserStatistics = {
+      totalProducts: 0,
+      totalSlides: 0,
+      totalBanners: 0,
+      totalSubscribers: 0,
+      totalStoreVisits: 0,
+      lastLogin: undefined
+    };
+
+    // Get products count
+    const productsRef = collection(db, 'users', userId, 'stores', userId, 'products');
+    const productsSnapshot = await getDocs(productsRef);
+    statistics.totalProducts = productsSnapshot.size;
+
+    // Get slides count
+    const slidesRef = collection(db, 'users', userId, 'stores', userId, 'slides');
+    const slidesSnapshot = await getDocs(slidesRef);
+    statistics.totalSlides = slidesSnapshot.size;
+
+    // Get banners count (global banners owned by user)
+    const bannersRef = collection(db, 'global_banners');
+    const bannersQuery = query(bannersRef, where('ownerId', '==', userId));
+    const bannersSnapshot = await getDocs(bannersQuery);
+    statistics.totalBanners = bannersSnapshot.size;
+
+    // Get subscribers count
+    const subscribersRef = collection(db, 'users', userId, 'stores', userId, 'subscribers');
+    const subscribersSnapshot = await getDocs(subscribersRef);
+    statistics.totalSubscribers = subscribersSnapshot.size;
+
+    // Get store visits count (page_view events)
+    const analyticsRef = collection(db, 'users', userId, 'stores', userId, 'analytics_events');
+    const pageViewQuery = query(analyticsRef, where('eventName', '==', 'page_view'));
+    const pageViewSnapshot = await getDocs(pageViewQuery);
+    statistics.totalStoreVisits = pageViewSnapshot.size;
+
+    // Note: lastLogin would need to be tracked separately in user profile
+    // For now, we'll leave it undefined
+
+    return statistics;
+  } catch (error) {
+    console.error('Error getting user statistics:', error);
+    return {
+      totalProducts: 0,
+      totalSlides: 0,
+      totalBanners: 0,
+      totalSubscribers: 0,
+      totalStoreVisits: 0
+    };
+  }
+};
