@@ -70,11 +70,10 @@ export default function GlobalBannerDisplay() {
       trackEvent('global_banner_click', banner.ownerId, {
         banner_id: banner.id,
         banner_link: banner.link,
-        banner_description: banner.description || '',
         store_name: 'Global Banner',
         destination_link: banner.link
       });
-      
+
       window.open(banner.link, '_blank', 'noopener,noreferrer');
       handleClose();
     }
@@ -92,7 +91,7 @@ export default function GlobalBannerDisplay() {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-[9999] flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden relative">
+      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-hidden relative">
         {/* Close Button */}
         <button
           onClick={handleClose}
@@ -101,39 +100,24 @@ export default function GlobalBannerDisplay() {
         >
           <X className="w-4 h-4" />
         </button>
-        
+
         {/* Banner Content */}
         <div
           className={banner.link ? 'cursor-pointer' : ''}
           onClick={handleBannerClick}
         >
           {/* Banner Image */}
-          <div className="aspect-video overflow-hidden rounded-t-lg">
+          <div className="aspect-video overflow-hidden rounded-lg">
             <Image
               src={banner.imageUrl}
               alt="Global Announcement"
-              width={800}
+              width={1200}
               height={600}
-              className="w-full h-full object-cover"
+              className="w-full h-full"
+              style={{ objectFit: 'fill' }}
               priority
             />
           </div>
-          
-          {/* Banner Description */}
-          {banner.description && (
-            <div className="p-6">
-              <p className="text-gray-800 text-base leading-relaxed">
-                {banner.description}
-              </p>
-              {banner.link && (
-                <div className="mt-3">
-                  <span className="inline-flex items-center text-primary-600 text-base font-medium">
-                    Click to learn more →
-                  </span>
-                </div>
-              )}
-            </div>
-          )}
         </div>
       </div>
     </div>

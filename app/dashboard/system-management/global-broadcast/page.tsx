@@ -34,7 +34,6 @@ export default function GlobalBroadcastPage() {
   const [showBannerForm, setShowBannerForm] = useState(false);
   const [bannerForm, setBannerForm] = useState({
     imageUrl: '',
-    description: '',
     link: '',
     isActive: false
   });
@@ -116,12 +115,16 @@ export default function GlobalBroadcastPage() {
       return;
     }
 
+    if (!bannerForm.link.trim()) {
+      showWarning('Please enter a banner link');
+      return;
+    }
+
     setSavingBanner(true);
     try {
       const bannerData = {
         imageUrl: bannerForm.imageUrl,
-        description: bannerForm.description.trim() || undefined,
-        link: bannerForm.link.trim() || undefined,
+        link: bannerForm.link.trim(),
         isActive: bannerForm.isActive,
         ownerId: user.uid
       };
@@ -165,7 +168,6 @@ export default function GlobalBroadcastPage() {
       setSelectedBanner(null);
       setBannerForm({
         imageUrl: '',
-        description: '',
         link: '',
         isActive: false
       });
@@ -199,7 +201,6 @@ export default function GlobalBroadcastPage() {
         setSelectedBanner(null);
         setBannerForm({
           imageUrl: '',
-          description: '',
           link: '',
           isActive: false
         });
@@ -220,7 +221,6 @@ export default function GlobalBroadcastPage() {
     setSelectedBanner(banner);
     setBannerForm({
       imageUrl: banner.imageUrl,
-      description: banner.description || '',
       link: banner.link || '',
       isActive: banner.isActive
     });
@@ -231,7 +231,6 @@ export default function GlobalBroadcastPage() {
     setSelectedBanner(null);
     setBannerForm({
       imageUrl: '',
-      description: '',
       link: '',
       isActive: false
     });
@@ -278,9 +277,6 @@ export default function GlobalBroadcastPage() {
                             <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                               Image
                             </th>
-                            <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Description
-                            </th>
                             <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
                               Link
                             </th>
@@ -307,13 +303,6 @@ export default function GlobalBroadcastPage() {
                                     height={32}
                                     className="h-8 w-12 sm:h-12 sm:w-16 rounded-lg object-cover"
                                   />
-                                </div>
-                              </td>
-                              <td className="px-3 sm:px-6 py-3 sm:py-4">
-                                <div className="text-xs sm:text-sm text-gray-900 max-w-[120px] sm:max-w-xs truncate">
-                                  {banner.description || (
-                                    <span className="text-gray-400 italic">No description</span>
-                                  )}
                                 </div>
                               </td>
                               <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap hidden sm:table-cell">
@@ -402,31 +391,18 @@ export default function GlobalBroadcastPage() {
                       {/* Banner Image Upload */}
                       <ImageUploadWithDelete
                         label="Banner Image"
-                        description="Upload an image for the global announcement banner that will be displayed to all users."
+                        description="Upload an image for the global announcement banner that will be displayed to all users. PNG images with transparency are supported."
                         currentImageUrl={bannerForm.imageUrl}
                         onImageUpload={handleBannerImageUpload}
                         onImageDelete={handleBannerImageDelete}
-                        maxSizeText="Recommended: 400x300px, Max: 5MB"
+                        maxSizeText="Recommended: 1200x600px, Max: 5MB, PNG or JPG"
+                        accept="image/png,image/jpeg,image/jpg,image/webp"
                       />
-
-                      {/* Banner Description */}
-                      <div>
-                        <label className="block text-xs sm:text-sm font-medium text-gray-900 mb-2">
-                          Banner Description (Optional)
-                        </label>
-                        <textarea
-                          value={bannerForm.description}
-                          onChange={(e) => setBannerForm(prev => ({ ...prev, description: e.target.value }))}
-                          rows={3}
-                          className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none text-sm"
-                          placeholder="Enter the announcement message..."
-                        />
-                      </div>
 
                       {/* Banner Link */}
                       <div>
                         <label className="block text-xs sm:text-sm font-medium text-gray-900 mb-2">
-                          Banner Link (Optional)
+                          Banner Link <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="url"
@@ -434,9 +410,10 @@ export default function GlobalBroadcastPage() {
                           onChange={(e) => setBannerForm(prev => ({ ...prev, link: e.target.value }))}
                           className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm min-h-[44px]"
                           placeholder="https://example.com/announcement"
+                          required
                         />
                         <p className="mt-1 text-xs sm:text-sm text-gray-500">
-                          If only image and link are provided (no description), the image will be clickable
+                          The banner image will be clickable and redirect to this URL
                         </p>
                       </div>
 
@@ -476,7 +453,6 @@ export default function GlobalBroadcastPage() {
                               setSelectedBanner(null);
                               setBannerForm({
                                 imageUrl: '',
-                                description: '',
                                 link: '',
                                 isActive: false
                               });

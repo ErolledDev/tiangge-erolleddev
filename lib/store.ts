@@ -117,8 +117,8 @@ export interface GlobalBanner {
   id: string;
   ownerId: string;
   imageUrl: string;
+  link: string;
   description?: string;
-  link?: string;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
