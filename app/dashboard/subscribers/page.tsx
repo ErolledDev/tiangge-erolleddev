@@ -141,34 +141,8 @@ export default function SubscribersPage() {
     );
   }
 
-  // Check trial status
-  const trialExpired = hasTrialExpired(userProfile);
-  const isUserPremium = canAccessFeature(userProfile, 'export');
-
   return (
     <div className="space-y-4 sm:space-y-6 md:space-y-8">
-      {/* Trial Expired Warning */}
-      {trialExpired && !isUserPremium && (
-        <div className="mx-3 sm:mx-4 lg:mx-6 bg-red-50 border-l-4 border-red-400 p-4">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <Clock className="h-5 w-5 text-red-400" />
-            </div>
-            <div className="ml-3">
-              <h3 className="text-sm font-medium text-red-800">
-                Free Trial Expired - Export Disabled
-              </h3>
-              <div className="mt-2 text-sm text-red-700">
-                <p>
-                  Your 7-day free trial has ended. Data export is disabled.
-                  Contact an administrator to upgrade to premium access to export your subscribers.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Header */}
       <div className="p-3 sm:p-4 lg:p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

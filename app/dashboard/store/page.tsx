@@ -306,56 +306,8 @@ export default function StoreSettingsPage() {
     );
   }
 
-  // Check if trial has expired
-  const trialExpired = hasTrialExpired(userProfile);
-  const onTrial = isOnTrial(userProfile);
-  const trialDaysLeft = getTrialDaysRemaining(userProfile);
-
   return (
     <div className="space-y-4 sm:space-y-6 lg:space-y-8">
-      {/* Trial Expired Warning */}
-      {trialExpired && !isUserPremium && (
-        <div className="bg-red-50 border-l-4 border-red-400 p-4">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <Clock className="h-5 w-5 text-red-400" />
-            </div>
-            <div className="ml-3">
-              <h3 className="text-sm font-medium text-red-800">
-                Free Trial Expired
-              </h3>
-              <div className="mt-2 text-sm text-red-700">
-                <p>
-                  Your 7-day free trial has ended. Premium features (Display Categories, Pop-up Banner, Floating Widget, CSV Import, Data Export) have been automatically disabled.
-                  Contact an administrator to upgrade to premium access.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Trial Active Info */}
-      {onTrial && isUserPremium && (
-        <div className="bg-blue-50 border-l-4 border-blue-400 p-4">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <Clock className="h-5 w-5 text-blue-400" />
-            </div>
-            <div className="ml-3">
-              <h3 className="text-sm font-medium text-blue-800">
-                Free Trial Active
-              </h3>
-              <div className="mt-2 text-sm text-blue-700">
-                <p>
-                  You have {trialDaysLeft} day{trialDaysLeft !== 1 ? 's' : ''} remaining in your free trial. All premium features are currently enabled.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
