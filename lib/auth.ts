@@ -278,19 +278,23 @@ export const updateUserRoleAndPremiumStatus = async (userId: string, updates: { 
 export const getUserByEmail = async (email: string): Promise<UserProfile | null> => {
   try {
     if (!db) return null;
-    
+
     const usersRef = collection(db, 'users');
     const q = query(usersRef, where('email', '==', email));
     const querySnapshot = await getDocs(q);
-    
+
     if (querySnapshot.empty) {
       return null;
     }
-    
+
     const userDoc = querySnapshot.docs[0];
+    const data = userDoc.data();
     return {
       uid: userDoc.id,
-      ...userDoc.data()
+      ...data,
+      createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : data.createdAt,
+      updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : data.updatedAt,
+      trialEndDate: data.trialEndDate?.toDate ? data.trialEndDate.toDate() : data.trialEndDate
     } as UserProfile;
   } catch (error) {
     console.error('Error fetching user by email:', error);
