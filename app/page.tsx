@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 import { Store, Package, TrendingUp, Users, Eye, MousePointer, ArrowRight, Star, StarHalf, RefreshCw, CheckCircle, Crown, Lock, DollarSign, Zap, ShieldCheck, LayoutDashboard, Code, Globe, Mail, Settings, BarChart3, Image as ImageIcon, PlusCircle, SquarePlus, LogOut, X, User, Copy, ChevronDown, Calendar, Clock, CircleAlert as AlertCircle } from 'lucide-react';
+import HomeHeader from '@/components/HomeHeader';
 import HomeFooter from '@/components/HomeFooter';
 
 export default function HomePage() {
@@ -31,31 +32,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <Store className="w-8 h-8 text-emerald-600 mr-3" />
-              <span className="text-xl font-bold text-gray-900">Tiangge</span>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Link
-                href="/auth"
-                className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium"
-              >
-                Sign In
-              </Link>
-              <Link
-                href="#pricing"
-                className="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors"
-              >
-                Get Started
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <HomeHeader />
 
       {/* Hero Section - Enhanced Copy and CTA */}
       <section className="relative min-h-[70vh] pt-24 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden flex items-center bg-gradient-to-br from-emerald-50 to-white">

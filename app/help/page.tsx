@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { Store, ArrowLeft, Search, Book, MessageCircle, Settings, BarChart3, Package, Image, Users } from 'lucide-react';
+import { Search, Book, MessageCircle, Settings, BarChart3, Package, Image, Users } from 'lucide-react';
+import HomeHeader from '@/components/HomeHeader';
 import HomeFooter from '@/components/HomeFooter';
 
 export default function HelpCenterPage() {
@@ -76,23 +77,7 @@ export default function HelpCenterPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/" className="flex items-center">
-              <Store className="w-8 h-8 text-emerald-600 mr-3" />
-              <span className="text-xl font-bold text-gray-900">Tiangge</span>
-            </Link>
-            <Link
-              href="/"
-              className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Home
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <HomeHeader />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">
@@ -114,24 +99,59 @@ export default function HelpCenterPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {helpCategories.map((category, index) => (
-            <div key={index} className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
-              <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center mb-4">
-                <category.icon className="w-6 h-6 text-emerald-600" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">{category.title}</h3>
-              <p className="text-gray-600 mb-4">{category.description}</p>
-              <ul className="space-y-2">
-                {category.articles.map((article, articleIndex) => (
-                  <li key={articleIndex}>
-                    <a href="#" className="text-emerald-600 hover:text-emerald-700 text-sm">
-                      {article}
-                    </a>
-                  </li>
-                ))}
-              </ul>
+          <Link href="/help/getting-started" className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow block">
+            <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center mb-4">
+              <Settings className="w-6 h-6 text-emerald-600" />
             </div>
-          ))}
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">Getting Started</h3>
+            <p className="text-gray-600 mb-4">Learn the basics of setting up your store</p>
+            <span className="text-emerald-600 hover:text-emerald-700 text-sm font-medium">Read article →</span>
+          </Link>
+
+          <Link href="/help/product-management" className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow block">
+            <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center mb-4">
+              <Package className="w-6 h-6 text-emerald-600" />
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">Product Management</h3>
+            <p className="text-gray-600 mb-4">Managing your affiliate products</p>
+            <span className="text-emerald-600 hover:text-emerald-700 text-sm font-medium">Read article →</span>
+          </Link>
+
+          <Link href="/help/content-design" className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow block">
+            <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center mb-4">
+              <Image className="w-6 h-6 text-emerald-600" />
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">Content & Design</h3>
+            <p className="text-gray-600 mb-4">Creating engaging content</p>
+            <span className="text-emerald-600 hover:text-emerald-700 text-sm font-medium">Read article →</span>
+          </Link>
+
+          <Link href="/help/analytics" className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow block">
+            <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center mb-4">
+              <BarChart3 className="w-6 h-6 text-emerald-600" />
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">Analytics</h3>
+            <p className="text-gray-600 mb-4">Understanding your store performance</p>
+            <span className="text-emerald-600 hover:text-emerald-700 text-sm font-medium">Read article →</span>
+          </Link>
+
+          <Link href="/help/subscriber-management" className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow block">
+            <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center mb-4">
+              <Users className="w-6 h-6 text-emerald-600" />
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">Subscriber Management</h3>
+            <p className="text-gray-600 mb-4">Building your email list</p>
+            <span className="text-emerald-600 hover:text-emerald-700 text-sm font-medium">Read article →</span>
+          </Link>
+
+          <Link href="/help/premium-features" className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow block">
+            <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center mb-4">
+              <Book className="w-6 h-6 text-emerald-600" />
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">Premium Features</h3>
+            <p className="text-gray-600 mb-4">Get the most from Premium</p>
+            <span className="text-emerald-600 hover:text-emerald-700 text-sm font-medium">Read article →</span>
+          </Link>
         </div>
 
         <div className="mt-16 bg-emerald-50 rounded-xl p-8 text-center">

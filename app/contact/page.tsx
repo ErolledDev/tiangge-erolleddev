@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Store, ArrowLeft, Mail, MessageSquare, Send } from 'lucide-react';
+import { Mail, MessageSquare, Send } from 'lucide-react';
+import HomeHeader from '@/components/HomeHeader';
 import HomeFooter from '@/components/HomeFooter';
 
 export default function ContactPage() {
@@ -32,23 +33,7 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/" className="flex items-center">
-              <Store className="w-8 h-8 text-emerald-600 mr-3" />
-              <span className="text-xl font-bold text-gray-900">Tiangge</span>
-            </Link>
-            <Link
-              href="/"
-              className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Home
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <HomeHeader />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">
