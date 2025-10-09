@@ -69,7 +69,7 @@ export default function DashboardNav({ isSidebarOpen, toggleSidebar }: Dashboard
     clearAll();
     try {
       await logout();
-      router.push('/auth');
+      router.push('/');
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
