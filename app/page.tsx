@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 import { Store, Package, TrendingUp, Users, Eye, MousePointer, ArrowRight, Star, StarHalf, RefreshCw, CheckCircle, Crown, Lock, DollarSign, Zap, ShieldCheck, LayoutDashboard, Code, Globe, Mail, Settings, BarChart3, Image as ImageIcon, PlusCircle, SquarePlus, LogOut, X, User, Copy, ChevronDown, Calendar, Clock, CircleAlert as AlertCircle } from 'lucide-react';
+import HomeFooter from '@/components/HomeFooter';
 
 export default function HomePage() {
   const { user, loading } = useAuth();
@@ -63,9 +64,15 @@ export default function HomePage() {
             Launch Your Profitable
             <span className="text-emerald-600 block">Affiliate Store Today</span>
           </h1>
-          <p className="text-xl text-gray-700 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-700 mb-4 max-w-3xl mx-auto">
             Effortlessly build, customize, and manage your own high-converting affiliate store. Maximize your earnings with powerful tools designed for success.
           </p>
+          <div className="flex items-center justify-center gap-2 mb-8">
+            <div className="bg-emerald-100 border border-emerald-300 rounded-lg px-4 py-2 flex items-center gap-2">
+              <Clock className="w-5 h-5 text-emerald-600" />
+              <span className="text-emerald-800 font-semibold">7-Day FREE Premium Trial</span>
+            </div>
+          </div>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="#pricing"
@@ -540,8 +547,8 @@ export default function HomePage() {
             {/* Standard Plan */}
             <div className="bg-white rounded-xl p-8 shadow-lg border border-gray-200 flex flex-col">
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Standard</h3>
-              <p className="text-gray-600 mb-6">Perfect for new affiliate marketers getting started.</p>
-              <div className="text-4xl font-extrabold text-emerald-600 mb-6">
+              <p className="text-gray-600 mb-6">Perfect for new affiliate marketers getting started. Now Enjoy 7days Full Premium Access</p>
+              <div className="text-4xl font-extrabold text-emerald-600 mb-2">
                 Free
                 <span className="text-xl text-gray-500 font-medium"> / forever</span>
               </div>
@@ -598,7 +605,7 @@ export default function HomePage() {
               </div>
               <h3 className="text-2xl font-bold mb-4">Premium</h3>
               <p className="text-emerald-100 mb-6">Unlock advanced features for serious growth.</p>
-              <div className="text-4xl font-extrabold mb-6">
+              <div className="text-4xl font-extrabold mb-2">
                 $29
                 <span className="text-xl text-emerald-200 font-medium"> / month</span>
               </div>
@@ -647,6 +654,112 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* FAQ Section */}
+      <section className="py-24 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-xl text-gray-600">
+              Everything you need to know about Tiangge
+            </p>
+          </div>
+
+          <div className="space-y-6">
+            <details className="bg-gray-50 rounded-xl p-6 border border-gray-200 group">
+              <summary className="text-lg font-semibold text-gray-900 cursor-pointer list-none flex items-center justify-between">
+                <span>What is Tiangge?</span>
+                <span className="text-emerald-600 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <p className="text-gray-600 mt-4">
+                Tiangge is an affiliate store builder platform that allows you to create, customize, and manage your own online store for affiliate marketing. You can add products, track analytics, and earn commissions through affiliate links.
+              </p>
+            </details>
+
+            <details className="bg-gray-50 rounded-xl p-6 border border-gray-200 group">
+              <summary className="text-lg font-semibold text-gray-900 cursor-pointer list-none flex items-center justify-between">
+                <span>Is Tiangge free to use?</span>
+                <span className="text-emerald-600 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <p className="text-gray-600 mt-4">
+                Yes! When you sign up, you get a 7-day FREE trial with full Premium access to all features. After the trial, your account automatically switches to the free Standard plan with up to 30 products and core features. You can upgrade to Premium anytime for $29/month to unlock unlimited products and advanced features.
+              </p>
+            </details>
+
+            <details className="bg-gray-50 rounded-xl p-6 border border-gray-200 group">
+              <summary className="text-lg font-semibold text-gray-900 cursor-pointer list-none flex items-center justify-between">
+                <span>How do I earn money with Tiangge?</span>
+                <span className="text-emerald-600 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <p className="text-gray-600 mt-4">
+                You earn money through affiliate commissions. When visitors click on products in your store and make purchases through your affiliate links, you earn a commission from the affiliate program. Tiangge provides the tools to showcase products and track performance, but earnings come from your affiliate programs.
+              </p>
+            </details>
+
+            <details className="bg-gray-50 rounded-xl p-6 border border-gray-200 group">
+              <summary className="text-lg font-semibold text-gray-900 cursor-pointer list-none flex items-center justify-between">
+                <span>Can I customize my store design?</span>
+                <span className="text-emerald-600 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <p className="text-gray-600 mt-4">
+                Absolutely! Tiangge offers extensive customization options including custom colors, fonts, layouts, backgrounds, and social media integration. You can create a unique store that matches your brand identity.
+              </p>
+            </details>
+
+            <details className="bg-gray-50 rounded-xl p-6 border border-gray-200 group">
+              <summary className="text-lg font-semibold text-gray-900 cursor-pointer list-none flex items-center justify-between">
+                <span>What are sponsored products?</span>
+                <span className="text-emerald-600 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <p className="text-gray-600 mt-4">
+                Sponsored products are products placed in stores with 15 or more products. These products provide an additional revenue stream and help keep the platform affordable. They are clearly marked and blend naturally with your store content.
+              </p>
+            </details>
+
+            <details className="bg-gray-50 rounded-xl p-6 border border-gray-200 group">
+              <summary className="text-lg font-semibold text-gray-900 cursor-pointer list-none flex items-center justify-between">
+                <span>How does the analytics feature work?</span>
+                <span className="text-emerald-600 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <p className="text-gray-600 mt-4">
+                Our analytics dashboard tracks important metrics including store views, product clicks, search queries, and category selections. This data helps you understand visitor behavior and optimize your store for better conversions.
+              </p>
+            </details>
+
+            <details className="bg-gray-50 rounded-xl p-6 border border-gray-200 group">
+              <summary className="text-lg font-semibold text-gray-900 cursor-pointer list-none flex items-center justify-between">
+                <span>Can I import products in bulk?</span>
+                <span className="text-emerald-600 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <p className="text-gray-600 mt-4">
+                Yes! Premium users can import hundreds of products at once using CSV files. This feature is perfect for quickly scaling your store. Standard users can add products one at a time or use the product URL scraping feature for auto-fill.
+              </p>
+            </details>
+
+            <details className="bg-gray-50 rounded-xl p-6 border border-gray-200 group">
+              <summary className="text-lg font-semibold text-gray-900 cursor-pointer list-none flex items-center justify-between">
+                <span>What happens after my 7-day trial ends?</span>
+                <span className="text-emerald-600 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <p className="text-gray-600 mt-4">
+                After your 7-day trial, your account automatically switches to the free Standard plan. Premium features like bulk import, floating widgets, and data export will be disabled. If you have more than 30 products, only your 30 most recent products will remain visible. You can upgrade to Premium anytime to restore full access.
+              </p>
+            </details>
+
+            <details className="bg-gray-50 rounded-xl p-6 border border-gray-200 group">
+              <summary className="text-lg font-semibold text-gray-900 cursor-pointer list-none flex items-center justify-between">
+                <span>What if I need help?</span>
+                <span className="text-emerald-600 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <p className="text-gray-600 mt-4">
+                We offer comprehensive support through our Help Center with detailed guides and tutorials. You can also contact our support team directly through the Contact page, and Premium users receive priority support.
+              </p>
+            </details>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-24 bg-emerald-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -666,41 +779,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="md:col-span-2">
-              <div className="flex items-center mb-4">
-                <Store className="w-8 h-8 text-emerald-400 mr-3" />
-                <span className="text-xl font-bold">Tiangge</span>
-              </div>
-              <p className="text-gray-400 mb-4">
-                The easiest way to create and manage your affiliate store. Start earning commissions today.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Product</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Features</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Pricing</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Templates</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Support</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Contact Us</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2025 Tiangge. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      <HomeFooter />
 
       <style jsx>{`
         html {
