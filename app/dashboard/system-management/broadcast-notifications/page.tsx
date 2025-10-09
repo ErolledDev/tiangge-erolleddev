@@ -11,7 +11,7 @@ import {
 } from '@/lib/store';
 import NotificationForm from '@/components/NotificationForm';
 import ConfirmModal from '@/components/ConfirmModal';
-import { Bell, Plus, SquarePen as Edit, Trash2, RefreshCw, ToggleLeft, ToggleRight } from 'lucide-react';
+import { Bell, Plus, Edit, Trash2, RefreshCw, ToggleLeft, ToggleRight } from 'lucide-react';
 
 export default function BroadcastNotificationsPage() {
   const { user, userProfile } = useAuth();
