@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { signIn, signUp } from '@/lib/auth';
 import { checkSlugAvailability } from '@/lib/store';
 import { useAuth } from '@/hooks/useAuth';
-import { Store, Package, TrendingUp, Users, Eye, MousePointer, ArrowRight, Star, StarHalf, RefreshCw, AtSign, Lock, CircleAlert as AlertCircle, CircleCheck as CheckCircle } from 'lucide-react';
+import { Store, Package, TrendingUp, Users, Eye, EyeOff, MousePointer, ArrowRight, Star, StarHalf, RefreshCw, AtSign, CircleAlert as AlertCircle, CircleCheck as CheckCircle } from 'lucide-react';
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -25,6 +25,7 @@ export default function AuthPage() {
     displayName: false,
     storeSlug: false
   });
+  const [showPassword, setShowPassword] = useState(false);
   
   const router = useRouter();
   const { user } = useAuth();
@@ -337,10 +338,13 @@ export default function AuthPage() {
         <div className="flex-none w-full lg:w-[450px] bg-white p-4 sm:p-6 lg:p-12 flex flex-col min-h-[500px] lg:min-h-auto">
           <div>
             {/* Logo Section */}
-            <div className="flex items-center mb-6 lg:mb-8 text-emerald-600 font-bold text-lg lg:text-xl">
+            <a
+              href="/"
+              className="flex items-center mb-6 lg:mb-8 text-emerald-600 font-bold text-lg lg:text-xl hover:text-emerald-700 transition-colors cursor-pointer"
+            >
               <Store className="w-4 h-4 lg:w-5 lg:h-5 mr-2" />
               <span>Tiangge</span>
-            </div>
+            </a>
 
             <h1 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-2">
               {isLogin ? 'Welcome back' : 'Get started'}
@@ -444,11 +448,11 @@ export default function AuthPage() {
                 </label>
                 <div className="relative">
                   <input
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={handlePasswordChange}
                     onBlur={handlePasswordBlur}
-                    className={`w-full px-4 py-2.5 lg:py-3 border rounded-lg text-sm lg:text-base outline-none focus:ring-2 transition-all bg-white ${
+                    className={`w-full px-4 py-2.5 lg:py-3 border rounded-lg text-sm lg:text-base outline-none focus:ring-2 transition-all bg-white pr-10 ${
                       passwordError && touched.password && !isLogin
                         ? 'border-red-300 focus:border-red-500 focus:ring-red-100'
                         : 'border-gray-300 focus:border-emerald-500 focus:ring-emerald-100'
@@ -456,9 +460,21 @@ export default function AuthPage() {
                     placeholder={isLogin ? 'Enter your password' : 'Create a strong password'}
                     required
                   />
-                  <Lock className={`absolute top-1/2 transform -translate-y-1/2 right-3 w-4 h-4 ${
-                    passwordError && touched.password && !isLogin ? 'text-red-400' : 'text-gray-400'
-                  }`} />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute top-1/2 transform -translate-y-1/2 right-3 hover:opacity-70 transition-opacity"
+                  >
+                    {showPassword ? (
+                      <EyeOff className={`w-4 h-4 ${
+                        passwordError && touched.password && !isLogin ? 'text-red-400' : 'text-gray-400'
+                      }`} />
+                    ) : (
+                      <Eye className={`w-4 h-4 ${
+                        passwordError && touched.password && !isLogin ? 'text-red-400' : 'text-gray-400'
+                      }`} />
+                    )}
+                  </button>
                 </div>
                 {!isLogin && passwordError && touched.password && (
                   <p className="mt-1.5 text-xs text-red-600 flex items-center">
