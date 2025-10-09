@@ -451,10 +451,6 @@ export default function UserManagementPage() {
                         <p className="text-xs text-gray-600">Slides</p>
                         <p className="text-lg font-semibold text-gray-900">{userStatistics.totalSlides}</p>
                       </div>
-                      <div className="bg-purple-50 rounded-lg p-3">
-                        <p className="text-xs text-gray-600">Banners</p>
-                        <p className="text-lg font-semibold text-gray-900">{userStatistics.totalBanners}</p>
-                      </div>
                       <div className="bg-yellow-50 rounded-lg p-3">
                         <p className="text-xs text-gray-600">Subscribers</p>
                         <p className="text-lg font-semibold text-gray-900">{userStatistics.totalSubscribers}</p>
@@ -698,9 +694,9 @@ export default function UserManagementPage() {
                             </span>
                           </td>
                           <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                            <div className="flex flex-col space-y-1">
+                            <div className="flex flex-col items-start space-y-1">
                               {/* Premium Status Badge */}
-                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium w-fit ${
                                 user.isPremiumAdminSet === true || (user.isPremium && user.isPremiumAdminSet === undefined && !isOnTrial(user))
                                   ? 'bg-yellow-100 text-yellow-800'
                                   : isOnTrial(user)
@@ -721,21 +717,29 @@ export default function UserManagementPage() {
                                   'Basic'
                                 )}
                               </span>
-                              
+
+                              {/* Role Badge for Admin */}
+                              {user.role === 'admin' && (
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium w-fit bg-red-100 text-red-800">
+                                  <Shield className="w-3 h-3 mr-1" />
+                                  Admin
+                                </span>
+                              )}
+
                               {/* Trial Days Remaining - only show if not admin-set premium */}
                               {isOnTrial(user) && user.isPremiumAdminSet !== true && (
                                 <span className="text-xs text-blue-600 font-medium">
                                   {getTrialDaysRemaining(user)} days left
                                 </span>
                               )}
-                              
+
                               {/* Trial Expired Notice - only show if not admin-set premium */}
                               {hasTrialExpired(user) && user.isPremiumAdminSet !== true && (
                                 <span className="text-xs text-red-600 font-medium">
                                   Trial expired
                                 </span>
                               )}
-                              
+
                               {/* Fix Needed Notice - Only show for users who need migration (not on trial) */}
                               {user.isPremium && user.isPremiumAdminSet === undefined && !isOnTrial(user) && (
                                 <span className="text-xs text-yellow-600 font-medium">
