@@ -103,32 +103,32 @@ export default function HomePage() {
         <HomeHeader />
 
       {/* Hero Section - Enhanced Copy and CTA */}
-      <section className="relative min-h-[70vh] pt-24 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden flex items-center bg-gradient-to-br from-emerald-50 to-white">
+      <section className="relative min-h-[80vh] pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden flex items-center bg-gradient-to-br from-emerald-50 to-white">
         <div className="max-w-7xl mx-auto w-full text-center">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-6 leading-tight">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-gray-900 mb-8 leading-tight">
             Create Your Online Affiliate Store and
-            <span className="text-emerald-600 block">Earn Commissions Today</span>
+            <span className="text-emerald-600 block mt-2">Earn Commissions Today</span>
           </h1>
-          <p className="text-xl text-gray-700 mb-4 max-w-3xl mx-auto">
+          <p className="text-lg sm:text-xl lg:text-2xl text-gray-700 mb-6 max-w-3xl mx-auto leading-relaxed">
             Effortlessly build, customize, and manage your own high-converting affiliate store. Maximize your earnings with powerful tools designed for success.
           </p>
-          <div className="flex items-center justify-center gap-2 mb-8">
-            <div className="bg-emerald-100 border border-emerald-300 rounded-lg px-4 py-2 flex items-center gap-2">
+          <div className="flex items-center justify-center gap-2 mb-10">
+            <div className="bg-emerald-100 border border-emerald-300 rounded-lg px-5 py-3 flex items-center gap-2">
               <Clock className="w-5 h-5 text-emerald-600" />
-              <span className="text-emerald-800 font-semibold">7-Day FREE Premium Trial</span>
+              <span className="text-emerald-800 font-semibold text-base">7-Day FREE Premium Trial</span>
             </div>
           </div>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="#pricing"
-              className="inline-flex items-center px-8 py-4 bg-emerald-600 text-white rounded-lg text-lg font-semibold hover:bg-emerald-700 transition-colors shadow-lg transform hover:scale-105"
+              className="inline-flex items-center px-8 py-4 bg-emerald-600 text-white rounded-lg text-lg font-semibold transition-colors shadow-lg"
             >
               Start Building Now
               <ArrowRight className="w-5 h-5 ml-2" />
             </Link>
             <Link
               href="/auth"
-              className="inline-flex items-center px-8 py-4 border-2 border-emerald-600 text-emerald-600 rounded-lg text-lg font-semibold hover:bg-emerald-50 transition-colors transform hover:scale-105"
+              className="inline-flex items-center px-8 py-4 border-2 border-emerald-600 text-emerald-600 rounded-lg text-lg font-semibold transition-colors"
             >
               Explore Features
             </Link>
@@ -137,13 +137,13 @@ export default function HomePage() {
       </section>
 
       {/* Showcase Section - Mobile Mockup with Floating Cards on Desktop */}
-      <section className="relative py-16 sm:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden bg-white">
+      <section className="relative py-20 sm:py-28 lg:py-32 px-4 sm:px-6 lg:px-8 overflow-hidden bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-16 sm:mb-20">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-5">
               See Your Store Come to Life
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto">
               Visualize the power of a fully customized, high-performance affiliate store.
             </p>
           </div>
@@ -467,20 +467,20 @@ export default function HomePage() {
       </section>
 
       {/* Features Section - Visual Mockups with Alternating Layout */}
-      <section id="features" className="py-24 bg-gray-50">
+      <section id="features" className="py-20 sm:py-28 lg:py-32 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-16 sm:mb-20">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-5">
               Everything You Need to Succeed
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
               Our platform provides all the tools you need to build, customize, and grow your affiliate marketing business.
             </p>
           </div>
 
-          <div className="space-y-12">
+          <div className="space-y-16 sm:space-y-20 lg:space-y-24">
             {/* Feature 1: Product Scraper - Left */}
-            <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+            <div className="flex flex-col md:flex-row items-center gap-10 md:gap-12 lg:gap-16">
               <div className="w-full md:w-1/2">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
@@ -526,7 +526,7 @@ export default function HomePage() {
             </div>
 
             {/* Feature 2: Store Customization - Right */}
-            <div className="flex flex-col md:flex-row-reverse items-center gap-8 md:gap-12">
+            <div className="flex flex-col md:flex-row-reverse items-center gap-10 md:gap-12 lg:gap-16">
               <div className="w-full md:w-1/2">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
@@ -568,7 +568,7 @@ export default function HomePage() {
             </div>
 
             {/* Feature 3: Analytics Dashboard - Left */}
-            <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+            <div className="flex flex-col md:flex-row items-center gap-10 md:gap-12 lg:gap-16">
               <div className="w-full md:w-1/2">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
@@ -616,7 +616,7 @@ export default function HomePage() {
             </div>
 
             {/* Feature 4: Email Subscriptions - Right */}
-            <div className="flex flex-col md:flex-row-reverse items-center gap-8 md:gap-12">
+            <div className="flex flex-col md:flex-row-reverse items-center gap-10 md:gap-12 lg:gap-16">
               <div className="w-full md:w-1/2">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center">
@@ -655,7 +655,7 @@ export default function HomePage() {
             </div>
 
             {/* Feature 5: Promotional Slides - Left */}
-            <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+            <div className="flex flex-col md:flex-row items-center gap-10 md:gap-12 lg:gap-16">
               <div className="w-full md:w-1/2">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
@@ -701,7 +701,7 @@ export default function HomePage() {
             </div>
 
             {/* Feature 6: Bulk Import - Right */}
-            <div className="flex flex-col md:flex-row-reverse items-center gap-8 md:gap-12">
+            <div className="flex flex-col md:flex-row-reverse items-center gap-10 md:gap-12 lg:gap-16">
               <div className="w-full md:w-1/2">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
@@ -737,7 +737,7 @@ export default function HomePage() {
             </div>
 
             {/* Feature 7: Popup Banner - Left */}
-            <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+            <div className="flex flex-col md:flex-row items-center gap-10 md:gap-12 lg:gap-16">
               <div className="w-full md:w-1/2">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
@@ -775,7 +775,7 @@ export default function HomePage() {
             </div>
 
             {/* Feature 8: Floating Widget - Right */}
-            <div className="flex flex-col md:flex-row-reverse items-center gap-8 md:gap-12">
+            <div className="flex flex-col md:flex-row-reverse items-center gap-10 md:gap-12 lg:gap-16">
               <div className="w-full md:w-1/2">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 bg-cyan-100 rounded-xl flex items-center justify-center">
@@ -820,13 +820,13 @@ export default function HomePage() {
       </section>
 
       {/* Testimonials Section - Slider */}
-      <section className="py-16 sm:py-24 bg-white overflow-hidden">
+      <section className="py-20 sm:py-28 lg:py-32 bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10 sm:mb-16">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
+          <div className="text-center mb-12 sm:mb-16 lg:mb-20">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-5">
               What Our Users Say
             </h2>
-            <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto px-4">
+            <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto px-4">
               Hear from successful affiliate marketers who are growing their businesses with Tiangge.
             </p>
           </div>
@@ -910,13 +910,13 @@ export default function HomePage() {
       </section>
 
       {/* Platform Compatibility Section - Infinite Brand Carousel */}
-      <section className="py-24 bg-gray-50 overflow-hidden">
+      <section className="py-20 sm:py-28 lg:py-32 bg-gray-50 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-16 sm:mb-20">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-5">
               Compatible with Leading Platforms
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
               Promote products from top affiliate programs and platforms worldwide. Create your unique store selling anything from online courses to hosting services, fashion to finance.
             </p>
           </div>
@@ -1161,61 +1161,61 @@ export default function HomePage() {
       </section>
 
       {/* Pricing Section - New Section */}
-      <section id="pricing" className="py-24 bg-gray-50">
+      <section id="pricing" className="py-20 sm:py-28 lg:py-32 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-16 sm:mb-20">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-5">
               Simple, Transparent Pricing
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
               Choose the plan that fits your ambition. Upgrade anytime for more power.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {/* Standard Plan */}
-            <div className="bg-white rounded-xl p-8 shadow-lg border border-gray-200 flex flex-col">
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Standard</h3>
-              <p className="text-gray-600 mb-6">Perfect for new affiliate marketers getting started. Now Enjoy 7days Full Premium Access</p>
-              <div className="text-4xl font-extrabold text-emerald-600 mb-2">
+            <div className="bg-gray-50 rounded-2xl p-8 lg:p-10 shadow-lg border-2 border-gray-200 flex flex-col">
+              <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">Standard</h3>
+              <p className="text-gray-600 mb-6 text-base lg:text-lg">Perfect for new affiliate marketers getting started. Now Enjoy 7 days Full Premium Access</p>
+              <div className="text-4xl lg:text-5xl font-extrabold text-emerald-600 mb-2">
                 Free
-                <span className="text-xl text-gray-500 font-medium"> / forever</span>
+                <span className="text-xl lg:text-2xl text-gray-500 font-medium"> / forever</span>
               </div>
-              <ul className="space-y-3 text-gray-700 flex-grow">
-                <li className="flex items-center">
-                  <CheckCircle className="w-5 h-5 text-emerald-500 mr-2 flex-shrink-0" />
+              <ul className="space-y-4 text-gray-700 flex-grow mt-8">
+                <li className="flex items-center text-base">
+                  <CheckCircle className="w-5 h-5 text-emerald-500 mr-3 flex-shrink-0" />
                   Up to 30 Products
                 </li>
-                <li className="flex items-center">
-                  <CheckCircle className="w-5 h-5 text-emerald-500 mr-2 flex-shrink-0" />
+                <li className="flex items-center text-base">
+                  <CheckCircle className="w-5 h-5 text-emerald-500 mr-3 flex-shrink-0" />
                   Store Customization & Theming
                 </li>
-                <li className="flex items-center">
-                  <CheckCircle className="w-5 h-5 text-emerald-500 mr-2 flex-shrink-0" />
+                <li className="flex items-center text-base">
+                  <CheckCircle className="w-5 h-5 text-emerald-500 mr-3 flex-shrink-0" />
                   Product Scraping
                 </li>
-                <li className="flex items-center">
-                  <CheckCircle className="w-5 h-5 text-emerald-500 mr-2 flex-shrink-0" />
+                <li className="flex items-center text-base">
+                  <CheckCircle className="w-5 h-5 text-emerald-500 mr-3 flex-shrink-0" />
                   Promotional Slides
                 </li>
-                <li className="flex items-center">
-                  <CheckCircle className="w-5 h-5 text-emerald-500 mr-2 flex-shrink-0" />
+                <li className="flex items-center text-base">
+                  <CheckCircle className="w-5 h-5 text-emerald-500 mr-3 flex-shrink-0" />
                   Basic Analytics Dashboard
                 </li>
-                <li className="flex items-center">
-                  <CheckCircle className="w-5 h-5 text-emerald-500 mr-2 flex-shrink-0" />
+                <li className="flex items-center text-base">
+                  <CheckCircle className="w-5 h-5 text-emerald-500 mr-3 flex-shrink-0" />
                   Email Subscriptions
                 </li>
-                <li className="flex items-center text-gray-500">
-                  <X className="w-5 h-5 text-red-500 mr-2 flex-shrink-0" />
+                <li className="flex items-center text-gray-500 text-base">
+                  <X className="w-5 h-5 text-red-500 mr-3 flex-shrink-0" />
                   No Bulk Import
                 </li>
-                <li className="flex items-center text-gray-500">
-                  <X className="w-5 h-5 text-red-500 mr-2 flex-shrink-0" />
+                <li className="flex items-center text-gray-500 text-base">
+                  <X className="w-5 h-5 text-red-500 mr-3 flex-shrink-0" />
                   No Data Export
                 </li>
-                <li className="flex items-center text-gray-500">
-                  <X className="w-5 h-5 text-red-500 mr-2 flex-shrink-0" />
+                <li className="flex items-center text-gray-500 text-base">
+                  <X className="w-5 h-5 text-red-500 mr-3 flex-shrink-0" />
                   No Floating Widget / Pop-up Banner
                 </li>
               </ul>
@@ -1228,47 +1228,47 @@ export default function HomePage() {
             </div>
 
             {/* Premium Plan */}
-            <div className="bg-emerald-600 text-white rounded-xl p-8 shadow-lg border border-emerald-700 flex flex-col relative overflow-hidden">
-              <div className="absolute top-0 right-0 bg-emerald-700 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
+            <div className="bg-emerald-600 text-white rounded-2xl p-8 lg:p-10 shadow-xl border-2 border-emerald-700 flex flex-col relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-emerald-800 text-white text-sm font-bold px-4 py-2 rounded-bl-xl">
                 Most Popular
               </div>
-              <h3 className="text-2xl font-bold mb-4">Premium</h3>
-              <p className="text-emerald-100 mb-6">Unlock advanced features for serious growth.</p>
-              <div className="text-4xl font-extrabold mb-2">
-                $29
-                <span className="text-xl text-emerald-200 font-medium"> / month</span>
+              <h3 className="text-2xl lg:text-3xl font-bold mb-4">Premium</h3>
+              <p className="text-emerald-100 mb-6 text-base lg:text-lg">Unlock advanced features for serious growth.</p>
+              <div className="text-4xl lg:text-5xl font-extrabold mb-2">
+                $7
+                <span className="text-xl lg:text-2xl text-emerald-200 font-medium"> / month</span>
               </div>
-              <ul className="space-y-3 flex-grow">
-                <li className="flex items-center">
-                  <CheckCircle className="w-5 h-5 text-white mr-2 flex-shrink-0" />
+              <ul className="space-y-4 flex-grow mt-8">
+                <li className="flex items-center text-base">
+                  <CheckCircle className="w-5 h-5 text-white mr-3 flex-shrink-0" />
                   Unlimited Products
                 </li>
-                <li className="flex items-center">
-                  <CheckCircle className="w-5 h-5 text-white mr-2 flex-shrink-0" />
+                <li className="flex items-center text-base">
+                  <CheckCircle className="w-5 h-5 text-white mr-3 flex-shrink-0" />
                   Advanced Customization
                 </li>
-                <li className="flex items-center">
-                  <CheckCircle className="w-5 h-5 text-white mr-2 flex-shrink-0" />
+                <li className="flex items-center text-base">
+                  <CheckCircle className="w-5 h-5 text-white mr-3 flex-shrink-0" />
                   Bulk Product Import (CSV)
                 </li>
-                <li className="flex items-center">
-                  <CheckCircle className="w-5 h-5 text-white mr-2 flex-shrink-0" />
+                <li className="flex items-center text-base">
+                  <CheckCircle className="w-5 h-5 text-white mr-3 flex-shrink-0" />
                   Floating Widget & Pop-up Banner
                 </li>
-                <li className="flex items-center">
-                  <CheckCircle className="w-5 h-5 text-white mr-2 flex-shrink-0" />
+                <li className="flex items-center text-base">
+                  <CheckCircle className="w-5 h-5 text-white mr-3 flex-shrink-0" />
                   Advanced Analytics & Data Export
                 </li>
-                <li className="flex items-center">
-                  <CheckCircle className="w-5 h-5 text-white mr-2 flex-shrink-0" />
+                <li className="flex items-center text-base">
+                  <CheckCircle className="w-5 h-5 text-white mr-3 flex-shrink-0" />
                   Priority Support
                 </li>
-                <li className="flex items-center">
-                  <CheckCircle className="w-5 h-5 text-white mr-2 flex-shrink-0" />
+                <li className="flex items-center text-base">
+                  <CheckCircle className="w-5 h-5 text-white mr-3 flex-shrink-0" />
                   Custom Domain Support (Coming Soon)
                 </li>
-                <li className="flex items-center">
-                  <CheckCircle className="w-5 h-5 text-white mr-2 flex-shrink-0" />
+                <li className="flex items-center text-base">
+                  <CheckCircle className="w-5 h-5 text-white mr-3 flex-shrink-0" />
                   All Standard Features
                 </li>
               </ul>
@@ -1284,105 +1284,105 @@ export default function HomePage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-24 bg-white">
+      <section className="py-20 sm:py-28 lg:py-32 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-16 sm:mb-20">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-5">
               Frequently Asked Questions
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-lg sm:text-xl text-gray-600">
               Everything you need to know about Tiangge
             </p>
           </div>
 
-          <div className="space-y-6">
-            <details className="bg-gray-50 rounded-xl p-6 border border-gray-200 group">
+          <div className="space-y-5">
+            <details className="bg-white rounded-xl p-6 lg:p-8 border border-gray-200 group shadow-sm hover:shadow-md transition-shadow">
               <summary className="text-lg font-semibold text-gray-900 cursor-pointer list-none flex items-center justify-between">
                 <span>What is Tiangge?</span>
                 <span className="text-emerald-600 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <p className="text-gray-600 mt-4">
-                Tiangge is an affiliate store builder platform that allows you to create, customize, and manage your own online store for affiliate marketing. You can add products, track analytics, and earn commissions through affiliate links.
+              <p className="text-gray-600 mt-4 leading-relaxed">
+                An affiliate store builder for creating and managing your own online store with products, analytics, and commissions.
               </p>
             </details>
 
-            <details className="bg-gray-50 rounded-xl p-6 border border-gray-200 group">
+            <details className="bg-white rounded-xl p-6 lg:p-8 border border-gray-200 group shadow-sm hover:shadow-md transition-shadow">
               <summary className="text-lg font-semibold text-gray-900 cursor-pointer list-none flex items-center justify-between">
                 <span>Is Tiangge free to use?</span>
                 <span className="text-emerald-600 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <p className="text-gray-600 mt-4">
-                Yes! When you sign up, you get a 7-day FREE trial with full Premium access to all features. After the trial, your account automatically switches to the free Standard plan with up to 30 products and core features. You can upgrade to Premium anytime for $29/month to unlock unlimited products and advanced features.
+              <p className="text-gray-600 mt-4 leading-relaxed">
+                Yes! Get a 7-day FREE trial with full Premium access. After the trial, it switches to the free Standard plan (30 products). Upgrade to Premium anytime for $7/month.
               </p>
             </details>
 
-            <details className="bg-gray-50 rounded-xl p-6 border border-gray-200 group">
+            <details className="bg-white rounded-xl p-6 lg:p-8 border border-gray-200 group shadow-sm hover:shadow-md transition-shadow">
               <summary className="text-lg font-semibold text-gray-900 cursor-pointer list-none flex items-center justify-between">
                 <span>How do I earn money with Tiangge?</span>
                 <span className="text-emerald-600 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <p className="text-gray-600 mt-4">
-                You earn money through affiliate commissions. When visitors click on products in your store and make purchases through your affiliate links, you earn a commission from the affiliate program. Tiangge provides the tools to showcase products and track performance, but earnings come from your affiliate programs.
+              <p className="text-gray-600 mt-4 leading-relaxed">
+                Earn affiliate commissions when visitors click products and make purchases through your affiliate links. Tiangge provides the tools to showcase and track products.
               </p>
             </details>
 
-            <details className="bg-gray-50 rounded-xl p-6 border border-gray-200 group">
+            <details className="bg-white rounded-xl p-6 lg:p-8 border border-gray-200 group shadow-sm hover:shadow-md transition-shadow">
               <summary className="text-lg font-semibold text-gray-900 cursor-pointer list-none flex items-center justify-between">
                 <span>Can I customize my store design?</span>
                 <span className="text-emerald-600 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <p className="text-gray-600 mt-4">
-                Absolutely! Tiangge offers extensive customization options including custom colors, fonts, layouts, backgrounds, and social media integration. You can create a unique store that matches your brand identity.
+              <p className="text-gray-600 mt-4 leading-relaxed">
+                Yes! Customize colors, fonts, layouts, backgrounds, and social media integration to match your brand.
               </p>
             </details>
 
-            <details className="bg-gray-50 rounded-xl p-6 border border-gray-200 group">
+            <details className="bg-white rounded-xl p-6 lg:p-8 border border-gray-200 group shadow-sm hover:shadow-md transition-shadow">
               <summary className="text-lg font-semibold text-gray-900 cursor-pointer list-none flex items-center justify-between">
                 <span>What are sponsored products?</span>
                 <span className="text-emerald-600 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <p className="text-gray-600 mt-4">
-                Sponsored products are products placed in stores with 15 or more products. These products provide an additional revenue stream and help keep the platform affordable. They are clearly marked and blend naturally with your store content.
+              <p className="text-gray-600 mt-4 leading-relaxed">
+                Products placed in stores with 15+ products. They're clearly marked and help keep the platform affordable.
               </p>
             </details>
 
-            <details className="bg-gray-50 rounded-xl p-6 border border-gray-200 group">
+            <details className="bg-white rounded-xl p-6 lg:p-8 border border-gray-200 group shadow-sm hover:shadow-md transition-shadow">
               <summary className="text-lg font-semibold text-gray-900 cursor-pointer list-none flex items-center justify-between">
                 <span>How does the analytics feature work?</span>
                 <span className="text-emerald-600 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <p className="text-gray-600 mt-4">
-                Our analytics dashboard tracks important metrics including store views, product clicks, search queries, and category selections. This data helps you understand visitor behavior and optimize your store for better conversions.
+              <p className="text-gray-600 mt-4 leading-relaxed">
+                Track store views, product clicks, search queries, and category selections to understand visitor behavior and optimize conversions.
               </p>
             </details>
 
-            <details className="bg-gray-50 rounded-xl p-6 border border-gray-200 group">
+            <details className="bg-white rounded-xl p-6 lg:p-8 border border-gray-200 group shadow-sm hover:shadow-md transition-shadow">
               <summary className="text-lg font-semibold text-gray-900 cursor-pointer list-none flex items-center justify-between">
                 <span>Can I import products in bulk?</span>
                 <span className="text-emerald-600 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <p className="text-gray-600 mt-4">
-                Yes! Premium users can import hundreds of products at once using CSV files. This feature is perfect for quickly scaling your store. Standard users can add products one at a time or use the product URL scraping feature for auto-fill.
+              <p className="text-gray-600 mt-4 leading-relaxed">
+                Yes! Premium users can import hundreds of products using CSV files. Standard users can add products one at a time or use URL scraping.
               </p>
             </details>
 
-            <details className="bg-gray-50 rounded-xl p-6 border border-gray-200 group">
+            <details className="bg-white rounded-xl p-6 lg:p-8 border border-gray-200 group shadow-sm hover:shadow-md transition-shadow">
               <summary className="text-lg font-semibold text-gray-900 cursor-pointer list-none flex items-center justify-between">
                 <span>What happens after my 7-day trial ends?</span>
                 <span className="text-emerald-600 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <p className="text-gray-600 mt-4">
-                After your 7-day trial, your account automatically switches to the free Standard plan. Premium features like bulk import, floating widgets, and data export will be disabled. If you have more than 30 products, only your 30 most recent products will remain visible. You can upgrade to Premium anytime to restore full access.
+              <p className="text-gray-600 mt-4 leading-relaxed">
+                Your account switches to the free Standard plan. Premium features are disabled, and only your 30 most recent products remain visible. Upgrade anytime to restore full access.
               </p>
             </details>
 
-            <details className="bg-gray-50 rounded-xl p-6 border border-gray-200 group">
+            <details className="bg-white rounded-xl p-6 lg:p-8 border border-gray-200 group shadow-sm hover:shadow-md transition-shadow">
               <summary className="text-lg font-semibold text-gray-900 cursor-pointer list-none flex items-center justify-between">
                 <span>What if I need help?</span>
                 <span className="text-emerald-600 group-open:rotate-180 transition-transform">▼</span>
               </summary>
-              <p className="text-gray-600 mt-4">
-                We offer comprehensive support through our Help Center with detailed guides and tutorials. You can also contact our support team directly through the Contact page, and Premium users receive priority support.
+              <p className="text-gray-600 mt-4 leading-relaxed">
+                Access our Help Center with guides and tutorials, or contact support through the Contact page. Premium users receive priority support.
               </p>
             </details>
           </div>
@@ -1390,12 +1390,12 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-emerald-600">
+      <section className="py-20 sm:py-28 lg:py-32 bg-emerald-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
             Ready to Start Earning?
           </h2>
-          <p className="text-xl text-emerald-100 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl text-emerald-100 mb-10 max-w-2xl mx-auto">
             Join thousands of successful affiliate marketers who are already earning with Tiangge.
           </p>
           <Link
