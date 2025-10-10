@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 import Head from 'next/head';
-import { Store, Package, TrendingUp, Users, Eye, MousePointer, ArrowRight, Star, StarHalf, RefreshCw, CheckCircle, Crown, Lock, DollarSign, Zap, ShieldCheck, LayoutDashboard, Code, Globe, Mail, Settings, BarChart3, Image as ImageIcon, PlusCircle, SquarePlus, LogOut, X, User, Copy, ChevronDown, Calendar, Clock, CircleAlert as AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Store, Package, TrendingUp, Users, Eye, MousePointer, ArrowRight, Star, StarHalf, RefreshCw, CheckCircle, Zap, Code, Globe, Mail, Image as ImageIcon, SquarePlus, X, ChevronLeft, ChevronRight, Bell, Clock, Gift } from 'lucide-react';
 import HomeHeader from '@/components/HomeHeader';
 import HomeFooter from '@/components/HomeFooter';
 
@@ -466,9 +466,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features Section - Refined Content */}
+      {/* Features Section - Visual Mockups with Alternating Layout */}
       <section id="features" className="py-24 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
               Everything You Need to Succeed
@@ -478,47 +478,343 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                icon: Store,
-                title: 'Custom Store Builder',
-                description: 'Create a beautiful, professional store with our easy-to-use customization tools. No coding required.'
-              },
-              {
-                icon: Package,
-                title: 'Smart Product Management',
-                description: 'Add products with ease, auto-fill details by scraping URLs, and manage your inventory efficiently.'
-              },
-              {
-                icon: TrendingUp,
-                title: 'Actionable Analytics',
-                description: 'Track store views, product clicks, and conversions with a detailed, real-time dashboard.'
-              },
-              {
-                icon: Users,
-                title: 'Engage Your Audience',
-                description: 'Build your mailing list with subscription forms and keep customers informed with notifications.'
-              },
-              {
-                icon: ShieldCheck,
-                title: 'Secure & Optimized',
-                description: 'Benefit from robust security, image optimization, and SEO-friendly features for better visibility.'
-              },
-              {
-                icon: Zap,
-                title: 'Boost Conversions',
-                description: 'Utilize promotional slides, widgets, and banners to highlight offers and drive sales.'
-              }
-            ].map((feature, index) => (
-              <div key={index} className="bg-white rounded-xl p-8 shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center mb-4">
-                  <feature.icon className="w-6 h-6 text-emerald-600" />
+          <div className="space-y-12">
+            {/* Feature 1: Product Scraper - Left */}
+            <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+              <div className="w-full md:w-1/2">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
+                    <Package className="w-6 h-6 text-emerald-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900">Smart Product Scraper</h3>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
+                <p className="text-lg text-gray-600 leading-relaxed">
+                  Paste any product URL and our smart scraper automatically extracts product details, images, prices, and descriptions. Save hours of manual data entry.
+                </p>
               </div>
-            ))}
+              <div className="w-full md:w-1/2">
+                <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200 h-[320px] flex flex-col">
+                  <div className="p-6 bg-gradient-to-br from-emerald-50 to-white flex-1 flex items-center">
+                    <div className="flex gap-4 w-full">
+                      <div className="flex-1 flex flex-col justify-center space-y-3">
+                        <div className="flex items-center gap-2 bg-white border-2 border-gray-300 rounded-lg px-3 py-3 shadow-sm">
+                          <Globe className="w-5 h-5 text-gray-400" />
+                          <input type="text" placeholder="amazon.com/product/..." className="flex-1 text-sm text-gray-500 bg-transparent border-none outline-none" readOnly />
+                        </div>
+                        <button className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-sm font-semibold py-3 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+                          Scrape Product
+                        </button>
+                      </div>
+                      <div className="w-36 border border-gray-300 rounded-lg overflow-hidden bg-white flex-shrink-0">
+                        <div className="aspect-square overflow-hidden bg-gray-200">
+                          <div className="w-full h-full"></div>
+                        </div>
+                        <div className="p-2 flex flex-col justify-between">
+                          <div className="space-y-1.5 mb-2">
+                            <div className="h-2.5 bg-gray-300 rounded w-full"></div>
+                            <div className="h-2.5 bg-gray-300 rounded w-4/5"></div>
+                          </div>
+                          <div className="flex items-center justify-start">
+                            <div className="h-3 w-2/5 bg-gray-300 rounded"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Feature 2: Store Customization - Right */}
+            <div className="flex flex-col md:flex-row-reverse items-center gap-8 md:gap-12">
+              <div className="w-full md:w-1/2">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                    <Store className="w-6 h-6 text-blue-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900">Custom Store Builder</h3>
+                </div>
+                <p className="text-lg text-gray-600 leading-relaxed">
+                  Design your perfect store with our intuitive customization tools. Choose colors, fonts, layouts, and branding to match your unique style.
+                </p>
+              </div>
+              <div className="w-full md:w-1/2">
+                <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200 h-[320px] flex flex-col">
+                  <div className="p-6 bg-gradient-to-br from-blue-50 to-white flex-1 flex flex-col justify-center">
+                    <div className="space-y-4">
+                      <div className="flex gap-3 justify-center">
+                        <div className="w-10 h-10 rounded-full bg-emerald-500 border-2 border-white shadow-lg"></div>
+                        <div className="w-10 h-10 rounded-full bg-blue-500 border-2 border-white shadow-lg"></div>
+                        <div className="w-10 h-10 rounded-full bg-pink-500 border-2 border-white shadow-lg"></div>
+                      </div>
+                      <div className="bg-white rounded-xl border-2 border-gray-200 p-5 shadow-md">
+                        <div className="flex flex-col items-center text-center mb-4">
+                          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 mb-3"></div>
+                          <div className="space-y-2 w-full">
+                            <div className="h-2.5 bg-gray-300 rounded w-2/3 mx-auto"></div>
+                            <div className="h-2 bg-gray-200 rounded w-1/2 mx-auto"></div>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-3 gap-3">
+                          <div className="aspect-square bg-gradient-to-br from-emerald-100 to-emerald-200 rounded-lg"></div>
+                          <div className="aspect-square bg-gradient-to-br from-emerald-100 to-emerald-200 rounded-lg"></div>
+                          <div className="aspect-square bg-gradient-to-br from-emerald-100 to-emerald-200 rounded-lg"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Feature 3: Analytics Dashboard - Left */}
+            <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+              <div className="w-full md:w-1/2">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+                    <TrendingUp className="w-6 h-6 text-orange-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900">Real-Time Analytics</h3>
+                </div>
+                <p className="text-lg text-gray-600 leading-relaxed">
+                  Track every metric that matters. Monitor store views, product clicks, conversion rates, and user behavior with detailed real-time analytics.
+                </p>
+              </div>
+              <div className="w-full md:w-1/2">
+                <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200 h-[320px] flex flex-col">
+                  <div className="p-6 bg-gradient-to-br from-orange-50 to-white flex-1 flex flex-col justify-center">
+                    <div className="bg-white rounded-xl border-2 border-gray-200 p-4 shadow-md space-y-3">
+                      <div className="text-center pb-2 border-b border-gray-200">
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Real-Time Dashboard</p>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-3 text-center">
+                          <Eye className="w-5 h-5 text-blue-600 mx-auto mb-1" />
+                          <p className="text-xs text-gray-600 mb-1">Views</p>
+                          <p className="text-lg font-bold text-blue-600">1,234</p>
+                        </div>
+                        <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-3 text-center">
+                          <MousePointer className="w-5 h-5 text-green-600 mx-auto mb-1" />
+                          <p className="text-xs text-gray-600 mb-1">Clicks</p>
+                          <p className="text-lg font-bold text-green-600">567</p>
+                        </div>
+                      </div>
+                      <div className="pt-2">
+                        <p className="text-xs text-gray-500 mb-2">Traffic Trend</p>
+                        <div className="h-16 flex items-end gap-1">
+                          <div className="flex-1 bg-gradient-to-t from-orange-400 to-orange-300 rounded-t" style={{height: '45%'}}></div>
+                          <div className="flex-1 bg-gradient-to-t from-orange-500 to-orange-400 rounded-t" style={{height: '65%'}}></div>
+                          <div className="flex-1 bg-gradient-to-t from-orange-600 to-orange-500 rounded-t" style={{height: '85%'}}></div>
+                          <div className="flex-1 bg-gradient-to-t from-orange-700 to-orange-600 rounded-t" style={{height: '100%'}}></div>
+                          <div className="flex-1 bg-gradient-to-t from-orange-600 to-orange-500 rounded-t" style={{height: '75%'}}></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Feature 4: Email Subscriptions - Right */}
+            <div className="flex flex-col md:flex-row-reverse items-center gap-8 md:gap-12">
+              <div className="w-full md:w-1/2">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center">
+                    <Users className="w-6 h-6 text-pink-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900">Email Subscriptions</h3>
+                </div>
+                <p className="text-lg text-gray-600 leading-relaxed">
+                  Build your audience with built-in subscription forms. Send notifications about new products and keep your customers engaged.
+                </p>
+              </div>
+              <div className="w-full md:w-1/2">
+                <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200 h-[320px] flex flex-col">
+                  <div className="p-6 bg-gradient-to-br from-pink-50 to-white flex-1 flex flex-col justify-center items-center">
+                    <div className="bg-white rounded-2xl border-2 border-pink-200 shadow-2xl p-8 max-w-md w-full">
+                      <div className="text-center mb-6">
+                        <div className="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                          <Mail className="w-8 h-8 text-pink-600" />
+                        </div>
+                        <h4 className="text-xl font-bold text-gray-900 mb-2">Stay Updated!</h4>
+                        <p className="text-sm text-gray-600">Get notified about new products</p>
+                      </div>
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-2 bg-gray-50 border border-gray-300 rounded-lg px-4 py-3">
+                          <Mail className="w-5 h-5 text-gray-400" />
+                          <input type="email" placeholder="Enter your email" className="flex-1 text-sm text-gray-500 bg-transparent border-none outline-none" readOnly />
+                        </div>
+                        <button className="w-full bg-gradient-to-r from-pink-500 to-pink-600 text-white text-base font-semibold py-3.5 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+                          Subscribe Now
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Feature 5: Promotional Slides - Left */}
+            <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+              <div className="w-full md:w-1/2">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
+                    <Zap className="w-6 h-6 text-yellow-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900">Promotional Slides</h3>
+                </div>
+                <p className="text-lg text-gray-600 leading-relaxed">
+                  Create eye-catching promotional slides and pop-up banners to highlight special offers, featured products, and drive conversions.
+                </p>
+              </div>
+              <div className="w-full md:w-1/2">
+                <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200 h-[320px] flex flex-col">
+                  <div className="p-6 bg-gradient-to-br from-yellow-50 to-white flex-1 flex flex-col justify-center">
+                    <div className="relative h-48 overflow-hidden shadow-lg rounded-lg">
+                      <div className="relative h-full">
+                        <div className="h-full bg-gradient-to-r from-yellow-400 to-orange-500 flex items-center justify-center">
+                          <ImageIcon className="w-24 h-24 text-white/60" />
+                        </div>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4 z-10">
+                          <h2 className="text-2xl font-bold mb-2 text-white">Summer Sale</h2>
+                          <p className="text-sm text-gray-100">Up to 50% off on selected items</p>
+                        </div>
+                      </div>
+
+                      <button className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-opacity-70 transition-all z-20">
+                        <span className="text-sm font-bold">‹</span>
+                      </button>
+
+                      <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-opacity-70 transition-all z-20">
+                        <span className="text-sm font-bold">›</span>
+                      </button>
+
+                      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-1 z-20">
+                        <div className="w-2 h-2 rounded-full bg-white"></div>
+                        <div className="w-2 h-2 rounded-full bg-white opacity-50"></div>
+                        <div className="w-2 h-2 rounded-full bg-white opacity-50"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Feature 6: Bulk Import - Right */}
+            <div className="flex flex-col md:flex-row-reverse items-center gap-8 md:gap-12">
+              <div className="w-full md:w-1/2">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                    <SquarePlus className="w-6 h-6 text-green-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900">Bulk CSV Import</h3>
+                </div>
+                <p className="text-lg text-gray-600 leading-relaxed">
+                  Upload hundreds of products at once with CSV import. Perfect for scaling your store quickly with our easy-to-use bulk upload feature.
+                </p>
+              </div>
+              <div className="w-full md:w-1/2">
+                <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200 h-[320px] flex flex-col">
+                  <div className="p-6 bg-gradient-to-br from-green-50 to-white flex-1 flex flex-col justify-center">
+                    <div className="bg-white rounded-xl border-2 border-dashed border-gray-300 p-6 text-center space-y-4">
+                      <div className="w-16 h-16 bg-green-100 rounded-xl flex items-center justify-center mx-auto">
+                        <Code className="w-8 h-8 text-green-600" />
+                      </div>
+                      <div>
+                        <p className="text-base font-semibold text-gray-700">products.csv</p>
+                        <div className="text-sm text-gray-500 mt-1">250 products ready to import</div>
+                      </div>
+                      <div className="pt-2">
+                        <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                          <div className="h-full bg-gradient-to-r from-green-500 to-emerald-500 rounded-full" style={{width: '75%'}}></div>
+                        </div>
+                        <p className="text-xs text-gray-600 mt-2">Uploading... 75%</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Feature 7: Popup Banner - Left */}
+            <div className="flex flex-col md:flex-row items-center gap-8 md:gap-12">
+              <div className="w-full md:w-1/2">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+                    <ImageIcon className="w-6 h-6 text-purple-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900">Pop-up Banner</h3>
+                </div>
+                <p className="text-lg text-gray-600 leading-relaxed">
+                  Capture attention with customizable pop-up banners. Promote special offers, new products, or important announcements to your visitors.
+                </p>
+              </div>
+              <div className="w-full md:w-1/2">
+                <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200 h-[320px] flex flex-col relative">
+                  <div className="p-6 bg-gradient-to-br from-purple-50 to-white flex-1 flex flex-col justify-center items-center relative">
+                    <div className="absolute inset-0 bg-white bg-opacity-20 flex items-center justify-center z-10">
+                      <div className="relative bg-white rounded-2xl shadow-2xl overflow-hidden max-w-[240px] w-full">
+                        <button className="absolute top-2 right-2 bg-gray-800 text-white rounded-full w-7 h-7 flex items-center justify-center text-sm hover:bg-gray-700 shadow-lg z-10">
+                          ✕
+                        </button>
+                        <div className="bg-gradient-to-br from-purple-400 via-purple-500 to-pink-500 h-48 flex items-center justify-center">
+                          <ImageIcon className="w-16 h-16 text-white/60" />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="bg-gray-100 rounded-lg w-full h-full flex items-center justify-center opacity-50">
+                      <div className="text-center text-gray-400">
+                        <div className="w-12 h-12 bg-gray-200 rounded-full mx-auto mb-2"></div>
+                        <div className="h-2 bg-gray-200 rounded w-20 mx-auto mb-1"></div>
+                        <div className="h-2 bg-gray-200 rounded w-16 mx-auto"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Feature 8: Floating Widget - Right */}
+            <div className="flex flex-col md:flex-row-reverse items-center gap-8 md:gap-12">
+              <div className="w-full md:w-1/2">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-cyan-100 rounded-xl flex items-center justify-center">
+                    <Gift className="w-6 h-6 text-cyan-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900">Floating Widget</h3>
+                </div>
+                <p className="text-lg text-gray-600 leading-relaxed">
+                  Add an eye-catching floating widget that follows visitors as they scroll. Perfect for promoting special offers or driving engagement.
+                </p>
+              </div>
+              <div className="w-full md:w-1/2">
+                <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200 h-[320px] flex flex-col relative">
+                  <div className="p-6 bg-gradient-to-br from-cyan-50 to-white flex-1 flex flex-col justify-center relative">
+                    <div className="bg-white rounded-xl border-2 border-gray-200 shadow-md h-full relative overflow-hidden">
+                      <div className="p-5">
+                        <div className="flex flex-col items-center text-center mb-4">
+                          <div className="w-14 h-14 rounded-full bg-gradient-to-br from-cyan-400 to-cyan-600 mb-3"></div>
+                          <div className="space-y-2 w-full">
+                            <div className="h-2.5 bg-gray-300 rounded w-2/3 mx-auto"></div>
+                            <div className="h-2 bg-gray-200 rounded w-1/2 mx-auto"></div>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-3 gap-2">
+                          <div className="aspect-square bg-gradient-to-br from-cyan-100 to-cyan-200 rounded-lg"></div>
+                          <div className="aspect-square bg-gradient-to-br from-cyan-100 to-cyan-200 rounded-lg"></div>
+                          <div className="aspect-square bg-gradient-to-br from-cyan-100 to-cyan-200 rounded-lg"></div>
+                        </div>
+                      </div>
+                      <div className="absolute bottom-4 right-4">
+                        <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 via-cyan-600 to-blue-600 rounded-full shadow-xl flex items-center justify-center border-2 border-white">
+                          <Gift className="w-6 h-6 text-white" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
