@@ -1,23 +1,77 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import Link from 'next/link';
 import Head from 'next/head';
-import { Store, Package, TrendingUp, Users, Eye, MousePointer, ArrowRight, Star, StarHalf, RefreshCw, CheckCircle, Crown, Lock, DollarSign, Zap, ShieldCheck, LayoutDashboard, Code, Globe, Mail, Settings, BarChart3, Image as ImageIcon, PlusCircle, SquarePlus, LogOut, X, User, Copy, ChevronDown, Calendar, Clock, CircleAlert as AlertCircle } from 'lucide-react';
+import { Store, Package, TrendingUp, Users, Eye, MousePointer, ArrowRight, Star, StarHalf, RefreshCw, CheckCircle, Crown, Lock, DollarSign, Zap, ShieldCheck, LayoutDashboard, Code, Globe, Mail, Settings, BarChart3, Image as ImageIcon, PlusCircle, SquarePlus, LogOut, X, User, Copy, ChevronDown, Calendar, Clock, CircleAlert as AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 import HomeHeader from '@/components/HomeHeader';
 import HomeFooter from '@/components/HomeFooter';
 
 export default function HomePage() {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+
+  const testimonials = [
+    {
+      name: 'Jane Doe',
+      role: 'Affiliate Marketing Pro',
+      image: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      quote: 'Tiangge transformed my affiliate business. The customization options are incredible, and the analytics help me optimize everything. My earnings have doubled!'
+    },
+    {
+      name: 'John Smith',
+      role: 'E-commerce Entrepreneur',
+      image: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      quote: 'I love how easy it is to add products and create stunning slides. The product scraping feature saves me so much time. Highly recommend!'
+    },
+    {
+      name: 'Sarah Lee',
+      role: 'Content Creator',
+      image: 'https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      quote: 'Finally, a platform that understands affiliate marketing. The built-in SEO and responsive design mean my stores look great and perform well on any device.'
+    },
+    {
+      name: 'Michael Chen',
+      role: 'Digital Marketer',
+      image: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      quote: 'The subscriber management and notification system helped me build a loyal audience. My conversion rates increased by 40% in just two months.'
+    },
+    {
+      name: 'Emily Rodriguez',
+      role: 'Lifestyle Blogger',
+      image: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      quote: 'Beautiful templates and easy customization made launching my affiliate store a breeze. I was up and running in less than an hour!'
+    }
+  ];
 
   useEffect(() => {
     if (!loading && user) {
       router.push('/dashboard');
     }
   }, [user, loading, router]);
+
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    if (isPaused) return;
+
+    const timer = setInterval(() => {
+      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+    }, 5000);
+
+    return () => clearInterval(timer);
+  }, [testimonials.length, isPaused]);
+
+  const nextTestimonial = () => {
+    setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+  };
+
+  const prevTestimonial = () => {
+    setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  };
 
   if (loading) {
     return (
@@ -469,54 +523,342 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Testimonials Section - New Section */}
-      <section className="py-24 bg-white">
+      {/* Testimonials Section - Slider */}
+      <section className="py-16 sm:py-24 bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+          <div className="text-center mb-10 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
               What Our Users Say
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto px-4">
               Hear from successful affiliate marketers who are growing their businesses with Tiangge.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-gray-50 rounded-xl p-8 shadow-sm border border-gray-200">
-              <div className="flex items-center mb-4">
-                <img src="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="User Avatar" className="w-12 h-12 rounded-full object-cover mr-4" />
-                <div>
-                  <p className="font-semibold text-gray-900">Jane Doe</p>
-                  <p className="text-sm text-gray-600">Affiliate Marketing Pro</p>
+          <div className="relative max-w-4xl mx-auto">
+            <div className="px-8 sm:px-12 md:px-16">
+              <div
+                className="testimonial-slider-container"
+                onMouseEnter={() => setIsPaused(true)}
+                onMouseLeave={() => setIsPaused(false)}
+              >
+                <div
+                  className="testimonial-slider-track"
+                  style={{ transform: `translateX(-${currentTestimonial * 100}%)` }}
+                >
+                  {testimonials.map((testimonial, index) => (
+                    <div key={index} className="testimonial-slide">
+                      <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl sm:rounded-2xl p-6 sm:p-12 shadow-lg border border-gray-200">
+                        <div className="flex flex-col items-center text-center">
+                          <div className="mb-4 sm:mb-6">
+                            <img
+                              src={testimonial.image}
+                              alt={testimonial.name}
+                              className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-4 border-emerald-500 shadow-md"
+                            />
+                          </div>
+                          <div className="flex text-yellow-400 mb-3 sm:mb-4">
+                            <Star className="w-4 h-4 sm:w-5 sm:h-5 fill-current" />
+                            <Star className="w-4 h-4 sm:w-5 sm:h-5 fill-current" />
+                            <Star className="w-4 h-4 sm:w-5 sm:h-5 fill-current" />
+                            <Star className="w-4 h-4 sm:w-5 sm:h-5 fill-current" />
+                            <Star className="w-4 h-4 sm:w-5 sm:h-5 fill-current" />
+                          </div>
+                          <p className="text-base sm:text-lg md:text-xl text-gray-700 italic mb-4 sm:mb-6 leading-relaxed max-w-2xl">
+                            &ldquo;{testimonial.quote}&rdquo;
+                          </p>
+                          <div>
+                            <p className="font-bold text-gray-900 text-base sm:text-lg">{testimonial.name}</p>
+                            <p className="text-emerald-600 font-medium text-sm sm:text-base">{testimonial.role}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-              <p className="text-lg text-gray-700 italic">
-                &ldquo;Tiangge transformed my affiliate business. The customization options are incredible, and the analytics help me optimize everything. My earnings have doubled!&rdquo;
-              </p>
             </div>
-            <div className="bg-gray-50 rounded-xl p-8 shadow-sm border border-gray-200">
-              <div className="flex items-center mb-4">
-                <img src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="User Avatar" className="w-12 h-12 rounded-full object-cover mr-4" />
-                <div>
-                  <p className="font-semibold text-gray-900">John Smith</p>
-                  <p className="text-sm text-gray-600">E-commerce Entrepreneur</p>
-                </div>
-              </div>
-              <p className="text-lg text-gray-700 italic">
-                &ldquo;I love how easy it is to add products and create stunning slides. The product scraping feature saves me so much time. Highly recommend!&rdquo;
-              </p>
+
+            <button
+              onClick={prevTestimonial}
+              className="absolute left-0 top-1/2 -translate-y-1/2 bg-white hover:bg-gray-50 rounded-full p-3 shadow-lg border border-gray-200 transition-all hover:scale-110 z-10 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              aria-label="Previous testimonial"
+            >
+              <ChevronLeft className="w-6 h-6 text-gray-700" />
+            </button>
+
+            <button
+              onClick={nextTestimonial}
+              className="absolute right-0 top-1/2 -translate-y-1/2 bg-white hover:bg-gray-50 rounded-full p-3 shadow-lg border border-gray-200 transition-all hover:scale-110 z-10 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              aria-label="Next testimonial"
+            >
+              <ChevronRight className="w-6 h-6 text-gray-700" />
+            </button>
+
+            <div className="flex justify-center mt-6 sm:mt-8 gap-2">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentTestimonial(index)}
+                  className={`transition-all ${
+                    index === currentTestimonial
+                      ? 'w-6 sm:w-8 bg-emerald-600'
+                      : 'w-2 bg-gray-300 hover:bg-gray-400'
+                  } h-2 rounded-full focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2`}
+                  aria-label={`Go to testimonial ${index + 1}`}
+                />
+              ))}
             </div>
-            <div className="bg-gray-50 rounded-xl p-8 shadow-sm border border-gray-200">
-              <div className="flex items-center mb-4">
-                <img src="https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="User Avatar" className="w-12 h-12 rounded-full object-cover mr-4" />
-                <div>
-                  <p className="font-semibold text-gray-900">Sarah Lee</p>
-                  <p className="text-sm text-gray-600">Content Creator</p>
-                </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Platform Compatibility Section - Infinite Brand Carousel */}
+      <section className="py-24 bg-gray-50 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              Compatible with Leading Platforms
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Promote products from top affiliate programs and platforms worldwide. Create your unique store selling anything from online courses to hosting services, fashion to finance.
+            </p>
+          </div>
+
+          {/* Infinite Carousel Container */}
+          <div className="relative">
+            {/* Top Row - Scrolling Right */}
+            <div className="carousel-wrapper mb-8">
+              <div className="carousel-track">
+                {[
+                  { name: 'Amazon', domain: 'amazon.com' },
+                  { name: 'Shopee', domain: 'shopee.com' },
+                  { name: 'Lazada', domain: 'lazada.com' },
+                  { name: 'eBay', domain: 'ebay.com' },
+                  { name: 'AliExpress', domain: 'aliexpress.com' },
+                  { name: 'Walmart', domain: 'walmart.com' },
+                  { name: 'Udemy', domain: 'udemy.com' },
+                  { name: 'Coursera', domain: 'coursera.org' },
+                  { name: 'Skillshare', domain: 'skillshare.com' },
+                  { name: 'LinkedIn Learning', domain: 'linkedin.com' },
+                  { name: 'Teachable', domain: 'teachable.com' },
+                  { name: 'MasterClass', domain: 'masterclass.com' }
+                ].map((platform, idx) => (
+                  <div key={idx} className="carousel-item">
+                    <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-all h-24 flex items-center justify-center">
+                      <img
+                        src={`https://logo.clearbit.com/${platform.domain}`}
+                        alt={platform.name}
+                        className="max-h-12 max-w-full object-contain"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const textFallback = target.nextElementSibling as HTMLElement;
+                          if (textFallback) textFallback.style.display = 'block';
+                        }}
+                      />
+                      <span className="text-gray-900 font-semibold text-lg hidden">{platform.name}</span>
+                    </div>
+                  </div>
+                ))}
+                {[
+                  { name: 'Amazon', domain: 'amazon.com' },
+                  { name: 'Shopee', domain: 'shopee.com' },
+                  { name: 'Lazada', domain: 'lazada.com' },
+                  { name: 'eBay', domain: 'ebay.com' },
+                  { name: 'AliExpress', domain: 'aliexpress.com' },
+                  { name: 'Walmart', domain: 'walmart.com' },
+                  { name: 'Udemy', domain: 'udemy.com' },
+                  { name: 'Coursera', domain: 'coursera.org' },
+                  { name: 'Skillshare', domain: 'skillshare.com' },
+                  { name: 'LinkedIn Learning', domain: 'linkedin.com' },
+                  { name: 'Teachable', domain: 'teachable.com' },
+                  { name: 'MasterClass', domain: 'masterclass.com' }
+                ].map((platform, idx) => (
+                  <div key={`dup-${idx}`} className="carousel-item">
+                    <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-all h-24 flex items-center justify-center">
+                      <img
+                        src={`https://logo.clearbit.com/${platform.domain}`}
+                        alt={platform.name}
+                        className="max-h-12 max-w-full object-contain"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const textFallback = target.nextElementSibling as HTMLElement;
+                          if (textFallback) textFallback.style.display = 'block';
+                        }}
+                      />
+                      <span className="text-gray-900 font-semibold text-lg hidden">{platform.name}</span>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <p className="text-lg text-gray-700 italic">
-                &ldquo;Finally, a platform that understands affiliate marketing. The built-in SEO and responsive design mean my stores look great and perform well on any device.&rdquo;
-              </p>
+            </div>
+
+            {/* Middle Row - Scrolling Left */}
+            <div className="carousel-wrapper mb-8">
+              <div className="carousel-track-reverse">
+                {[
+                  { name: 'Bluehost', domain: 'bluehost.com' },
+                  { name: 'HostGator', domain: 'hostgator.com' },
+                  { name: 'SiteGround', domain: 'siteground.com' },
+                  { name: 'GoDaddy', domain: 'godaddy.com' },
+                  { name: 'Namecheap', domain: 'namecheap.com' },
+                  { name: 'WP Engine', domain: 'wpengine.com' },
+                  { name: 'HubSpot', domain: 'hubspot.com' },
+                  { name: 'Shopify', domain: 'shopify.com' },
+                  { name: 'ConvertKit', domain: 'convertkit.com' },
+                  { name: 'Canva', domain: 'canva.com' },
+                  { name: 'Grammarly', domain: 'grammarly.com' },
+                  { name: 'Adobe', domain: 'adobe.com' }
+                ].map((platform, idx) => (
+                  <div key={idx} className="carousel-item">
+                    <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-all h-24 flex items-center justify-center">
+                      <img
+                        src={`https://logo.clearbit.com/${platform.domain}`}
+                        alt={platform.name}
+                        className="max-h-12 max-w-full object-contain"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const textFallback = target.nextElementSibling as HTMLElement;
+                          if (textFallback) textFallback.style.display = 'block';
+                        }}
+                      />
+                      <span className="text-gray-900 font-semibold text-lg hidden">{platform.name}</span>
+                    </div>
+                  </div>
+                ))}
+                {[
+                  { name: 'Bluehost', domain: 'bluehost.com' },
+                  { name: 'HostGator', domain: 'hostgator.com' },
+                  { name: 'SiteGround', domain: 'siteground.com' },
+                  { name: 'GoDaddy', domain: 'godaddy.com' },
+                  { name: 'Namecheap', domain: 'namecheap.com' },
+                  { name: 'WP Engine', domain: 'wpengine.com' },
+                  { name: 'HubSpot', domain: 'hubspot.com' },
+                  { name: 'Shopify', domain: 'shopify.com' },
+                  { name: 'ConvertKit', domain: 'convertkit.com' },
+                  { name: 'Canva', domain: 'canva.com' },
+                  { name: 'Grammarly', domain: 'grammarly.com' },
+                  { name: 'Adobe', domain: 'adobe.com' }
+                ].map((platform, idx) => (
+                  <div key={`dup-${idx}`} className="carousel-item">
+                    <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-all h-24 flex items-center justify-center">
+                      <img
+                        src={`https://logo.clearbit.com/${platform.domain}`}
+                        alt={platform.name}
+                        className="max-h-12 max-w-full object-contain"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const textFallback = target.nextElementSibling as HTMLElement;
+                          if (textFallback) textFallback.style.display = 'block';
+                        }}
+                      />
+                      <span className="text-gray-900 font-semibold text-lg hidden">{platform.name}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Bottom Row - Scrolling Right */}
+            <div className="carousel-wrapper">
+              <div className="carousel-track">
+                {[
+                  { name: 'Booking.com', domain: 'booking.com' },
+                  { name: 'Airbnb', domain: 'airbnb.com' },
+                  { name: 'Expedia', domain: 'expedia.com' },
+                  { name: 'TripAdvisor', domain: 'tripadvisor.com' },
+                  { name: 'Nike', domain: 'nike.com' },
+                  { name: 'Adidas', domain: 'adidas.com' },
+                  { name: 'Sephora', domain: 'sephora.com' },
+                  { name: 'Steam', domain: 'steampowered.com' },
+                  { name: 'Spotify', domain: 'spotify.com' },
+                  { name: 'Netflix', domain: 'netflix.com' },
+                  { name: 'Fiverr', domain: 'fiverr.com' },
+                  { name: 'Upwork', domain: 'upwork.com' }
+                ].map((platform, idx) => (
+                  <div key={idx} className="carousel-item">
+                    <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-all h-24 flex items-center justify-center">
+                      <img
+                        src={`https://logo.clearbit.com/${platform.domain}`}
+                        alt={platform.name}
+                        className="max-h-12 max-w-full object-contain"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const textFallback = target.nextElementSibling as HTMLElement;
+                          if (textFallback) textFallback.style.display = 'block';
+                        }}
+                      />
+                      <span className="text-gray-900 font-semibold text-lg hidden">{platform.name}</span>
+                    </div>
+                  </div>
+                ))}
+                {[
+                  { name: 'Booking.com', domain: 'booking.com' },
+                  { name: 'Airbnb', domain: 'airbnb.com' },
+                  { name: 'Expedia', domain: 'expedia.com' },
+                  { name: 'TripAdvisor', domain: 'tripadvisor.com' },
+                  { name: 'Nike', domain: 'nike.com' },
+                  { name: 'Adidas', domain: 'adidas.com' },
+                  { name: 'Sephora', domain: 'sephora.com' },
+                  { name: 'Steam', domain: 'steampowered.com' },
+                  { name: 'Spotify', domain: 'spotify.com' },
+                  { name: 'Netflix', domain: 'netflix.com' },
+                  { name: 'Fiverr', domain: 'fiverr.com' },
+                  { name: 'Upwork', domain: 'upwork.com' }
+                ].map((platform, idx) => (
+                  <div key={`dup-${idx}`} className="carousel-item">
+                    <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-all h-24 flex items-center justify-center">
+                      <img
+                        src={`https://logo.clearbit.com/${platform.domain}`}
+                        alt={platform.name}
+                        className="max-h-12 max-w-full object-contain"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const textFallback = target.nextElementSibling as HTMLElement;
+                          if (textFallback) textFallback.style.display = 'block';
+                        }}
+                      />
+                      <span className="text-gray-900 font-semibold text-lg hidden">{platform.name}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Info */}
+          <div className="text-center mt-12">
+            <p className="text-lg text-gray-600 mb-4">
+              And hundreds more affiliate programs across all industries
+            </p>
+            <div className="flex flex-wrap justify-center gap-3">
+              <span className="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 border border-gray-300">
+                Credit Cards & Finance
+              </span>
+              <span className="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 border border-gray-300">
+                Trading & Crypto
+              </span>
+              <span className="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 border border-gray-300">
+                Digital Downloads
+              </span>
+              <span className="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 border border-gray-300">
+                Health & Fitness
+              </span>
+              <span className="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 border border-gray-300">
+                Gaming & Entertainment
+              </span>
+              <span className="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 border border-gray-300">
+                Insurance
+              </span>
+              <span className="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 border border-gray-300">
+                Custom Affiliate Links
+              </span>
             </div>
           </div>
         </div>
@@ -776,36 +1118,83 @@ export default function HomePage() {
         html {
           scroll-behavior: smooth;
         }
-        @keyframes float-1 {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-10px) rotate(2deg); }
+
+        /* Testimonial Slider Styles */
+        .testimonial-slider-container {
+          overflow: hidden;
+          position: relative;
+          width: 100%;
+          isolation: isolate;
         }
-        @keyframes float-2 {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-15px) rotate(-1deg); }
+        .testimonial-slider-track {
+          display: flex;
+          transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+          will-change: transform;
+          backface-visibility: hidden;
+          -webkit-backface-visibility: hidden;
         }
-        @keyframes float-3 {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-5px) rotate(1deg); }
+        .testimonial-slide {
+          min-width: 100%;
+          max-width: 100%;
+          flex-shrink: 0;
+          padding: 0 8px;
+          box-sizing: border-box;
         }
-        @keyframes float-4 {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-20px) rotate(3deg); }
+        .testimonial-slide > div {
+          width: 100%;
+          box-sizing: border-box;
+          min-height: 320px;
+          display: flex;
+          align-items: center;
         }
-        @keyframes float-5 {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-8px) rotate(-2deg); }
+        @media (max-width: 640px) {
+          .testimonial-slide {
+            padding: 0 4px;
+          }
+          .testimonial-slide > div {
+            min-height: 280px;
+          }
         }
-        @keyframes float-6 {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-12px) rotate(1deg); }
+
+        /* Infinite Brand Carousel Styles */
+        .carousel-wrapper {
+          overflow: hidden;
+          position: relative;
         }
-        .animate-float-1 { animation: float-1 6s ease-in-out infinite; }
-        .animate-float-2 { animation: float-2 6s ease-in-out infinite; }
-        .animate-float-3 { animation: float-3 6s ease-in-out infinite; }
-        .animate-float-4 { animation: float-4 6s ease-in-out infinite; }
-        .animate-float-5 { animation: float-5 6s ease-in-out infinite; }
-        .animate-float-6 { animation: float-6 6s ease-in-out infinite; }
+        .carousel-track, .carousel-track-reverse {
+          display: flex;
+          gap: 1.5rem;
+          width: fit-content;
+        }
+        .carousel-track {
+          animation: scroll-left 40s linear infinite;
+        }
+        .carousel-track-reverse {
+          animation: scroll-right 40s linear infinite;
+        }
+        .carousel-item {
+          flex-shrink: 0;
+          width: 200px;
+        }
+        @keyframes scroll-left {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+        @keyframes scroll-right {
+          0% {
+            transform: translateX(-50%);
+          }
+          100% {
+            transform: translateX(0);
+          }
+        }
+        .carousel-track:hover, .carousel-track-reverse:hover {
+          animation-play-state: paused;
+        }
         `}</style>
       </div>
     </>
