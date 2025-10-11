@@ -412,27 +412,6 @@ export default function StoreTemplate({ store, products, slides, categories, ini
                     )}
                   </div>
                   
-                  {/* Social links */}
-                  <div className="flex space-x-2 sm:space-x-3">
-                    {store.socialLinks?.map((socialLink, index) => {
-                      const IconComponent = SOCIAL_ICONS[socialLink.platform] || Globe;
-                      return (
-                        <a
-                          key={index}
-                          href={socialLink.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:opacity-75 transition-opacity p-1"
-                          style={{ color: store.customization?.socialIconColor || '#ffffff' }}
-                          onClick={() => handleSocialLinkClick(socialLink.platform, socialLink.url)}
-                        >
-                          <IconComponent className="w-5 h-5 sm:w-6 sm:h-6" />
-                        </a>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
               
               {/* Centered store name and description */}
               <div className="text-center">
@@ -455,6 +434,29 @@ export default function StoreTemplate({ store, products, slides, categories, ini
                   {store.description}
                 </p>
               </div>
+
+                  
+                  {/* Social links */}
+                  <div className="flex space-x-2 sm:space-x-3">
+                    {store.socialLinks?.map((socialLink, index) => {
+                      const IconComponent = SOCIAL_ICONS[socialLink.platform] || Globe;
+                      return (
+                        <a
+                          key={index}
+                          href={socialLink.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:opacity-75 transition-opacity p-1"
+                          style={{ color: store.customization?.socialIconColor || '#ffffff' }}
+                          onClick={() => handleSocialLinkClick(socialLink.platform, socialLink.url)}
+                        >
+                          <IconComponent className="w-5 h-5 sm:w-6 sm:h-6" />
+                        </a>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           </header>
 
