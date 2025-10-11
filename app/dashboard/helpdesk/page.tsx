@@ -1,0 +1,439 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/useToast';
+import { useRouter } from 'next/navigation';
+import { isPremium, isAdmin } from '@/lib/auth';
+import { createTicket, getUserTickets, getTicket, getTicketReplies, subscribeToTicketReplies, HelpdeskTicket, TicketReply, clearTicketNotifications } from '@/lib/helpdesk';
+import PremiumFeatureGate from '@/components/PremiumFeatureGate';
+import { Plus, MessageSquare, Clock, CheckCircle, XCircle, AlertCircle, ChevronLeft, Crown, Lock } from 'lucide-react';
+
+export default function HelpdeskPage() {
+  const { user, userProfile, loading } = useAuth();
+  const { showToast } = useToast();
+  const router = useRouter();
+
+  const [tickets, setTickets] = useState<HelpdeskTicket[]>([]);
+  const [loadingTickets, setLoadingTickets] = useState(true);
+  const [showNewTicketForm, setShowNewTicketForm] = useState(false);
+  const [selectedTicket, setSelectedTicket] = useState<HelpdeskTicket | null>(null);
+  const [ticketReplies, setTicketReplies] = useState<TicketReply[]>([]);
+  const [loadingReplies, setLoadingReplies] = useState(false);
+
+  const [formData, setFormData] = useState({
+    subject: '',
+    category: 'general' as 'technical' | 'billing' | 'feature_request' | 'general',
+    priority: 'medium' as 'low' | 'medium' | 'high',
+    description: ''
+  });
+
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (loading) return;
+
+    if (!user || !userProfile) {
+      router.push('/auth');
+      return;
+    }
+
+    loadTickets();
+  }, [user, userProfile, loading, router]);
+
+  useEffect(() => {
+    if (!selectedTicket) return;
+
+    setLoadingReplies(true);
+    const unsubscribe = subscribeToTicketReplies(selectedTicket.id!, (replies) => {
+      setTicketReplies(replies);
+      setLoadingReplies(false);
+    });
+
+    return () => unsubscribe();
+  }, [selectedTicket]);
+
+  const loadTickets = async () => {
+    if (!user) return;
+
+    setLoadingTickets(true);
+    try {
+      const userTickets = await getUserTickets(user.uid);
+      setTickets(userTickets);
+    } catch (error) {
+      console.error('Error loading tickets:', error);
+      showToast('Failed to load tickets', 'error');
+    } finally {
+      setLoadingTickets(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!user || !userProfile) return;
+
+    if (!formData.subject.trim() || !formData.description.trim()) {
+      showToast('Please fill in all required fields', 'error');
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
+      await createTicket(
+        user.uid,
+        userProfile.email,
+        userProfile.displayName || userProfile.email,
+        formData.subject,
+        formData.category,
+        formData.priority,
+        formData.description
+      );
+
+      showToast('Support ticket created successfully', 'success');
+      setFormData({
+        subject: '',
+        category: 'general',
+        priority: 'medium',
+        description: ''
+      });
+      setShowNewTicketForm(false);
+      loadTickets();
+    } catch (error) {
+      console.error('Error creating ticket:', error);
+      showToast('Failed to create ticket', 'error');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleTicketClick = async (ticket: HelpdeskTicket) => {
+    setSelectedTicket(ticket);
+
+    if (user && ticket.id) {
+      try {
+        await clearTicketNotifications(ticket.id, user.uid);
+      } catch (error) {
+        console.error('Error clearing notifications:', error);
+      }
+    }
+  };
+
+  const handleBackToList = () => {
+    setSelectedTicket(null);
+    setTicketReplies([]);
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'open':
+        return <AlertCircle className="w-5 h-5 text-blue-500" />;
+      case 'in_progress':
+        return <Clock className="w-5 h-5 text-yellow-500" />;
+      case 'resolved':
+        return <CheckCircle className="w-5 h-5 text-green-500" />;
+      case 'closed':
+        return <XCircle className="w-5 h-5 text-gray-500" />;
+      default:
+        return <AlertCircle className="w-5 h-5 text-gray-500" />;
+    }
+  };
+
+  const getStatusBadge = (status: string) => {
+    const styles = {
+      open: 'bg-blue-100 text-blue-800',
+      in_progress: 'bg-yellow-100 text-yellow-800',
+      resolved: 'bg-green-100 text-green-800',
+      closed: 'bg-gray-100 text-gray-800'
+    };
+
+    return (
+      <span className={`px-2 py-1 text-xs font-medium rounded-full ${styles[status as keyof typeof styles]}`}>
+        {status.replace('_', ' ').toUpperCase()}
+      </span>
+    );
+  };
+
+  const getPriorityBadge = (priority: string) => {
+    const styles = {
+      low: 'bg-gray-100 text-gray-800',
+      medium: 'bg-blue-100 text-blue-800',
+      high: 'bg-red-100 text-red-800'
+    };
+
+    return (
+      <span className={`px-2 py-1 text-xs font-medium rounded-full ${styles[priority as keyof typeof styles]}`}>
+        {priority.toUpperCase()}
+      </span>
+    );
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+      </div>
+    );
+  }
+
+  if (!userProfile?.isPremiumAdminSet && !isAdmin(userProfile)) {
+    return (
+      <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg border border-yellow-200 p-8 text-center max-w-2xl mx-auto mt-12">
+        <div className="w-20 h-20 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-6 text-white">
+          <Crown className="w-10 h-10" />
+        </div>
+        <h2 className="text-2xl font-bold text-gray-900 mb-3">Premium Feature: Help Desk</h2>
+        <p className="text-gray-700 mb-6">
+          Access our dedicated support helpdesk with this premium feature. Submit tickets and get help from our support team.
+        </p>
+        <div className="bg-white rounded-lg p-4 border border-yellow-300 mb-6">
+          <p className="text-gray-800 font-medium">
+            Upgrade to premium to access the helpdesk and get priority support.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (selectedTicket) {
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <button
+          onClick={handleBackToList}
+          className="flex items-center text-gray-600 hover:text-gray-900 mb-6"
+        >
+          <ChevronLeft className="w-5 h-5 mr-1" />
+          Back to tickets
+        </button>
+
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="flex items-start justify-between mb-6">
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-2">
+                {getStatusIcon(selectedTicket.status)}
+                <h1 className="text-2xl font-bold text-gray-900">{selectedTicket.subject}</h1>
+              </div>
+              <div className="flex items-center gap-2 flex-wrap">
+                {getStatusBadge(selectedTicket.status)}
+                {getPriorityBadge(selectedTicket.priority)}
+                <span className="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800">
+                  {selectedTicket.category.replace('_', ' ').toUpperCase()}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-gray-200 pt-4 mb-6">
+            <p className="text-sm text-gray-500 mb-2">
+              Created: {selectedTicket.createdAt.toLocaleString()}
+            </p>
+            <p className="text-gray-700 whitespace-pre-wrap">{selectedTicket.description}</p>
+          </div>
+
+          <div className="border-t border-gray-200 pt-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+              <MessageSquare className="w-5 h-5 mr-2" />
+              Replies ({ticketReplies.length})
+            </h2>
+
+            {loadingReplies ? (
+              <div className="flex justify-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+              </div>
+            ) : ticketReplies.length === 0 ? (
+              <p className="text-gray-500 text-center py-8">
+                No replies yet. Our support team will respond soon.
+              </p>
+            ) : (
+              <div className="space-y-4">
+                {ticketReplies.map((reply) => (
+                  <div
+                    key={reply.id}
+                    className={`p-4 rounded-lg ${
+                      reply.isAdmin
+                        ? 'bg-primary-50 border border-primary-200'
+                        : 'bg-gray-50 border border-gray-200'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold text-gray-900">
+                          {reply.userName}
+                        </span>
+                        {reply.isAdmin && (
+                          <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-primary-600 text-white">
+                            ADMIN
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-xs text-gray-500">
+                        {reply.createdAt.toLocaleString()}
+                      </span>
+                    </div>
+                    <p className="text-gray-700 whitespace-pre-wrap">{reply.message}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container mx-auto px-4 py-8 max-w-6xl">
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Help Desk</h1>
+          <p className="text-gray-600 mt-2">Submit and track your support tickets</p>
+        </div>
+        <button
+          onClick={() => setShowNewTicketForm(!showNewTicketForm)}
+          className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+        >
+          <Plus className="w-5 h-5 mr-2" />
+          New Ticket
+        </button>
+      </div>
+
+      {showNewTicketForm && (
+        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">Create New Ticket</h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Subject *
+              </label>
+              <input
+                type="text"
+                value={formData.subject}
+                onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                placeholder="Brief description of your issue"
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Category *
+                </label>
+                <select
+                  value={formData.category}
+                  onChange={(e) => setFormData({ ...formData, category: e.target.value as any })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                >
+                  <option value="general">General</option>
+                  <option value="technical">Technical</option>
+                  <option value="billing">Billing</option>
+                  <option value="feature_request">Feature Request</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Priority *
+                </label>
+                <select
+                  value={formData.priority}
+                  onChange={(e) => setFormData({ ...formData, priority: e.target.value as any })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                >
+                  <option value="low">Low</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Description *
+              </label>
+              <textarea
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                rows={6}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                placeholder="Provide detailed information about your issue..."
+                required
+              />
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                type="submit"
+                disabled={submitting}
+                className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {submitting ? 'Submitting...' : 'Submit Ticket'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowNewTicketForm(false)}
+                className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      <div className="bg-white rounded-lg shadow-md">
+        <div className="p-6 border-b border-gray-200">
+          <h2 className="text-xl font-semibold text-gray-900">Your Tickets</h2>
+        </div>
+
+        {loadingTickets ? (
+          <div className="flex justify-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+          </div>
+        ) : tickets.length === 0 ? (
+          <div className="text-center py-12">
+            <MessageSquare className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+            <p className="text-gray-500 text-lg">No tickets yet</p>
+            <p className="text-gray-400 mt-2">Create a ticket to get support from our team</p>
+          </div>
+        ) : (
+          <div className="divide-y divide-gray-200">
+            {tickets.map((ticket) => (
+              <button
+                key={ticket.id}
+                onClick={() => handleTicketClick(ticket)}
+                className="w-full p-6 text-left hover:bg-gray-50 transition-colors"
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      {getStatusIcon(ticket.status)}
+                      <h3 className="text-lg font-semibold text-gray-900">{ticket.subject}</h3>
+                    </div>
+                    <p className="text-gray-600 text-sm line-clamp-2 mb-3">
+                      {ticket.description}
+                    </p>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {getStatusBadge(ticket.status)}
+                      {getPriorityBadge(ticket.priority)}
+                      <span className="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800">
+                        {ticket.category.replace('_', ' ').toUpperCase()}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="text-right ml-4">
+                    <p className="text-xs text-gray-500">
+                      {ticket.createdAt.toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
