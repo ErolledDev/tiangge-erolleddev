@@ -27,6 +27,8 @@ function HelpdeskManagementContent() {
   const [notificationMessage, setNotificationMessage] = useState('');
   const [showNotificationModal, setShowNotificationModal] = useState(false);
   const [sendingNotification, setSendingNotification] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   useEffect(() => {
     loadTickets();
@@ -212,6 +214,15 @@ function HelpdeskManagementContent() {
     }
     return true;
   });
+
+  const totalPages = Math.ceil(filteredTickets.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedTickets = filteredTickets.slice(startIndex, endIndex);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [statusFilter, priorityFilter, categoryFilter, searchTerm, itemsPerPage]);
 
   const ticketStats = {
     total: tickets.length,
@@ -519,38 +530,57 @@ function HelpdeskManagementContent() {
             </div>
           </div>
 
-          {(searchTerm || statusFilter !== 'all' || priorityFilter !== 'all' || categoryFilter !== 'all') && (
-            <div className="mt-3 flex items-center gap-2">
-              <span className="text-sm text-gray-600">
-                Showing {filteredTickets.length} of {tickets.length} tickets
-              </span>
-              <button
-                onClick={() => {
-                  setSearchTerm('');
-                  setStatusFilter('all');
-                  setPriorityFilter('all');
-                  setCategoryFilter('all');
-                }}
-                className="text-sm text-primary-600 hover:text-primary-700 underline"
-              >
-                Clear filters
-              </button>
+          <div className="mt-3 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              {(searchTerm || statusFilter !== 'all' || priorityFilter !== 'all' || categoryFilter !== 'all') && (
+                <>
+                  <span className="text-sm text-gray-600">
+                    Showing {filteredTickets.length} of {tickets.length} tickets
+                  </span>
+                  <button
+                    onClick={() => {
+                      setSearchTerm('');
+                      setStatusFilter('all');
+                      setPriorityFilter('all');
+                      setCategoryFilter('all');
+                    }}
+                    className="text-sm text-primary-600 hover:text-primary-700 underline"
+                  >
+                    Clear filters
+                  </button>
+                </>
+              )}
             </div>
-          )}
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-600">Per page:</span>
+              <select
+                value={itemsPerPage}
+                onChange={(e) => setItemsPerPage(Number(e.target.value))}
+                className="px-2 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
+              >
+                <option value={5}>5</option>
+                <option value={10}>10</option>
+                <option value={25}>25</option>
+                <option value={50}>50</option>
+                <option value={100}>100</option>
+              </select>
+            </div>
+          </div>
         </div>
 
         {loadingTickets ? (
           <div className="flex justify-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
           </div>
-        ) : filteredTickets.length === 0 ? (
+        ) : paginatedTickets.length === 0 ? (
           <div className="text-center py-12">
             <MessageSquare className="w-16 h-16 text-gray-300 mx-auto mb-4" />
             <p className="text-gray-500 text-lg">No tickets found</p>
           </div>
         ) : (
-          <div className="divide-y divide-gray-200">
-            {filteredTickets.map((ticket) => (
+          <div>
+            <div className="divide-y divide-gray-200">
+              {paginatedTickets.map((ticket) => (
               <button
                 key={ticket.id}
                 onClick={() => handleTicketClick(ticket)}
@@ -589,7 +619,73 @@ function HelpdeskManagementContent() {
                   </div>
                 </div>
               </button>
-            ))}
+              ))}
+            </div>
+
+            {totalPages > 1 && (
+              <div className="p-4 border-t border-gray-200 flex items-center justify-between">
+                <div className="text-sm text-gray-600">
+                  Showing {startIndex + 1} to {Math.min(endIndex, filteredTickets.length)} of {filteredTickets.length} tickets
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setCurrentPage(1)}
+                    disabled={currentPage === 1}
+                    className="px-3 py-1 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    First
+                  </button>
+                  <button
+                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                    disabled={currentPage === 1}
+                    className="px-3 py-1 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    Previous
+                  </button>
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                      let pageNum;
+                      if (totalPages <= 5) {
+                        pageNum = i + 1;
+                      } else if (currentPage <= 3) {
+                        pageNum = i + 1;
+                      } else if (currentPage >= totalPages - 2) {
+                        pageNum = totalPages - 4 + i;
+                      } else {
+                        pageNum = currentPage - 2 + i;
+                      }
+                      return (
+                        <button
+                          key={pageNum}
+                          onClick={() => setCurrentPage(pageNum)}
+                          className={`px-3 py-1 text-sm border rounded-lg transition-colors ${
+                            currentPage === pageNum
+                              ? 'bg-primary-600 text-white border-primary-600'
+                              : 'border-gray-300 hover:bg-gray-50'
+                          }`}
+                        >
+                          {pageNum}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <button
+                    onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                    disabled={currentPage === totalPages}
+                    className="px-3 py-1 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    Next
+                  </button>
+                  <button
+                    onClick={() => setCurrentPage(totalPages)}
+                    disabled={currentPage === totalPages}
+                    className="px-3 py-1 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    Last
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
