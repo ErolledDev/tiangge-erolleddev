@@ -5,7 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/useToast';
 import { useRouter } from 'next/navigation';
 import { isPremium, isAdmin } from '@/lib/auth';
-import { createTicket, getUserTickets, getTicket, getTicketReplies, subscribeToTicketReplies, HelpdeskTicket, TicketReply, clearTicketNotifications } from '@/lib/helpdesk';
+import { createTicket, getUserTickets, subscribeToUserTickets, getTicket, getTicketReplies, subscribeToTicketReplies, HelpdeskTicket, TicketReply, clearTicketNotifications } from '@/lib/helpdesk';
 import PremiumFeatureGate from '@/components/PremiumFeatureGate';
 import { Plus, MessageSquare, Clock, CheckCircle, XCircle, AlertCircle, ChevronLeft, Crown, Lock } from 'lucide-react';
 
@@ -38,7 +38,13 @@ export default function HelpdeskPage() {
       return;
     }
 
-    loadTickets();
+    setLoadingTickets(true);
+    const unsubscribe = subscribeToUserTickets(user.uid, (userTickets) => {
+      setTickets(userTickets);
+      setLoadingTickets(false);
+    });
+
+    return () => unsubscribe();
   }, [user, userProfile, loading, router]);
 
   useEffect(() => {
@@ -52,21 +58,6 @@ export default function HelpdeskPage() {
 
     return () => unsubscribe();
   }, [selectedTicket]);
-
-  const loadTickets = async () => {
-    if (!user) return;
-
-    setLoadingTickets(true);
-    try {
-      const userTickets = await getUserTickets(user.uid);
-      setTickets(userTickets);
-    } catch (error) {
-      console.error('Error loading tickets:', error);
-      showToast('Failed to load tickets', 'error');
-    } finally {
-      setLoadingTickets(false);
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -99,7 +90,6 @@ export default function HelpdeskPage() {
         description: ''
       });
       setShowNewTicketForm(false);
-      loadTickets();
     } catch (error) {
       console.error('Error creating ticket:', error);
       showToast('Failed to create ticket', 'error');
@@ -224,56 +214,67 @@ export default function HelpdeskPage() {
             </div>
           </div>
 
-          <div className="border-t border-gray-200 pt-4 mb-6">
-            <p className="text-sm text-gray-500 mb-2">
-              Created: {selectedTicket.createdAt.toLocaleString()}
-            </p>
-            <p className="text-gray-700 whitespace-pre-wrap">{selectedTicket.description}</p>
-          </div>
-
           <div className="border-t border-gray-200 pt-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
               <MessageSquare className="w-5 h-5 mr-2" />
-              Replies ({ticketReplies.length})
+              Conversation ({ticketReplies.length + 1})
             </h2>
 
             {loadingReplies ? (
               <div className="flex justify-center py-8">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
               </div>
-            ) : ticketReplies.length === 0 ? (
-              <p className="text-gray-500 text-center py-8">
-                No replies yet. Our support team will respond soon.
-              </p>
             ) : (
               <div className="space-y-4">
-                {ticketReplies.map((reply) => (
-                  <div
-                    key={reply.id}
-                    className={`p-4 rounded-lg ${
-                      reply.isAdmin
-                        ? 'bg-primary-50 border border-primary-200'
-                        : 'bg-gray-50 border border-gray-200'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold text-gray-900">
-                          {reply.userName}
-                        </span>
-                        {reply.isAdmin && (
-                          <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-primary-600 text-white">
-                            ADMIN
-                          </span>
-                        )}
-                      </div>
-                      <span className="text-xs text-gray-500">
-                        {reply.createdAt.toLocaleString()}
+                <div className="p-4 rounded-lg bg-gray-50 border border-gray-200">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-gray-900">
+                        {selectedTicket.userName}
+                      </span>
+                      <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-gray-600 text-white">
+                        YOU
                       </span>
                     </div>
-                    <p className="text-gray-700 whitespace-pre-wrap">{reply.message}</p>
+                    <span className="text-xs text-gray-500">
+                      {selectedTicket.createdAt.toLocaleString()}
+                    </span>
                   </div>
-                ))}
+                  <p className="text-gray-700 whitespace-pre-wrap">{selectedTicket.description}</p>
+                </div>
+                {ticketReplies.length === 0 ? (
+                  <p className="text-gray-500 text-center py-8">
+                    No replies yet. Our support team will respond soon.
+                  </p>
+                ) : (
+                  ticketReplies.map((reply) => (
+                    <div
+                      key={reply.id}
+                      className={`p-4 rounded-lg ${
+                        reply.isAdmin
+                          ? 'bg-primary-50 border border-primary-200'
+                          : 'bg-gray-50 border border-gray-200'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold text-gray-900">
+                            {reply.userName}
+                          </span>
+                          {reply.isAdmin && (
+                            <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-primary-600 text-white">
+                              ADMIN
+                            </span>
+                          )}
+                        </div>
+                        <span className="text-xs text-gray-500">
+                          {reply.createdAt.toLocaleString()}
+                        </span>
+                      </div>
+                      <p className="text-gray-700 whitespace-pre-wrap">{reply.message}</p>
+                    </div>
+                  ))
+                )}
               </div>
             )}
           </div>
@@ -383,7 +384,7 @@ export default function HelpdeskPage() {
         </div>
       )}
 
-      <div className="bg-white rounded-lg shadow-md">
+      <div className="bg-white rounded-lg shadow-md overflow-hidden">
         <div className="p-6 border-b border-gray-200">
           <h2 className="text-xl font-semibold text-gray-900">Your Tickets</h2>
         </div>
@@ -399,38 +400,78 @@ export default function HelpdeskPage() {
             <p className="text-gray-400 mt-2">Create a ticket to get support from our team</p>
           </div>
         ) : (
-          <div className="divide-y divide-gray-200">
-            {tickets.map((ticket) => (
-              <button
-                key={ticket.id}
-                onClick={() => handleTicketClick(ticket)}
-                className="w-full p-6 text-left hover:bg-gray-50 transition-colors"
-              >
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      {getStatusIcon(ticket.status)}
-                      <h3 className="text-lg font-semibold text-gray-900">{ticket.subject}</h3>
-                    </div>
-                    <p className="text-gray-600 text-sm line-clamp-2 mb-3">
-                      {ticket.description}
-                    </p>
-                    <div className="flex items-center gap-2 flex-wrap">
-                      {getStatusBadge(ticket.status)}
-                      {getPriorityBadge(ticket.priority)}
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50 border-b border-gray-200">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Subject
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Category
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Priority
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Created
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Admin Reply
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {tickets.map((ticket) => (
+                  <tr
+                    key={ticket.id}
+                    onClick={() => handleTicketClick(ticket)}
+                    className="hover:bg-gray-50 cursor-pointer transition-colors"
+                  >
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2">
+                        {getStatusIcon(ticket.status)}
+                        <div>
+                          <div className="text-sm font-medium text-gray-900">{ticket.subject}</div>
+                          <div className="text-xs text-gray-500 line-clamp-1">{ticket.description}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
                       <span className="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800">
                         {ticket.category.replace('_', ' ').toUpperCase()}
                       </span>
-                    </div>
-                  </div>
-                  <div className="text-right ml-4">
-                    <p className="text-xs text-gray-500">
-                      {ticket.createdAt.toLocaleDateString()}
-                    </p>
-                  </div>
-                </div>
-              </button>
-            ))}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {getPriorityBadge(ticket.priority)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {getStatusBadge(ticket.status)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <div>{ticket.createdAt.toLocaleDateString()}</div>
+                      <div className="text-xs text-gray-400">{ticket.createdAt.toLocaleTimeString()}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {ticket.hasAdminReply ? (
+                        <span className="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                          <CheckCircle className="w-3 h-3 mr-1" />
+                          Yes
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-500">
+                          <Clock className="w-3 h-3 mr-1" />
+                          Waiting
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </div>

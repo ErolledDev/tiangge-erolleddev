@@ -235,7 +235,7 @@ function HelpdeskManagementContent() {
           <div className="border-t border-gray-200 pt-6 mb-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
               <MessageSquare className="w-5 h-5 mr-2" />
-              Conversation ({ticketReplies.length})
+              Conversation ({ticketReplies.length + 1})
             </h2>
 
             {loadingReplies ? (
@@ -244,6 +244,22 @@ function HelpdeskManagementContent() {
               </div>
             ) : (
               <div className="space-y-4 mb-6">
+                <div className="p-4 rounded-lg bg-gray-50 border border-gray-200">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-gray-900">
+                        {selectedTicket.userName}
+                      </span>
+                      <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-gray-600 text-white">
+                        TICKET CREATOR
+                      </span>
+                    </div>
+                    <span className="text-xs text-gray-500">
+                      {selectedTicket.createdAt.toLocaleString()}
+                    </span>
+                  </div>
+                  <p className="text-gray-700 whitespace-pre-wrap">{selectedTicket.description}</p>
+                </div>
                 {ticketReplies.map((reply) => (
                   <div
                     key={reply.id}

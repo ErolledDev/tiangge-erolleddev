@@ -104,6 +104,41 @@ export const getUserTickets = async (userId: string): Promise<HelpdeskTicket[]> 
   }
 };
 
+export const subscribeToUserTickets = (
+  userId: string,
+  callback: (tickets: HelpdeskTicket[]) => void
+): (() => void) => {
+  try {
+    if (!db) return () => {};
+
+    const ticketsRef = collection(db, 'helpdesk_tickets');
+    const q = query(
+      ticketsRef,
+      where('userId', '==', userId),
+      orderBy('createdAt', 'desc')
+    );
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const tickets: HelpdeskTicket[] = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        tickets.push({
+          id: doc.id,
+          ...data,
+          createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : data.createdAt,
+          updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : data.updatedAt
+        } as HelpdeskTicket);
+      });
+      callback(tickets);
+    });
+
+    return unsubscribe;
+  } catch (error) {
+    console.error('Error subscribing to user tickets:', error);
+    return () => {};
+  }
+};
+
 export const getAllTickets = async (): Promise<HelpdeskTicket[]> => {
   try {
     if (!db) return [];
