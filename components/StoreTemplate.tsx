@@ -315,35 +315,13 @@ export default function StoreTemplate({ store, products, slides, categories, ini
   const getHeaderLayoutStyle = () => {
     switch (store.headerLayout) {
       case 'right-left':
-        return 'flex-row-reverse justify-end';
+        return 'flex-row-reverse';
       case 'center':
         return 'flex-col items-center';
       default: // 'left-right'
-        return 'flex-row justify-start';
+        return 'flex-row';
     }
   };
-
-  // Render social links component
-  const renderSocialLinks = () => (
-    <div className="flex justify-center space-x-2 sm:space-x-3 mb-3 sm:mb-4">
-      {store.socialLinks?.map((socialLink, index) => {
-        const IconComponent = SOCIAL_ICONS[socialLink.platform] || Globe;
-        return (
-          <a
-            key={index}
-            href={socialLink.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:opacity-75 transition-opacity p-1"
-            style={{ color: store.customization?.socialIconColor || '#ffffff' }}
-            onClick={() => handleSocialLinkClick(socialLink.platform, socialLink.url)}
-          >
-            <IconComponent className="w-5 h-5 sm:w-6 sm:h-6" />
-          </a>
-        );
-      })}
-    </div>
-  );
 
   return (
     <>
@@ -390,9 +368,29 @@ export default function StoreTemplate({ store, products, slides, categories, ini
                       </div>
                     )}
                   </div>
+                  
+                  {/* Centered social links */}
+                  <div className="flex justify-center space-x-2 sm:space-x-3">
+                    {store.socialLinks?.map((socialLink, index) => {
+                      const IconComponent = SOCIAL_ICONS[socialLink.platform] || Globe;
+                      return (
+                        <a
+                          key={index}
+                          href={socialLink.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:opacity-75 transition-opacity p-1"
+                          style={{ color: store.customization?.socialIconColor || '#ffffff' }}
+                          onClick={() => handleSocialLinkClick(socialLink.platform, socialLink.url)}
+                        >
+                          <IconComponent className="w-5 h-5 sm:w-6 sm:h-6" />
+                        </a>
+                      );
+                    })}
+                  </div>
                 </div>
               ) : (
-                <div className={`flex items-center mb-3 sm:mb-4 ${getHeaderLayoutStyle()}`}>
+                <div className={`flex justify-between items-center mb-3 sm:mb-4 ${getHeaderLayoutStyle()}`}>
                   {/* Avatar */}
                   <div className="flex items-center">
                     {store.avatar && (
@@ -413,6 +411,26 @@ export default function StoreTemplate({ store, products, slides, categories, ini
                       </div>
                     )}
                   </div>
+                  
+                  {/* Social links */}
+                  <div className="flex space-x-2 sm:space-x-3">
+                    {store.socialLinks?.map((socialLink, index) => {
+                      const IconComponent = SOCIAL_ICONS[socialLink.platform] || Globe;
+                      return (
+                        <a
+                          key={index}
+                          href={socialLink.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:opacity-75 transition-opacity p-1"
+                          style={{ color: store.customization?.socialIconColor || '#ffffff' }}
+                          onClick={() => handleSocialLinkClick(socialLink.platform, socialLink.url)}
+                        >
+                          <IconComponent className="w-5 h-5 sm:w-6 sm:h-6" />
+                        </a>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
               
@@ -428,7 +446,7 @@ export default function StoreTemplate({ store, products, slides, categories, ini
                   {store.name}
                 </h1>
                 <p 
-                  className="text-xs sm:text-sm max-w-xs mx-auto leading-snug mb-3 sm:mb-4"
+                  className="text-xs sm:text-sm max-w-xs mx-auto leading-snug"
                   style={{
                     color: store.customization?.storeBioFontColor || '#e5e7eb',
                     fontFamily: store.customization?.bodyFontFamily || store.customization?.fontFamily || 'inherit'
@@ -437,9 +455,6 @@ export default function StoreTemplate({ store, products, slides, categories, ini
                   {store.description}
                 </p>
               </div>
-
-              {/* Social links under title and description */}
-              {store.socialLinks && store.socialLinks.length > 0 && renderSocialLinks()}
             </div>
           </header>
 
