@@ -109,8 +109,13 @@ export const subscribeToUserTickets = (
   callback: (tickets: HelpdeskTicket[]) => void
 ): (() => void) => {
   try {
-    if (!db) return () => {};
+    if (!db) {
+      console.error('Firebase DB not initialized');
+      callback([]);
+      return () => {};
+    }
 
+    console.log('Setting up ticket subscription for user:', userId);
     const ticketsRef = collection(db, 'helpdesk_tickets');
     const q = query(
       ticketsRef,
@@ -118,23 +123,36 @@ export const subscribeToUserTickets = (
       orderBy('createdAt', 'desc')
     );
 
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const tickets: HelpdeskTicket[] = [];
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        tickets.push({
-          id: doc.id,
-          ...data,
-          createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : data.createdAt,
-          updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : data.updatedAt
-        } as HelpdeskTicket);
-      });
-      callback(tickets);
-    });
+    const unsubscribe = onSnapshot(
+      q,
+      (querySnapshot) => {
+        console.log('Ticket subscription received:', querySnapshot.size, 'tickets');
+        const tickets: HelpdeskTicket[] = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          tickets.push({
+            id: doc.id,
+            ...data,
+            createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : data.createdAt,
+            updatedAt: data.updatedAt?.toDate ? data.updatedAt.toDate() : data.updatedAt
+          } as HelpdeskTicket);
+        });
+        console.log('Processed tickets:', tickets.length);
+        callback(tickets);
+      },
+      (error) => {
+        console.error('Error in ticket subscription:', error);
+        console.error('Error code:', error.code);
+        console.error('Error message:', error.message);
+        // If there's an error (like missing index), still call callback with empty array
+        callback([]);
+      }
+    );
 
     return unsubscribe;
   } catch (error) {
     console.error('Error subscribing to user tickets:', error);
+    callback([]);
     return () => {};
   }
 };
@@ -413,6 +431,32 @@ export const clearTicketNotifications = async (ticketId: string, userId: string)
     await Promise.all(updatePromises);
   } catch (error) {
     console.error('Error clearing ticket notifications:', error);
+    throw error;
+  }
+};
+
+export const sendTicketNotification = async (
+  userId: string,
+  ticketId: string,
+  ticketSubject: string,
+  message: string
+): Promise<void> => {
+  try {
+    if (!db) throw new Error('Firebase not initialized');
+
+    const notificationData: Omit<TicketNotification, 'id'> = {
+      userId,
+      ticketId,
+      ticketSubject,
+      message,
+      isRead: false,
+      createdAt: new Date()
+    };
+
+    const notificationsRef = collection(db, 'ticket_notifications');
+    await addDoc(notificationsRef, notificationData);
+  } catch (error) {
+    console.error('Error sending ticket notification:', error);
     throw error;
   }
 };

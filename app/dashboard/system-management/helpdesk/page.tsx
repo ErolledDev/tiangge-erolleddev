@@ -5,7 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/useToast';
 import { useRouter } from 'next/navigation';
 import { isAdmin } from '@/lib/auth';
-import { getAllTickets, getTicket, updateTicketStatus, addTicketReply, getTicketReplies, subscribeToTicketReplies, HelpdeskTicket, TicketReply } from '@/lib/helpdesk';
+import { getAllTickets, getTicket, updateTicketStatus, addTicketReply, getTicketReplies, subscribeToTicketReplies, sendTicketNotification, HelpdeskTicket, TicketReply } from '@/lib/helpdesk';
 import { MessageSquare, Clock, CheckCircle, XCircle, AlertCircle, ChevronLeft, Send, Filter } from 'lucide-react';
 import AdminRoute from '@/components/AdminRoute';
 
@@ -21,6 +21,12 @@ function HelpdeskManagementContent() {
   const [replyMessage, setReplyMessage] = useState('');
   const [sendingReply, setSendingReply] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [priorityFilter, setPriorityFilter] = useState<string>('all');
+  const [categoryFilter, setCategoryFilter] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [notificationMessage, setNotificationMessage] = useState('');
+  const [showNotificationModal, setShowNotificationModal] = useState(false);
+  const [sendingNotification, setSendingNotification] = useState(false);
 
   useEffect(() => {
     loadTickets();
@@ -61,9 +67,24 @@ function HelpdeskManagementContent() {
     setReplyMessage('');
   };
 
-  const handleStatusChange = async (ticketId: string, newStatus: 'open' | 'in_progress' | 'resolved' | 'closed') => {
+  const handleStatusChange = async (ticketId: string, newStatus: 'open' | 'in_progress' | 'resolved' | 'closed', notify: boolean = false) => {
     try {
+      const ticket = tickets.find(t => t.id === ticketId) || selectedTicket;
+      if (!ticket) return;
+
       await updateTicketStatus(ticketId, newStatus);
+
+      if (notify) {
+        const statusMessages = {
+          open: 'reopened',
+          in_progress: 'is now being reviewed',
+          resolved: 'has been resolved',
+          closed: 'has been closed'
+        };
+        const message = `Your ticket "${ticket.subject}" ${statusMessages[newStatus]}.`;
+        await sendTicketNotification(ticket.userId, ticketId, ticket.subject, message);
+      }
+
       showToast('Ticket status updated', 'success');
 
       if (selectedTicket && selectedTicket.id === ticketId) {
@@ -98,7 +119,7 @@ function HelpdeskManagementContent() {
       setReplyMessage('');
 
       if (selectedTicket.status === 'open') {
-        await handleStatusChange(selectedTicket.id!, 'in_progress');
+        await handleStatusChange(selectedTicket.id!, 'in_progress', true);
       }
     } catch (error) {
       console.error('Error sending reply:', error);
@@ -152,9 +173,45 @@ function HelpdeskManagementContent() {
     );
   };
 
-  const filteredTickets = statusFilter === 'all'
-    ? tickets
-    : tickets.filter(ticket => ticket.status === statusFilter);
+  const handleSendNotification = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedTicket || !notificationMessage.trim()) return;
+
+    setSendingNotification(true);
+    try {
+      await sendTicketNotification(
+        selectedTicket.userId,
+        selectedTicket.id!,
+        selectedTicket.subject,
+        notificationMessage
+      );
+      showToast('Notification sent to user', 'success');
+      setNotificationMessage('');
+      setShowNotificationModal(false);
+    } catch (error) {
+      console.error('Error sending notification:', error);
+      showToast('Failed to send notification', 'error');
+    } finally {
+      setSendingNotification(false);
+    }
+  };
+
+  const filteredTickets = tickets.filter(ticket => {
+    if (statusFilter !== 'all' && ticket.status !== statusFilter) return false;
+    if (priorityFilter !== 'all' && ticket.priority !== priorityFilter) return false;
+    if (categoryFilter !== 'all' && ticket.category !== categoryFilter) return false;
+    if (searchTerm) {
+      const search = searchTerm.toLowerCase();
+      return (
+        ticket.subject.toLowerCase().includes(search) ||
+        ticket.description.toLowerCase().includes(search) ||
+        ticket.userName.toLowerCase().includes(search) ||
+        ticket.userEmail.toLowerCase().includes(search) ||
+        ticket.id?.toLowerCase().includes(search)
+      );
+    }
+    return true;
+  });
 
   const ticketStats = {
     total: tickets.length,
@@ -190,20 +247,33 @@ function HelpdeskManagementContent() {
                 </span>
               </div>
             </div>
-            <div className="ml-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Change Status
-              </label>
-              <select
-                value={selectedTicket.status}
-                onChange={(e) => handleStatusChange(selectedTicket.id!, e.target.value as any)}
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-              >
-                <option value="open">Open</option>
-                <option value="in_progress">In Progress</option>
-                <option value="resolved">Resolved</option>
-                <option value="closed">Closed</option>
-              </select>
+            <div className="ml-4 flex gap-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Change Status
+                </label>
+                <select
+                  value={selectedTicket.status}
+                  onChange={(e) => handleStatusChange(selectedTicket.id!, e.target.value as any, true)}
+                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                >
+                  <option value="open">Open</option>
+                  <option value="in_progress">In Progress</option>
+                  <option value="resolved">Resolved</option>
+                  <option value="closed">Closed</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Actions
+                </label>
+                <button
+                  onClick={() => setShowNotificationModal(true)}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Notify User
+                </button>
+              </div>
             </div>
           </div>
 
@@ -313,6 +383,54 @@ function HelpdeskManagementContent() {
             </button>
           </form>
         </div>
+
+        {showNotificationModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-lg max-w-md w-full p-6">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Send Notification to User</h3>
+              <form onSubmit={handleSendNotification}>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Notification Message
+                  </label>
+                  <textarea
+                    value={notificationMessage}
+                    onChange={(e) => setNotificationMessage(e.target.value)}
+                    rows={4}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    placeholder="Your ticket has been updated..."
+                    required
+                  />
+                  <p className="text-xs text-gray-500 mt-2">
+                    User: {selectedTicket.userName} ({selectedTicket.userEmail})
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    Ticket: {selectedTicket.subject}
+                  </p>
+                </div>
+                <div className="flex justify-end gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowNotificationModal(false);
+                      setNotificationMessage('');
+                    }}
+                    className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={sendingNotification || !notificationMessage.trim()}
+                    className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {sendingNotification ? 'Sending...' : 'Send Notification'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -348,22 +466,77 @@ function HelpdeskManagementContent() {
       </div>
 
       <div className="bg-white rounded-lg shadow-md mb-6">
-        <div className="p-4 border-b border-gray-200 flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-gray-900">All Tickets</h2>
-          <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-gray-500" />
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-3 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
-            >
-              <option value="all">All Status</option>
-              <option value="open">Open</option>
-              <option value="in_progress">In Progress</option>
-              <option value="resolved">Resolved</option>
-              <option value="closed">Closed</option>
-            </select>
+        <div className="p-4 border-b border-gray-200">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">All Tickets</h2>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="flex-1 min-w-[200px]">
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search tickets by ID, subject, description, or user..."
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
+              />
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Filter className="w-4 h-4 text-gray-500" />
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
+              >
+                <option value="all">All Status</option>
+                <option value="open">Open</option>
+                <option value="in_progress">In Progress</option>
+                <option value="resolved">Resolved</option>
+                <option value="closed">Closed</option>
+              </select>
+
+              <select
+                value={priorityFilter}
+                onChange={(e) => setPriorityFilter(e.target.value)}
+                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
+              >
+                <option value="all">All Priorities</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+              </select>
+
+              <select
+                value={categoryFilter}
+                onChange={(e) => setCategoryFilter(e.target.value)}
+                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
+              >
+                <option value="all">All Categories</option>
+                <option value="technical">Technical</option>
+                <option value="billing">Billing</option>
+                <option value="feature_request">Feature Request</option>
+                <option value="general">General</option>
+              </select>
+            </div>
           </div>
+
+          {(searchTerm || statusFilter !== 'all' || priorityFilter !== 'all' || categoryFilter !== 'all') && (
+            <div className="mt-3 flex items-center gap-2">
+              <span className="text-sm text-gray-600">
+                Showing {filteredTickets.length} of {tickets.length} tickets
+              </span>
+              <button
+                onClick={() => {
+                  setSearchTerm('');
+                  setStatusFilter('all');
+                  setPriorityFilter('all');
+                  setCategoryFilter('all');
+                }}
+                className="text-sm text-primary-600 hover:text-primary-700 underline"
+              >
+                Clear filters
+              </button>
+            </div>
+          )}
         </div>
 
         {loadingTickets ? (
@@ -404,11 +577,14 @@ function HelpdeskManagementContent() {
                     </div>
                   </div>
                   <div className="text-right ml-4">
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-gray-500 mb-1">
                       {ticket.createdAt.toLocaleDateString()}
                     </p>
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-gray-400 mb-2">
                       {ticket.createdAt.toLocaleTimeString()}
+                    </p>
+                    <p className="text-xs text-gray-500 font-mono bg-gray-100 px-2 py-1 rounded">
+                      #{ticket.id?.slice(-6).toUpperCase()}
                     </p>
                   </div>
                 </div>

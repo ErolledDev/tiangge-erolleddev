@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { isPremium, isAdmin } from '@/lib/auth';
 import { createTicket, getUserTickets, subscribeToUserTickets, getTicket, getTicketReplies, subscribeToTicketReplies, HelpdeskTicket, TicketReply, clearTicketNotifications } from '@/lib/helpdesk';
 import PremiumFeatureGate from '@/components/PremiumFeatureGate';
-import { Plus, MessageSquare, Clock, CheckCircle, XCircle, AlertCircle, ChevronLeft, Crown, Lock } from 'lucide-react';
+import { Plus, MessageSquare, Clock, CheckCircle, XCircle, AlertCircle, ChevronLeft, Crown, Lock, RefreshCw } from 'lucide-react';
 
 export default function HelpdeskPage() {
   const { user, userProfile, loading } = useAuth();
@@ -20,6 +20,7 @@ export default function HelpdeskPage() {
   const [selectedTicket, setSelectedTicket] = useState<HelpdeskTicket | null>(null);
   const [ticketReplies, setTicketReplies] = useState<TicketReply[]>([]);
   const [loadingReplies, setLoadingReplies] = useState(false);
+  const [subscriptionError, setSubscriptionError] = useState(false);
 
   const [formData, setFormData] = useState({
     subject: '',
@@ -30,6 +31,23 @@ export default function HelpdeskPage() {
 
   const [submitting, setSubmitting] = useState(false);
 
+  const loadTicketsManually = async () => {
+    if (!user) return;
+
+    setLoadingTickets(true);
+    setSubscriptionError(false);
+    try {
+      const userTickets = await getUserTickets(user.uid);
+      setTickets(userTickets);
+    } catch (error) {
+      console.error('Error loading tickets:', error);
+      showToast('Failed to load tickets. Please try again.', 'error');
+      setSubscriptionError(true);
+    } finally {
+      setLoadingTickets(false);
+    }
+  };
+
   useEffect(() => {
     if (loading) return;
 
@@ -39,12 +57,32 @@ export default function HelpdeskPage() {
     }
 
     setLoadingTickets(true);
-    const unsubscribe = subscribeToUserTickets(user.uid, (userTickets) => {
-      setTickets(userTickets);
-      setLoadingTickets(false);
-    });
+    setSubscriptionError(false);
 
-    return () => unsubscribe();
+    // Set a timeout to prevent infinite spinner
+    const timeoutId = setTimeout(() => {
+      console.warn('Subscription timeout - falling back to manual load');
+      setSubscriptionError(true);
+      loadTicketsManually();
+    }, 5000);
+
+    try {
+      const unsubscribe = subscribeToUserTickets(user.uid, (userTickets) => {
+        clearTimeout(timeoutId);
+        setTickets(userTickets);
+        setLoadingTickets(false);
+        setSubscriptionError(false);
+      });
+
+      return () => {
+        clearTimeout(timeoutId);
+        unsubscribe();
+      };
+    } catch (error) {
+      console.error('Error setting up subscription:', error);
+      clearTimeout(timeoutId);
+      loadTicketsManually();
+    }
   }, [user, userProfile, loading, router]);
 
   useEffect(() => {
@@ -290,14 +328,35 @@ export default function HelpdeskPage() {
           <h1 className="text-3xl font-bold text-gray-900">Help Desk</h1>
           <p className="text-gray-600 mt-2">Submit and track your support tickets</p>
         </div>
-        <button
-          onClick={() => setShowNewTicketForm(!showNewTicketForm)}
-          className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
-        >
-          <Plus className="w-5 h-5 mr-2" />
-          New Ticket
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={loadTicketsManually}
+            disabled={loadingTickets}
+            className="flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <RefreshCw className={`w-5 h-5 mr-2 ${loadingTickets ? 'animate-spin' : ''}`} />
+            Refresh
+          </button>
+          <button
+            onClick={() => setShowNewTicketForm(!showNewTicketForm)}
+            className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+          >
+            <Plus className="w-5 h-5 mr-2" />
+            New Ticket
+          </button>
+        </div>
       </div>
+
+      {subscriptionError && (
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-8">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="w-5 h-5 text-yellow-600" />
+            <p className="text-yellow-800">
+              Real-time updates are temporarily unavailable. Click the Refresh button to manually update your tickets.
+            </p>
+          </div>
+        </div>
+      )}
 
       {showNewTicketForm && (
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
