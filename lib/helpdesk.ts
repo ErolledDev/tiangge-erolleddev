@@ -14,6 +14,8 @@ export interface HelpdeskTicket {
   createdAt: Date;
   updatedAt: Date;
   hasAdminReply?: boolean;
+  openedByAdmin?: boolean;
+  lastNotifiedStatus?: string;
 }
 
 export interface TicketReply {
@@ -60,7 +62,9 @@ export const createTicket = async (
       status: 'open',
       createdAt: new Date(),
       updatedAt: new Date(),
-      hasAdminReply: false
+      hasAdminReply: false,
+      openedByAdmin: false,
+      lastNotifiedStatus: undefined
     };
 
     const ticketsRef = collection(db, 'helpdesk_tickets');
@@ -208,16 +212,32 @@ export const getTicket = async (ticketId: string): Promise<HelpdeskTicket | null
 
 export const updateTicketStatus = async (
   ticketId: string,
-  status: 'open' | 'in_progress' | 'resolved' | 'closed'
+  status: 'open' | 'in_progress' | 'resolved' | 'closed',
+  notifyUser: boolean = false
 ): Promise<void> => {
   try {
     if (!db) throw new Error('Firebase not initialized');
 
     const ticketRef = doc(db, 'helpdesk_tickets', ticketId);
+    const ticket = await getTicket(ticketId);
+
     await updateDoc(ticketRef, {
       status,
-      updatedAt: new Date()
+      updatedAt: new Date(),
+      lastNotifiedStatus: notifyUser ? status : ticket?.lastNotifiedStatus
     });
+
+    if (notifyUser && ticket) {
+      const statusMessages: Record<string, string> = {
+        open: 'reopened',
+        in_progress: 'is now being reviewed by our team',
+        resolved: 'has been resolved',
+        closed: 'has been closed'
+      };
+
+      const message = `Your ticket "${ticket.subject}" ${statusMessages[status]}.`;
+      await sendTicketNotification(ticket.userId, ticketId, ticket.subject, message);
+    }
   } catch (error) {
     console.error('Error updating ticket status:', error);
     throw error;
@@ -261,7 +281,7 @@ export const addTicketReply = async (
           userId: ticket.userId,
           ticketId,
           ticketSubject: ticket.subject,
-          message: `Admin replied to your ticket: ${ticket.subject}`,
+          message: `New reply from support on: ${ticket.subject}`,
           isRead: false,
           createdAt: new Date()
         };
@@ -432,6 +452,82 @@ export const clearTicketNotifications = async (ticketId: string, userId: string)
   } catch (error) {
     console.error('Error clearing ticket notifications:', error);
     throw error;
+  }
+};
+
+export const markTicketAsOpened = async (ticketId: string): Promise<void> => {
+  try {
+    if (!db) throw new Error('Firebase not initialized');
+
+    const ticketRef = doc(db, 'helpdesk_tickets', ticketId);
+    const ticket = await getTicket(ticketId);
+
+    if (!ticket?.openedByAdmin) {
+      await updateDoc(ticketRef, {
+        openedByAdmin: true,
+        updatedAt: new Date()
+      });
+
+      if (ticket) {
+        const message = `Your ticket "${ticket.subject}" is now being reviewed by our support team.`;
+        await sendTicketNotification(ticket.userId, ticketId, ticket.subject, message);
+      }
+    }
+  } catch (error) {
+    console.error('Error marking ticket as opened:', error);
+    throw error;
+  }
+};
+
+export const getUnreadTicketsCount = async (): Promise<number> => {
+  try {
+    if (!db) return 0;
+
+    const ticketsRef = collection(db, 'helpdesk_tickets');
+    const q = query(
+      ticketsRef,
+      where('openedByAdmin', '==', false)
+    );
+
+    const querySnapshot = await getDocs(q);
+    return querySnapshot.size;
+  } catch (error) {
+    console.error('Error getting unread tickets count:', error);
+    return 0;
+  }
+};
+
+export const subscribeToUnreadTicketsCount = (
+  callback: (count: number) => void
+): (() => void) => {
+  try {
+    if (!db) {
+      callback(0);
+      return () => {};
+    }
+
+    const ticketsRef = collection(db, 'helpdesk_tickets');
+    const q = query(
+      ticketsRef,
+      where('openedByAdmin', '==', false)
+    );
+
+    const unsubscribe = onSnapshot(
+      q,
+      (querySnapshot) => {
+        callback(querySnapshot.size);
+      },
+      (error) => {
+        console.error('Error in unread tickets subscription:', error);
+        callback(0);
+      }
+    );
+
+    return unsubscribe;
+  } catch (error) {
+    console.error('Error subscribing to unread tickets:', error);
+    callback(0);
+    return () => {};
   }
 };
 
