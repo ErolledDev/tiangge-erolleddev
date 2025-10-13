@@ -317,13 +317,13 @@ export default function AuthPage() {
                 <div className="w-full aspect-square overflow-hidden">
                   <img 
                     src="https://i.ibb.co/XkrqrDVm/shoes.png" 
-                    alt="Organic Cotton T-Shirt"
+                    alt="Jump360 Air MVP Shoes"
                     className="w-full h-full object-cover bg-gray-300"
                   />
                 </div>
                 <div className="p-3 lg:p-5 text-left">
                   <div className="text-sm lg:text-xl font-bold leading-tight mb-1 text-black">
-                    Organic Cotton T-Shirt
+                    Jump360 Air MVP Shoes
                   </div>
                   <div className="text-lg lg:text-2xl font-bold text-green-400 mt-0">
                     $29.99
