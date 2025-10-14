@@ -224,6 +224,16 @@ service cloud.firestore {
       }
     }
 
+    // Stripe Products collection with custom name: Public read for active products
+    match /tiangge-plan/{productId} {
+      allow read, list: if true;
+
+      // Prices subcollection: Public read for active prices
+      match /prices/{priceId} {
+        allow read, list: if true;
+      }
+    }
+
     // Stripe Customers collection (Firebase Extension): Users can read/write their own customer data
     match /customers/{userId} {
       allow read: if request.auth != null && request.auth.uid == userId;

@@ -44,7 +44,7 @@ export interface StripeSubscription {
 
 export async function getProducts(): Promise<StripeProduct[]> {
   const productsQuery = query(
-    collection(db, 'products'),
+    collection(db, 'tiangge-plan'),
     where('active', '==', true)
   );
 
@@ -55,7 +55,7 @@ export async function getProducts(): Promise<StripeProduct[]> {
     const productData = productDoc.data();
     const pricesSnapshot = await getDocs(
       query(
-        collection(db, 'products', productDoc.id, 'prices'),
+        collection(db, 'tiangge-plan', productDoc.id, 'prices'),
         where('active', '==', true)
       )
     );
