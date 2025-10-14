@@ -1,6 +1,8 @@
 import React from 'react';
+import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
 import { canAccessFeature } from '@/lib/auth';
+import { useSubscription } from '@/hooks/useSubscription';
 import { Crown, Lock, Sparkles } from 'lucide-react';
 
 interface PremiumFeatureGateProps {
@@ -10,15 +12,16 @@ interface PremiumFeatureGateProps {
   showUpgrade?: boolean;
 }
 
-export default function PremiumFeatureGate({ 
-  feature, 
-  children, 
-  fallback, 
-  showUpgrade = true 
+export default function PremiumFeatureGate({
+  feature,
+  children,
+  fallback,
+  showUpgrade = true
 }: PremiumFeatureGateProps) {
   const { userProfile } = useAuth();
-  
-  const hasAccess = canAccessFeature(userProfile, feature);
+  const { isPremium, loading } = useSubscription();
+
+  const hasAccess = canAccessFeature(userProfile, feature) || (feature !== 'admin' && isPremium);
   
   if (hasAccess) {
     return <>{children}</>;
@@ -70,10 +73,18 @@ export default function PremiumFeatureGate({
   const featureInfo = getFeatureInfo();
   
   return (
-    <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg border border-yellow-200 p-6 text-center">
+    <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg border border-yellow-200 p-8 text-center">
       <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4 text-white">
         {featureInfo.icon}
       </div>
+      <h3 className="text-xl font-bold text-gray-900 mb-2">{featureInfo.title}</h3>
+      <p className="text-gray-600 mb-6">{featureInfo.description}</p>
+      <Link
+        href="/dashboard/subscription"
+        className="inline-block px-6 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-semibold rounded-lg transition-all transform hover:scale-105"
+      >
+        Upgrade to Premium
+      </Link>
     </div>
   );
 }

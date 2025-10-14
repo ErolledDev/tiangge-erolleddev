@@ -393,10 +393,28 @@ export const isAdmin = (userProfile: UserProfile | null): boolean => {
   return userProfile?.role === 'admin';
 };
 
+// Helper function to check if user has active Stripe subscription
+export const hasActiveStripeSubscription = async (userId: string): Promise<boolean> => {
+  try {
+    if (!db) return false;
+
+    const subscriptionsQuery = query(
+      collection(db, 'customers', userId, 'subscriptions'),
+      where('status', 'in', ['trialing', 'active'])
+    );
+
+    const snapshot = await getDocs(subscriptionsQuery);
+    return !snapshot.empty;
+  } catch (error) {
+    console.error('Error checking Stripe subscription:', error);
+    return false;
+  }
+};
+
 // Helper function to check if user is premium
 export const isPremium = (userProfile: UserProfile | null): boolean => {
   if (!userProfile) return false;
-  
+
   console.log('🔍 isPremium check for user:', {
     email: userProfile.email,
     role: userProfile.role,
@@ -407,13 +425,13 @@ export const isPremium = (userProfile: UserProfile | null): boolean => {
     currentTimestamp: Date.now(),
     isTrialActive: userProfile.trialEndDate instanceof Date ? userProfile.trialEndDate.getTime() > Date.now() : false
   });
-  
+
   // Admin users always have premium access
   if (isAdmin(userProfile)) {
     console.log('✅ User is admin - premium access granted');
     return true;
   }
-  
+
   // If premium was set by admin, it's permanent
   if (userProfile.isPremiumAdminSet === true) {
     console.log('✅ User has permanent premium (isPremiumAdminSet=true)');
@@ -431,7 +449,7 @@ export const isPremium = (userProfile: UserProfile | null): boolean => {
     console.log('✅ User trial is still active');
     return true;
   }
-  
+
   console.log('❌ User is NOT premium');
   // Otherwise, check the isPremium flag (for backward compatibility)
   return userProfile.isPremium === true;

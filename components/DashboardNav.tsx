@@ -8,7 +8,7 @@ import { canAccessFeature } from '@/lib/auth';
 import { useAuth } from '@/hooks/useAuth';
 import { subscribeToUnreadTicketsCount } from '@/lib/helpdesk';
 import { useToast } from '@/hooks/useToast';
-import { ChartBar as BarChart3, Store, Image, Package, LogOut, X, User, CirclePlus as PlusCircle, SquarePlus as PlusSquare, TrendingUp, Users, Settings, DollarSign, Radio, Bell, HelpCircle } from 'lucide-react';
+import { ChartBar as BarChart3, Store, Image, Package, LogOut, X, User, CirclePlus as PlusCircle, SquarePlus as PlusSquare, TrendingUp, Users, Settings, DollarSign, Radio, Bell, HelpCircle, CreditCard } from 'lucide-react';
 
 interface DashboardNavProps {
   isSidebarOpen: boolean;
@@ -52,11 +52,20 @@ export default function DashboardNav({ isSidebarOpen, toggleSidebar }: Dashboard
       }
     }
 
+    // Add subscription section
+    const slidesIndex = navigation.findIndex(item => item.name === 'Add Slide');
+    if (slidesIndex !== -1) {
+      navigation.splice(slidesIndex + 1, 0,
+        { type: 'header', name: 'Subscription' },
+        { name: 'Manage Subscription', href: '/dashboard/subscription', icon: CreditCard }
+      );
+    }
+
     // Add help desk for premium users (not trial)
     if (userProfile?.isPremiumAdminSet === true || canAccessFeature(userProfile, 'admin')) {
-      const slidesIndex = navigation.findIndex(item => item.name === 'Add Slide');
-      if (slidesIndex !== -1) {
-        navigation.splice(slidesIndex + 1, 0,
+      const subscriptionIndex = navigation.findIndex(item => item.name === 'Manage Subscription');
+      if (subscriptionIndex !== -1) {
+        navigation.splice(subscriptionIndex + 1, 0,
           { type: 'header', name: 'Support' },
           { name: 'Help Desk', href: '/dashboard/helpdesk', icon: HelpCircle }
         );
