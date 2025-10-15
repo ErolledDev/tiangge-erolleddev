@@ -43,36 +43,52 @@ export interface StripeSubscription {
 }
 
 export async function getProducts(): Promise<StripeProduct[]> {
-  const productsQuery = query(
-    collection(db, 'tiangge-plan'),
-    where('active', '==', true)
-  );
-
-  const querySnapshot = await getDocs(productsQuery);
-  const products: StripeProduct[] = [];
-
-  for (const productDoc of querySnapshot.docs) {
-    const productData = productDoc.data();
-    const pricesSnapshot = await getDocs(
-      query(
-        collection(db, 'tiangge-plan', productDoc.id, 'prices'),
-        where('active', '==', true)
-      )
+  try {
+    console.log('🔍 Fetching products from tiangge-plan collection...');
+    const productsQuery = query(
+      collection(db, 'tiangge-plan'),
+      where('active', '==', true)
     );
 
-    const prices: StripePrice[] = pricesSnapshot.docs.map(priceDoc => ({
-      id: priceDoc.id,
-      ...priceDoc.data()
-    } as StripePrice));
+    const querySnapshot = await getDocs(productsQuery);
+    console.log(`📦 Found ${querySnapshot.docs.length} products`);
 
-    products.push({
-      id: productDoc.id,
-      ...productData,
-      prices
-    } as StripeProduct);
+    const products: StripeProduct[] = [];
+
+    for (const productDoc of querySnapshot.docs) {
+      const productData = productDoc.data();
+      console.log(`📋 Processing product: ${productDoc.id}`, productData);
+
+      const pricesSnapshot = await getDocs(
+        query(
+          collection(db, 'tiangge-plan', productDoc.id, 'prices'),
+          where('active', '==', true)
+        )
+      );
+      console.log(`💰 Found ${pricesSnapshot.docs.length} prices for product ${productDoc.id}`);
+
+      const prices: StripePrice[] = pricesSnapshot.docs.map(priceDoc => {
+        const priceData = priceDoc.data();
+        console.log(`  💵 Price ${priceDoc.id}:`, priceData);
+        return {
+          id: priceDoc.id,
+          ...priceData
+        } as StripePrice;
+      });
+
+      products.push({
+        id: productDoc.id,
+        ...productData,
+        prices
+      } as StripeProduct);
+    }
+
+    console.log('✅ Products loaded successfully:', products);
+    return products;
+  } catch (error) {
+    console.error('❌ Error fetching products:', error);
+    throw error;
   }
-
-  return products;
 }
 
 export async function createCheckoutSession(
@@ -81,29 +97,49 @@ export async function createCheckoutSession(
   successUrl: string,
   cancelUrl: string
 ): Promise<string> {
-  const checkoutSessionRef = await addDoc(
-    collection(db, 'customers', userId, 'checkout_sessions'),
-    {
-      price: priceId,
-      success_url: successUrl,
-      cancel_url: cancelUrl,
-      allow_promotion_codes: true,
-    }
-  );
+  try {
+    console.log('🛒 Creating checkout session...', { userId, priceId, successUrl, cancelUrl });
 
-  return new Promise((resolve, reject) => {
-    const unsubscribe = onSnapshot(checkoutSessionRef, (snap) => {
-      const data = snap.data();
-      if (data?.error) {
-        unsubscribe();
-        reject(new Error(data.error.message));
+    const checkoutSessionRef = await addDoc(
+      collection(db, 'customers', userId, 'checkout_sessions'),
+      {
+        price: priceId,
+        success_url: successUrl,
+        cancel_url: cancelUrl,
+        allow_promotion_codes: true,
       }
-      if (data?.url) {
+    );
+
+    console.log('📝 Checkout session document created:', checkoutSessionRef.id);
+
+    return new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
         unsubscribe();
-        resolve(data.url);
-      }
+        reject(new Error('Checkout session creation timed out after 30 seconds. Please ensure the Stripe extension is properly configured.'));
+      }, 30000);
+
+      const unsubscribe = onSnapshot(checkoutSessionRef, (snap) => {
+        const data = snap.data();
+        console.log('📊 Checkout session update:', data);
+
+        if (data?.error) {
+          clearTimeout(timeout);
+          unsubscribe();
+          console.error('❌ Checkout session error:', data.error);
+          reject(new Error(data.error.message));
+        }
+        if (data?.url) {
+          clearTimeout(timeout);
+          unsubscribe();
+          console.log('✅ Checkout URL received:', data.url);
+          resolve(data.url);
+        }
+      });
     });
-  });
+  } catch (error) {
+    console.error('❌ Error creating checkout session:', error);
+    throw error;
+  }
 }
 
 export function subscribeToUserSubscriptions(

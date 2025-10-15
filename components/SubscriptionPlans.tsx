@@ -38,11 +38,13 @@ export default function SubscriptionPlans() {
       return;
     }
 
+    console.log('🚀 Starting subscription flow for price:', priceId);
     setProcessingPriceId(priceId);
     try {
       const successUrl = `${window.location.origin}/dashboard?subscription=success`;
       const cancelUrl = `${window.location.origin}/dashboard?subscription=canceled`;
 
+      console.log('🔄 Creating checkout session...');
       const checkoutUrl = await createCheckoutSession(
         user.uid,
         priceId,
@@ -50,10 +52,12 @@ export default function SubscriptionPlans() {
         cancelUrl
       );
 
+      console.log('✅ Checkout URL received, redirecting...');
       window.location.assign(checkoutUrl);
-    } catch (error) {
-      console.error('Error creating checkout session:', error);
-      showToast('Failed to start checkout process', 'error');
+    } catch (error: any) {
+      console.error('❌ Error creating checkout session:', error);
+      const errorMessage = error?.message || 'Failed to start checkout process';
+      showToast(errorMessage, 'error');
       setProcessingPriceId(null);
     }
   };
