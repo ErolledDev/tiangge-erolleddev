@@ -213,45 +213,5 @@ service cloud.firestore {
       // Admins can list all notifications
       allow list: if isAdmin();
     }
-
-    // Stripe Products collection (Firebase Extension): Public read for active products
-    match /products/{productId} {
-      allow read, list: if true;
-
-      // Prices subcollection: Public read for active prices
-      match /prices/{priceId} {
-        allow read, list: if true;
-      }
-    }
-
-    // Stripe Products collection with custom name: Public read for active products
-    match /tiangge-plan/{productId} {
-      allow read, list: if true;
-
-      // Prices subcollection: Public read for active prices
-      match /prices/{priceId} {
-        allow read, list: if true;
-      }
-    }
-
-    // Stripe Customers collection (Firebase Extension): Users can read/write their own customer data
-    match /customers/{userId} {
-      allow read: if request.auth != null && request.auth.uid == userId;
-
-      // Checkout sessions subcollection: Users can create their own checkout sessions
-      match /checkout_sessions/{sessionId} {
-        allow read, create: if request.auth != null && request.auth.uid == userId;
-      }
-
-      // Subscriptions subcollection: Users can read their own subscriptions
-      match /subscriptions/{subscriptionId} {
-        allow read: if request.auth != null && request.auth.uid == userId;
-      }
-
-      // Payments subcollection: Users can read their own payments
-      match /payments/{paymentId} {
-        allow read: if request.auth != null && request.auth.uid == userId;
-      }
-    }
   }
 }
