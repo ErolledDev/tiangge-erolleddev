@@ -18,7 +18,7 @@ export async function generateMetadata({ params, searchParams }: StorePageProps)
 
   try {
     const store = await getStoreBySlug(storeSlug);
-    
+
     if (!store || !store.isActive) {
       return {
         title: 'Store Not Found',
@@ -26,40 +26,62 @@ export async function generateMetadata({ params, searchParams }: StorePageProps)
       };
     }
 
-    // Ensure avatar URL is absolute, with fallback to default avatar
-    let avatarUrl: string;
-    if (store.avatar && store.avatar.startsWith('http')) {
-      avatarUrl = store.avatar;
-    } else if (store.avatar) {
-      avatarUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://tiangge.shop'}${store.avatar}`;
+    // Determine SEO mode
+    const useAutomatic = store.seoSettings?.useAutomatic !== false;
+
+    // Get title and description
+    let title: string;
+    let description: string;
+
+    if (useAutomatic) {
+      title = store.name;
+      description = store.description;
     } else {
-      // Fallback to default avatar WebP
-      avatarUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://tiangge.shop'}/default-avatar.webp`;
+      title = store.seoSettings?.metaTitle || store.name;
+      description = store.seoSettings?.metaDescription || store.description;
+    }
+
+    // Determine image URL
+    let imageUrl: string;
+
+    if (!useAutomatic && store.seoSettings?.ogImage) {
+      // Use custom OG image if provided
+      imageUrl = store.seoSettings.ogImage;
+    } else {
+      // Use avatar or default
+      if (store.avatar && store.avatar.startsWith('http')) {
+        imageUrl = store.avatar;
+      } else if (store.avatar) {
+        imageUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://tiangge.shop'}${store.avatar}`;
+      } else {
+        // Fallback to default avatar WebP
+        imageUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://tiangge.shop'}/default-avatar.webp`;
+      }
     }
 
     return {
-      title: store.name,
-      description: store.description,
+      title,
+      description,
       openGraph: {
-        title: store.name,
-        description: store.description,
+        title,
+        description,
         type: 'website',
         url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://tiangge.shop'}/${storeSlug}`,
         siteName: store.name,
         images: [
           {
-            url: avatarUrl,
+            url: imageUrl,
             width: 1200,
             height: 630,
-            alt: `${store.name} - Store Avatar`,
+            alt: `${store.name} - Store Image`,
           },
         ],
       },
       twitter: {
         card: 'summary_large_image',
-        title: store.name,
-        description: store.description,
-        images: [avatarUrl],
+        title,
+        description,
+        images: [imageUrl],
       },
     };
   } catch (error) {
