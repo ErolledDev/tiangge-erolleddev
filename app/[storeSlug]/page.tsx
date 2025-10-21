@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
+import { headers } from 'next/headers';
 import { getStoreBySlug, getStoreProducts, getStoreSlides, generateCategoriesWithCountSync, getSponsoredProducts, SponsoredProduct, getStoreProductsWithTrialLimits } from '@/lib/store';
 import { getUserProfile } from '@/lib/auth';
 import StoreTemplate from '@/components/StoreTemplate';
@@ -11,6 +12,13 @@ interface StorePageProps {
   searchParams: {
     category?: string;
   };
+}
+
+function getBaseUrl(): string {
+  const headersList = headers();
+  const host = headersList.get('host') || 'tiangge.shop';
+  const protocol = headersList.get('x-forwarded-proto') || 'https';
+  return `${protocol}://${host}`;
 }
 
 export async function generateMetadata({ params, searchParams }: StorePageProps): Promise<Metadata> {
@@ -25,6 +33,8 @@ export async function generateMetadata({ params, searchParams }: StorePageProps)
         description: 'The requested store could not be found.',
       };
     }
+
+    const baseUrl = getBaseUrl();
 
     // Determine SEO mode
     const useAutomatic = store.seoSettings?.useAutomatic !== false;
@@ -45,17 +55,21 @@ export async function generateMetadata({ params, searchParams }: StorePageProps)
     let imageUrl: string;
 
     if (!useAutomatic && store.seoSettings?.ogImage) {
-      // Use custom OG image if provided
-      imageUrl = store.seoSettings.ogImage;
+      // Use custom OG image if provided (should be full URL)
+      if (store.seoSettings.ogImage.startsWith('http')) {
+        imageUrl = store.seoSettings.ogImage;
+      } else {
+        imageUrl = `${baseUrl}${store.seoSettings.ogImage}`;
+      }
     } else {
       // Use avatar or default
       if (store.avatar && store.avatar.startsWith('http')) {
         imageUrl = store.avatar;
       } else if (store.avatar) {
-        imageUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://tiangge.shop'}${store.avatar}`;
+        imageUrl = `${baseUrl}${store.avatar}`;
       } else {
         // Fallback to default avatar WebP
-        imageUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://tiangge.shop'}/default-avatar.webp`;
+        imageUrl = `${baseUrl}/default-avatar.webp`;
       }
     }
 
@@ -66,7 +80,7 @@ export async function generateMetadata({ params, searchParams }: StorePageProps)
         title,
         description,
         type: 'website',
-        url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://tiangge.shop'}/${storeSlug}`,
+        url: `${baseUrl}/${storeSlug}`,
         siteName: store.name,
         images: [
           {
