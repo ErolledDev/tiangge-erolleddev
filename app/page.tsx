@@ -1246,7 +1246,7 @@ export default function HomePage() {
             {/* Standard Plan */}
             <div className="bg-gray-50 rounded-2xl p-8 lg:p-10 shadow-lg border-2 border-gray-200 flex flex-col">
               <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">Standard</h3>
-              <p className="text-gray-600 mb-6 text-base lg:text-lg">Perfect for new affiliate marketers getting started. Now Enjoy 7 days Full Premium Access.</p>
+              <p className="text-gray-600 mb-6 text-base lg:text-lg">Perfect for new affiliate marketers.</p>
               <div className="text-4xl lg:text-5xl font-extrabold text-emerald-600 mb-2">
                 Free
                 <span className="text-xl lg:text-2xl text-gray-500 font-medium"> / forever</span>
@@ -1304,9 +1304,14 @@ export default function HomePage() {
               </div>
               <h3 className="text-2xl lg:text-3xl font-bold mb-4">Premium</h3>
               <p className="text-emerald-100 mb-6 text-base lg:text-lg">Unlock advanced features for serious growth.</p>
-              <div className="text-4xl lg:text-5xl font-extrabold mb-2">
-                $7
-                <span className="text-xl lg:text-2xl text-emerald-200 font-medium"> / month</span>
+              <div className="mb-4">
+                <div className="text-4xl lg:text-5xl font-extrabold mb-2">
+                  $3
+                  <span className="text-xl lg:text-2xl text-emerald-200 font-medium"> / month</span>
+                </div>
+                <p className="text-sm lg:text-base text-emerald-100">
+                  Save more with quarterly or annual billing
+                </p>
               </div>
               <ul className="space-y-4 flex-grow mt-8">
                 <li className="flex items-center text-base">
@@ -1382,7 +1387,7 @@ export default function HomePage() {
                 <span className="text-emerald-600 group-open:rotate-180 transition-transform">▼</span>
               </summary>
               <p className="text-gray-600 mt-4 leading-relaxed">
-                Yes! Get a 7-day FREE trial with full Premium access. After the trial, it switches to the free Standard plan (30 products). Upgrade to Premium anytime for $7/month.
+                Yes! Get a 7-day FREE trial with full Premium access. After the trial, it switches to the free Standard plan (30 products). Upgrade to Premium anytime starting at $3/month with quarterly or annual plans.
               </p>
             </details>
 
