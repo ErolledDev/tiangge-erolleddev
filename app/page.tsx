@@ -835,6 +835,56 @@ export default function HomePage() {
                 </div>
               </div>
             </div>
+
+            {/* Feature 9: SEO Optimization - Left */}
+            <div className="flex flex-col md:flex-row items-center gap-10 md:gap-12 lg:gap-16">
+              <div className="w-full md:w-1/2">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center">
+                    <Globe className="w-6 h-6 text-teal-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900">Built-in SEO Optimization</h3>
+                </div>
+                <p className="text-lg text-gray-600 leading-relaxed">
+                  Your store comes with powerful SEO features out of the box. Optimize meta titles, descriptions, Open Graph tags, and more to rank higher in search engines and drive organic traffic.
+                </p>
+              </div>
+              <div className="w-full md:w-1/2">
+                <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200 h-[320px] flex flex-col">
+                  <div className="p-6 bg-gradient-to-br from-teal-50 to-white flex-1 flex flex-col justify-center">
+                    <div className="space-y-3">
+                      <div className="bg-white rounded-xl border-2 border-teal-200 p-3 shadow-md">
+                        <div className="flex items-center gap-2 mb-2">
+                          <CheckCircle className="w-4 h-4 text-teal-600" />
+                          <span className="text-xs font-semibold text-gray-700">Search Engine Preview</span>
+                        </div>
+                        <div>
+                          <div className="text-base font-semibold text-blue-600 mb-1 line-clamp-1">My Awesome Store - Best Products</div>
+                          <div className="text-xs text-green-700 mb-1">https://tiangge.shop/my-store</div>
+                          <div className="text-xs text-gray-600 line-clamp-2">Discover amazing products curated just for you. Shop the latest trends with exclusive deals and fast shipping.</div>
+                        </div>
+                      </div>
+
+                      <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border border-blue-200 p-3">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="w-3 h-3 bg-blue-600 rounded"></div>
+                          <span className="text-xs font-semibold text-gray-700">Social Media Card</span>
+                        </div>
+                        <div className="bg-white rounded-lg overflow-hidden shadow-sm">
+                          <div className="h-16 bg-gradient-to-br from-teal-400 to-blue-500 flex items-center justify-center">
+                            <ImageIcon className="w-8 h-8 text-white/40" />
+                          </div>
+                          <div className="p-2">
+                            <div className="h-2 bg-gray-300 rounded w-4/5 mb-1"></div>
+                            <div className="h-1.5 bg-gray-200 rounded w-3/5"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
