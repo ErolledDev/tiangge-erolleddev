@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { logout } from '@/lib/auth';
-import { canAccessFeature } from '@/lib/auth';
+import { canAccessFeature, isPremium } from '@/lib/auth';
 import { useAuth } from '@/hooks/useAuth';
 import { subscribeToUnreadTicketsCount } from '@/lib/helpdesk';
 import { useToast } from '@/hooks/useToast';
@@ -55,8 +55,8 @@ export default function DashboardNav({ isSidebarOpen, toggleSidebar }: Dashboard
       }
     }
 
-    // Add help desk for premium users (not trial)
-    if (userProfile?.isPremiumAdminSet === true || canAccessFeature(userProfile, 'admin')) {
+    // Add help desk for all premium users
+    if (isPremium(userProfile) || canAccessFeature(userProfile, 'admin')) {
       const slidesIndex = navigation.findIndex(item => item.name === 'Add Slide');
       if (slidesIndex !== -1) {
         navigation.splice(slidesIndex + 1, 0,
