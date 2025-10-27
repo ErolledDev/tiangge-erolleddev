@@ -185,51 +185,79 @@ export default function DashboardHeader({ isSidebarOpen, toggleSidebar }: Dashbo
                     </div>
                   ) : (notifications.length > 0 || ticketNotifications.length > 0) ? (
                     <div className="py-2">
-                      {ticketNotifications.map((notification) => (
-                        <button
-                          key={`ticket-${notification.id}`}
-                          onClick={() => {
-                            if (notification.id) {
-                              markTicketNotificationAsRead(notification.id);
-                            }
-                            setIsNotificationMenuOpen(false);
-                            window.location.href = '/dashboard/helpdesk';
-                          }}
-                          className={`w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors border-l-4 ${
-                            notification.isRead
-                              ? 'border-transparent'
-                              : 'border-blue-500 bg-blue-50'
-                          }`}
-                        >
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2 mb-1">
-                                <MessageSquare className="w-3 h-3 text-blue-500" />
-                                <span className="text-xs font-medium text-blue-600">Support Ticket</span>
-                              </div>
-                              <p className={`text-xs sm:text-sm font-medium line-clamp-2 ${
-                                notification.isRead ? 'text-gray-700' : 'text-gray-900'
-                              }`}>
-                                {notification.message}
-                              </p>
-                              <div className="flex items-center mt-1 space-x-2">
-                                <Calendar className="w-3 h-3 text-gray-400" />
-                                <span className="text-xs text-gray-500">
-                                  {notification.createdAt.toLocaleDateString()}
-                                </span>
-                                {!notification.isRead && (
-                                  <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                    New
+                      {ticketNotifications.map((notification) => {
+                        const notifData = notification as any;
+                        const isSubscriptionNotification = notifData.type === 'subscription_approved' || notifData.type === 'subscription_rejected';
+                        const isTicketNotification = notifData.ticketId;
+
+                        return (
+                          <button
+                            key={`ticket-${notification.id}`}
+                            onClick={() => {
+                              if (notification.id) {
+                                markTicketNotificationAsRead(notification.id);
+                              }
+                              setIsNotificationMenuOpen(false);
+
+                              if (isSubscriptionNotification) {
+                                window.location.href = '/dashboard/subscription';
+                              } else if (isTicketNotification) {
+                                window.location.href = '/dashboard/helpdesk';
+                              }
+                            }}
+                            className={`w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors border-l-4 ${
+                              notification.isRead
+                                ? 'border-transparent'
+                                : isSubscriptionNotification
+                                  ? 'border-green-500 bg-green-50'
+                                  : 'border-blue-500 bg-blue-50'
+                            }`}
+                          >
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 mb-1">
+                                  {isSubscriptionNotification ? (
+                                    <>
+                                      <Crown className="w-3 h-3 text-green-500" />
+                                      <span className="text-xs font-medium text-green-600">Subscription Update</span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <MessageSquare className="w-3 h-3 text-blue-500" />
+                                      <span className="text-xs font-medium text-blue-600">Support Ticket</span>
+                                    </>
+                                  )}
+                                </div>
+                                <p className={`text-xs sm:text-sm font-medium line-clamp-2 ${
+                                  notification.isRead ? 'text-gray-700' : 'text-gray-900'
+                                }`}>
+                                  {notification.message}
+                                </p>
+                                <div className="flex items-center mt-1 space-x-2">
+                                  <Calendar className="w-3 h-3 text-gray-400" />
+                                  <span className="text-xs text-gray-500">
+                                    {notification.createdAt.toLocaleDateString()}
                                   </span>
-                                )}
+                                  {!notification.isRead && (
+                                    <span className={`inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium ${
+                                      isSubscriptionNotification
+                                        ? 'bg-green-100 text-green-800'
+                                        : 'bg-blue-100 text-blue-800'
+                                    }`}>
+                                      New
+                                    </span>
+                                  )}
+                                </div>
                               </div>
+                              {!notification.isRead && (
+                                <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
+                                  isSubscriptionNotification ? 'bg-green-500' : 'bg-blue-500'
+                                }`}></div>
+                              )}
                             </div>
-                            {!notification.isRead && (
-                              <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                            )}
-                          </div>
-                        </button>
-                      ))}
+                          </button>
+                        );
+                      })}
                       {notifications.map((notification) => (
                         <button
                           key={notification.id}
