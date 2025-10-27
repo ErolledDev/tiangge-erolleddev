@@ -2,6 +2,16 @@ import { db } from './firebase';
 import { collection, addDoc, getDocs, query, where, orderBy, doc, updateDoc, getDoc, Timestamp } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
+export interface SubscriptionNotification {
+  id?: string;
+  userId: string;
+  type: 'subscription_approved' | 'subscription_rejected';
+  title: string;
+  message: string;
+  read: boolean;
+  createdAt: Date;
+}
+
 export interface SubscriptionRequest {
   id?: string;
   userId: string;
@@ -174,5 +184,33 @@ export async function getSubscriptionRequest(requestId: string): Promise<Subscri
   } catch (error) {
     console.error('Error fetching subscription request:', error);
     throw error;
+  }
+}
+
+export async function sendSubscriptionNotification(
+  userId: string,
+  status: 'approved' | 'rejected',
+  plan: string,
+  notes?: string
+): Promise<void> {
+  try {
+    const planLabel = SUBSCRIPTION_PLANS[plan as keyof typeof SUBSCRIPTION_PLANS]?.label || plan;
+
+    const notificationData = {
+      userId,
+      type: status === 'approved' ? 'subscription_approved' : 'subscription_rejected',
+      title: status === 'approved'
+        ? 'Subscription Approved!'
+        : 'Subscription Request Update',
+      message: status === 'approved'
+        ? `Great news! Your ${planLabel} subscription has been approved. You now have access to all premium features!`
+        : `Your ${planLabel} subscription request has been reviewed. ${notes || 'Please contact support for more information.'}`,
+      read: false,
+      createdAt: Timestamp.now()
+    };
+
+    await addDoc(collection(db, 'helpdesk_notifications'), notificationData);
+  } catch (error) {
+    console.error('Error sending subscription notification:', error);
   }
 }

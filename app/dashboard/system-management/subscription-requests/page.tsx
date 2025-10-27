@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import AdminRoute from '@/components/AdminRoute';
 import { useToast } from '@/hooks/useToast';
-import { getSubscriptionRequests, updateSubscriptionRequestStatus, SubscriptionRequest, SUBSCRIPTION_PLANS } from '@/lib/subscriptions';
+import { getSubscriptionRequests, updateSubscriptionRequestStatus, SubscriptionRequest, SUBSCRIPTION_PLANS, sendSubscriptionNotification } from '@/lib/subscriptions';
 import { grantPremiumAccess } from '@/lib/auth';
 import ConfirmModal from '@/components/ConfirmModal';
 
@@ -89,6 +89,13 @@ export default function SubscriptionRequestsPage() {
 
         await grantPremiumAccess(request.userId, subscriptionType, user.uid);
       }
+
+      await sendSubscriptionNotification(
+        request.userId,
+        type === 'approve' ? 'approved' : 'rejected',
+        request.plan,
+        actionNotes
+      );
 
       showToast(
         type === 'approve'
