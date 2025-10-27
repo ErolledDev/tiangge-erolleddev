@@ -8,7 +8,7 @@ import { canAccessFeature } from '@/lib/auth';
 import { useAuth } from '@/hooks/useAuth';
 import { subscribeToUnreadTicketsCount } from '@/lib/helpdesk';
 import { useToast } from '@/hooks/useToast';
-import { ChartBar as BarChart3, Store, Image, Package, LogOut, X, User, CirclePlus as PlusCircle, SquarePlus as PlusSquare, TrendingUp, Users, Settings, DollarSign, Radio, Bell, HelpCircle } from 'lucide-react';
+import { ChartBar as BarChart3, Store, Image, Package, LogOut, X, User, CirclePlus as PlusCircle, SquarePlus as PlusSquare, TrendingUp, Users, Settings, DollarSign, Radio, Bell, HelpCircle, CreditCard } from 'lucide-react';
 
 interface DashboardNavProps {
   isSidebarOpen: boolean;
@@ -28,15 +28,18 @@ export default function DashboardNav({ isSidebarOpen, toggleSidebar }: Dashboard
     let navigation = [
       { type: 'header', name: 'Dashboard' },
       { name: 'Overview', href: '/dashboard', icon: BarChart3 },
-      
+
       { type: 'header', name: 'Store Management' },
       { name: 'Store Settings', href: '/dashboard/store', icon: Settings },
       { name: 'Subscribers', href: '/dashboard/subscribers', icon: Users },
-      
+
+      { type: 'header', name: 'Subscription' },
+      { name: 'Upgrade Account', href: '/dashboard/subscription', icon: CreditCard },
+
       { type: 'header', name: 'Products' },
       { name: 'Products', href: '/dashboard/products', icon: Package },
       { name: 'Add Product', href: '/dashboard/products/add', icon: PlusCircle },
-      
+
       { type: 'header', name: 'Slides' },
       { name: 'Slides', href: '/dashboard/slides', icon: Image },
       { name: 'Add Slide', href: '/dashboard/slides/add', icon: PlusSquare },
@@ -68,6 +71,7 @@ export default function DashboardNav({ isSidebarOpen, toggleSidebar }: Dashboard
       navigation.push(
         { type: 'header', name: 'Administration' },
         { name: 'Manage Users', href: '/dashboard/system-management/users', icon: Users },
+        { name: 'Subscription Requests', href: '/dashboard/system-management/subscription-requests', icon: CreditCard },
         { name: 'Global Broadcast', href: '/dashboard/system-management/global-broadcast', icon: Radio },
         { name: 'Broadcast Notifications', href: '/dashboard/system-management/broadcast-notifications', icon: Bell },
         { name: 'Sponsor Products', href: '/dashboard/system-management/sponsor-products', icon: DollarSign },

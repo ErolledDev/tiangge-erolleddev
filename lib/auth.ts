@@ -204,6 +204,17 @@ export const getUserProfile = async (uid: string): Promise<UserProfile | null> =
   }
 };
 
+export const grantPremiumAccess = async (
+  userId: string,
+  subscriptionType: 'permanent' | '1month' | '3months' | '1year',
+  adminId: string
+): Promise<void> => {
+  return updateUserRoleAndPremiumStatus(userId, {
+    isPremium: true,
+    subscriptionType
+  });
+};
+
 export const updateUserRoleAndPremiumStatus = async (
   userId: string,
   updates: {
