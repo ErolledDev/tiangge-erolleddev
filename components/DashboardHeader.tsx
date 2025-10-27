@@ -148,8 +148,8 @@ export default function DashboardHeader({ isSidebarOpen, toggleSidebar }: Dashbo
   return (
     <header className="fixed top-0 left-0 right-0 h-16 bg-white shadow-sm border-b border-gray-200 z-30">
       <div className="flex items-center justify-between h-full px-3 sm:px-4">
-        {/* Left Side - Hamburger Menu */}
-        <div className="flex items-center">
+        {/* Left Side - Hamburger Menu & Branding */}
+        <div className="flex items-center gap-3">
           <button
             id="hamburger-button"
             onClick={toggleSidebar}
@@ -158,6 +158,14 @@ export default function DashboardHeader({ isSidebarOpen, toggleSidebar }: Dashbo
           >
             <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
+          <div className="hidden sm:flex items-center gap-2">
+            <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">T</span>
+            </div>
+            <div>
+              <h1 className="text-base font-bold text-gray-900">Tiangge</h1>
+            </div>
+          </div>
         </div>
 
         {/* Right Side - Notifications and User Info */}

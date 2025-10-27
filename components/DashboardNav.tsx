@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { canAccessFeature, isPremium } from '@/lib/auth';
 import { useAuth } from '@/hooks/useAuth';
 import { subscribeToUnreadTicketsCount } from '@/lib/helpdesk';
-import { ChartBar as BarChart3, Store, Image, Package, X, CirclePlus as PlusCircle, SquarePlus as PlusSquare, TrendingUp, Users, Settings, DollarSign, Radio, Bell, HelpCircle, CreditCard } from 'lucide-react';
+import { ChartBar as BarChart3, Image, Package, CirclePlus as PlusCircle, SquarePlus as PlusSquare, TrendingUp, Users, Settings, DollarSign, Radio, Bell, HelpCircle, CreditCard } from 'lucide-react';
 
 interface DashboardNavProps {
   isSidebarOpen: boolean;
@@ -95,83 +95,51 @@ export default function DashboardNav({ isSidebarOpen, toggleSidebar }: Dashboard
     <div
       id="dashboard-sidebar"
       className={`
-        fixed top-0 left-0 h-full min-h-screen bg-white shadow-xl border-r border-gray-200 z-40 flex flex-col
+        fixed top-16 left-0 bottom-0 bg-white shadow-lg border-r border-gray-200 z-40 flex flex-col
         transition-transform duration-300 ease-in-out overflow-y-auto w-64 sm:w-72
         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}
-      style={{
-        height: '100%', // Dynamic viewport height for mobile browsers
-      }}
     >
-      {/* Sidebar Header with Close Button */}
-      <div className="flex items-center justify-between h-16 px-3 sm:px-4 bg-gradient-to-r from-primary-500 to-secondary-500 border-b border-gray-200">
-        <div className="flex items-center">
-          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-white rounded-lg flex items-center justify-center">
-            <Store className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />
-          </div>
-          <div className="ml-2 sm:ml-3">
-            <p className="text-sm sm:text-base font-bold text-white">
-              Tiangge
-            </p>
-            <p className="text-xs text-white text-opacity-80">
-              Dashboard
-            </p>
-          </div>
-        </div>
-        
-        {/* Close Button */}
-        <button
-          onClick={closeSidebar}
-          className="p-1 sm:p-1.5 text-white hover:bg-white hover:bg-opacity-20 rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
-          aria-label="Close sidebar"
-        >
-          <X className="w-4 h-4 sm:w-5 sm:h-5" />
-        </button>
-      </div>
-
       {/* Navigation */}
-      <nav className="flex-1 px-2 py-3 sm:py-4 space-y-1">
+      <nav className="flex-1 px-3 py-4 space-y-1">
         {getNavigationItems().map((item, index) => {
           // Render group headers
           if (item.type === 'header') {
             return (
               <div
                 key={`${item.name}-${index}`}
-                className="px-2 sm:px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider"
+                className="px-3 pt-4 pb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider first:pt-0"
               >
                 {item.name}
               </div>
             );
           }
-          
+
           // Render navigation links
           const isActive = pathname === item.href;
           const IconComponent = item.icon;
-          
+
           return (
             <Link
               key={`${item.name}-${index}`}
               href={item.href}
               onClick={closeSidebar}
               className={`
-                group flex items-center px-2 sm:px-3 py-3 text-sm font-medium rounded-lg transition-all duration-200
+                group flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200
                 min-h-[44px] relative
                 ${isActive
-                  ? 'bg-primary-50 text-primary-700 border-r-2 border-primary-600'
+                  ? 'bg-gradient-to-r from-primary-50 to-secondary-50 text-primary-700 shadow-sm'
                   : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
                 }
               `}
-              onFocus={() => {
-                // Keep sidebar open when navigating with keyboard
-              }}
             >
               <IconComponent
                 className={`
-                  flex-shrink-0 transition-colors w-4 h-4 sm:w-5 sm:h-5
-                  ${isActive ? 'text-primary-600' : 'text-gray-500 group-hover:text-gray-700'}
+                  flex-shrink-0 transition-colors w-5 h-5
+                  ${isActive ? 'text-primary-600' : 'text-gray-400 group-hover:text-gray-600'}
                 `}
               />
-              <span className="ml-2 sm:ml-3 truncate flex-1 text-sm">{item.name}</span>
+              <span className="ml-3 truncate flex-1">{item.name}</span>
               {item.name === 'Helpdesk Management' && unreadTicketsCount > 0 && (
                 <span className="ml-auto flex-shrink-0 inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold rounded-full bg-red-500 text-white min-w-[20px]">
                   {unreadTicketsCount > 99 ? '99+' : unreadTicketsCount}
