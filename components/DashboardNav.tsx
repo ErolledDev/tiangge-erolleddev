@@ -2,13 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { logout } from '@/lib/auth';
+import { usePathname } from 'next/navigation';
 import { canAccessFeature, isPremium } from '@/lib/auth';
 import { useAuth } from '@/hooks/useAuth';
 import { subscribeToUnreadTicketsCount } from '@/lib/helpdesk';
-import { useToast } from '@/hooks/useToast';
-import { ChartBar as BarChart3, Store, Image, Package, LogOut, X, User, CirclePlus as PlusCircle, SquarePlus as PlusSquare, TrendingUp, Users, Settings, DollarSign, Radio, Bell, HelpCircle, CreditCard } from 'lucide-react';
+import { ChartBar as BarChart3, Store, Image, Package, X, CirclePlus as PlusCircle, SquarePlus as PlusSquare, TrendingUp, Users, Settings, DollarSign, Radio, Bell, HelpCircle, CreditCard } from 'lucide-react';
 
 interface DashboardNavProps {
   isSidebarOpen: boolean;
@@ -17,10 +15,7 @@ interface DashboardNavProps {
 
 export default function DashboardNav({ isSidebarOpen, toggleSidebar }: DashboardNavProps) {
   const pathname = usePathname();
-  const router = useRouter();
   const { userProfile } = useAuth();
-  const { clearAll } = useToast();
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [unreadTicketsCount, setUnreadTicketsCount] = useState(0);
 
   // Generate navigation items based on user role and premium status
@@ -80,19 +75,6 @@ export default function DashboardNav({ isSidebarOpen, toggleSidebar }: Dashboard
     }
 
     return navigation;
-  };
-
-  const handleLogout = async () => {
-    setIsLoggingOut(true);
-    clearAll();
-    try {
-      await logout();
-      router.push('/');
-    } catch (error) {
-      console.error('Logout error:', error);
-    } finally {
-      setIsLoggingOut(false);
-    }
   };
 
   useEffect(() => {
@@ -199,20 +181,6 @@ export default function DashboardNav({ isSidebarOpen, toggleSidebar }: Dashboard
           );
         })}
       </nav>
-
-      {/* Logout Button */}
-      <div className="p-3 sm:p-4 border-t border-gray-200">
-        <button
-          onClick={handleLogout}
-          disabled={isLoggingOut}
-          className="group flex items-center w-full px-2 sm:px-3 py-3 text-sm font-medium text-gray-600 rounded-lg hover:bg-danger-50 hover:text-danger-700 transition-all duration-200 disabled:opacity-50 min-h-[44px]"
-        >
-          <LogOut className="flex-shrink-0 text-gray-500 group-hover:text-danger-600 transition-colors w-4 h-4 sm:w-5 sm:h-5" />
-          <span className="ml-2 sm:ml-3 truncate text-gray-700 group-hover:text-danger-700 flex-1">
-            {isLoggingOut ? 'Logging out...' : 'Logout'}
-          </span>
-        </button>
-      </div>
     </div>
   );
 }

@@ -2,12 +2,13 @@
 
 import React from 'react';
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/useToast';
-import { isPremium, isOnTrial, hasTrialExpired, getTrialDaysRemaining } from '@/lib/auth';
+import { isPremium, isOnTrial, hasTrialExpired, getTrialDaysRemaining, logout } from '@/lib/auth';
 import { getUserStore, getAllUserNotifications, markNotificationAsRead, Notification } from '@/lib/store';
 import { getUserTicketNotifications, markTicketNotificationAsRead, subscribeToTicketNotifications, TicketNotification, clearTicketNotifications } from '@/lib/helpdesk';
-import { Menu, Bell, User, Copy, ExternalLink, ChevronDown, Calendar, Check, Clock, Crown, MessageSquare } from 'lucide-react';
+import { Menu, Bell, User, Copy, ExternalLink, ChevronDown, Calendar, Check, Clock, Crown, MessageSquare, LogOut } from 'lucide-react';
 import NotificationModal from '@/components/NotificationModal';
 
 interface DashboardHeaderProps {
@@ -16,8 +17,9 @@ interface DashboardHeaderProps {
 }
 
 export default function DashboardHeader({ isSidebarOpen, toggleSidebar }: DashboardHeaderProps) {
+  const router = useRouter();
   const { user, userProfile } = useAuth();
-  const { showSuccess, showError } = useToast();
+  const { showSuccess, showError, clearAll } = useToast();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isNotificationMenuOpen, setIsNotificationMenuOpen] = useState(false);
   const [notifications, setNotifications] = useState<(Notification & { isRead: boolean })[]>([]);
@@ -27,6 +29,7 @@ export default function DashboardHeader({ isSidebarOpen, toggleSidebar }: Dashbo
   const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
   const [showNotificationModal, setShowNotificationModal] = useState(false);
   const [notificationsLoading, setNotificationsLoading] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [storeSlug, setStoreSlug] = useState<string>('');
   const userMenuRef = useRef<HTMLDivElement>(null);
   const notificationMenuRef = useRef<HTMLDivElement>(null);
@@ -118,7 +121,7 @@ export default function DashboardHeader({ isSidebarOpen, toggleSidebar }: Dashbo
 
   const handleMarkAsRead = async () => {
     if (!selectedNotification || !user) return;
-    
+
     try {
       await markNotificationAsRead(user.uid, selectedNotification.id!);
       await loadNotifications(); // Refresh notifications
@@ -126,6 +129,20 @@ export default function DashboardHeader({ isSidebarOpen, toggleSidebar }: Dashbo
       console.error('Error marking notification as read:', error);
     }
   };
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    clearAll();
+    try {
+      await logout();
+      router.push('/');
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
+
   const storeUrl = storeSlug ? `${window.location.origin}/${storeSlug}` : '';
 
   return (
@@ -419,6 +436,20 @@ export default function DashboardHeader({ isSidebarOpen, toggleSidebar }: Dashbo
                       <Copy className="w-3 h-3 sm:w-4 sm:h-4" />
                     </button>
                   </div>
+                </div>
+
+                {/* Logout Button */}
+                <div className="px-3 sm:px-4 py-3 border-t border-gray-100">
+                  <button
+                    onClick={handleLogout}
+                    disabled={isLoggingOut}
+                    className="group flex items-center w-full px-2 sm:px-3 py-2.5 text-sm font-medium text-gray-700 rounded-lg hover:bg-red-50 hover:text-red-700 transition-all duration-200 disabled:opacity-50 min-h-[44px]"
+                  >
+                    <LogOut className="flex-shrink-0 text-gray-500 group-hover:text-red-600 transition-colors w-4 h-4 sm:w-5 sm:h-5" />
+                    <span className="ml-2 sm:ml-3 truncate flex-1 text-left">
+                      {isLoggingOut ? 'Logging out...' : 'Logout'}
+                    </span>
+                  </button>
                 </div>
               </div>
             )}
