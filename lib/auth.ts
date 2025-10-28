@@ -117,14 +117,28 @@ export const signUp = async (email: string, password: string, displayName?: stri
       backgroundImage: '',
       socialLinks: [],
       headerLayout: 'left-right',
-      // Standard users start with restricted features disabled
-      showCategories: false,
-      bannerEnabled: false,
-      widgetEnabled: false,
-      // Other features enabled by default
+      // All features enabled by default
+      showCategories: true,
+      bannerEnabled: true,
+      widgetEnabled: true,
       subscriptionEnabled: true,
       slidesEnabled: true,
       displayPriceOnProducts: true,
+      // Default customization settings
+      customization: {
+        storeNameFontColor: '#000000',
+        storeBioFontColor: '#000000',
+        avatarBorderColor: '#000000',
+        activeCategoryBorderColor: '#000000',
+        socialIconColor: '#000000',
+        headingTextColor: '#000000',
+        bodyTextColor: '#000000',
+        mainBackgroundGradientStartColor: '#FFFFFF',
+        mainBackgroundGradientEndColor: '#FFFFFF',
+        priceFontColor: '#000000',
+        loadMoreButtonBgColor: '#000000',
+        loadMoreButtonTextColor: '#FFFFFF',
+      },
       // Store owner's premium and trial status for public access
       ownerIsPremiumAdminSet: false,
       ownerTrialEndDate: trialEndDate,
