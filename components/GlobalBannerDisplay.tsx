@@ -1,24 +1,28 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { getActiveGlobalBanner, GlobalBanner } from '@/lib/store';
 import { trackEvent } from '@/lib/analytics';
 import { X } from 'lucide-react';
+
+const BANNER_STORAGE_KEY = 'globalBannerShown';
 
 export default function GlobalBannerDisplay() {
   const { user, loading: authLoading } = useAuth();
   const [banner, setBanner] = useState<GlobalBanner | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [loading, setLoading] = useState(true);
-  const hasShownBanner = useRef(false);
 
   useEffect(() => {
-    if (hasShownBanner.current) {
-      return;
-    }
-
     if (!authLoading && user) {
+      const hasShownBanner = sessionStorage.getItem(BANNER_STORAGE_KEY);
+
+      if (hasShownBanner) {
+        setLoading(false);
+        return;
+      }
+
       let timeoutId: NodeJS.Timeout;
 
       const loadBanner = async () => {
@@ -26,7 +30,7 @@ export default function GlobalBannerDisplay() {
           const activeBanner = await getActiveGlobalBanner();
           if (activeBanner && activeBanner.isActive) {
             setBanner(activeBanner);
-            hasShownBanner.current = true;
+            sessionStorage.setItem(BANNER_STORAGE_KEY, 'true');
 
             timeoutId = setTimeout(() => {
               setIsVisible(true);

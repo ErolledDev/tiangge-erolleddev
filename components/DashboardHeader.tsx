@@ -225,9 +225,9 @@ export default function DashboardHeader({ isSidebarOpen, toggleSidebar }: Dashbo
                               setIsNotificationMenuOpen(false);
 
                               if (isSubscriptionNotification) {
-                                window.location.href = '/dashboard/subscription';
+                                router.push('/dashboard/subscription');
                               } else if (isTicketNotification) {
-                                window.location.href = '/dashboard/helpdesk';
+                                router.push('/dashboard/helpdesk');
                               }
                             }}
                             className={`w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors border-l-4 ${
