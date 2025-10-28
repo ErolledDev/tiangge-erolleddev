@@ -135,7 +135,7 @@ export const signUp = async (email: string, password: string, displayName?: stri
         bodyTextColor: '#000000',
         mainBackgroundGradientStartColor: '#FFFFFF',
         mainBackgroundGradientEndColor: '#FFFFFF',
-        priceFontColor: '#000000',
+        priceFontColor: '#F54927',
         loadMoreButtonBgColor: '#000000',
         loadMoreButtonTextColor: '#FFFFFF',
       },
