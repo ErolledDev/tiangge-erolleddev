@@ -188,7 +188,7 @@ export default function DashboardHeader({ isSidebarOpen, toggleSidebar }: Dashbo
 
             {/* Notifications Dropdown */}
             {isNotificationMenuOpen && (
-              <div className="absolute right-3 sm:right-4 mt-2 w-72 sm:w-80 md:w-96 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 max-h-[80vh] overflow-hidden">
+              <div className="absolute right-0 mt-2 w-72 sm:w-80 md:w-96 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 max-h-[80vh] overflow-hidden">
                 {/* Header */}
                 <div className="px-4 py-3 border-b border-gray-100">
                   <div className="flex items-center justify-between">
@@ -345,7 +345,7 @@ export default function DashboardHeader({ isSidebarOpen, toggleSidebar }: Dashbo
 
             {/* User Dropdown Menu */}
             {isUserMenuOpen && (
-              <div className="absolute right-3 sm:right-4 mt-2 w-64 sm:w-72 md:w-80 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 max-h-[80vh] overflow-y-auto">
+              <div className="absolute right-0 mt-2 w-64 sm:w-72 md:w-80 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50 max-h-[80vh] overflow-y-auto">
                 {/* User Info Section */}
                 <div className="px-3 sm:px-4 py-3 border-b border-gray-100">
                   <div className="flex items-center space-x-2 sm:space-x-3">
