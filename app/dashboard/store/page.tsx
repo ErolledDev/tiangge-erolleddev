@@ -377,20 +377,81 @@ export default function StoreSettingsPage() {
           </div>
 
           <div>
-            <label className="block text-xs sm:text-sm font-medium text-gray-900 mb-2">
+            <label className="block text-xs sm:text-sm font-medium text-gray-900 mb-3">
               Header Layout
             </label>
-            <select
-              value={formData.headerLayout}
-              onChange={(e) => handleInputChange('headerLayout', e.target.value)}
-              className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm min-h-[44px]"
-            >
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
               {HEADER_LAYOUTS.map((layout) => (
-                <option key={layout.value} value={layout.value}>
-                  {layout.label}
-                </option>
+                <button
+                  key={layout.value}
+                  type="button"
+                  onClick={() => handleInputChange('headerLayout', layout.value)}
+                  className={`relative p-4 border-2 rounded-lg transition-all duration-200 hover:shadow-md ${
+                    formData.headerLayout === layout.value
+                      ? 'border-primary-600 bg-primary-50 ring-2 ring-primary-200'
+                      : 'border-gray-300 bg-white hover:border-gray-400'
+                  }`}
+                >
+                  {/* Visual Mockup */}
+                  <div className="mb-3 bg-gray-100 rounded-md p-3 h-20 flex items-center justify-center">
+                    {layout.value === 'left-right' && (
+                      <div className="flex items-center justify-between w-full gap-2">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-full bg-gray-400"></div>
+                        </div>
+                        <div className="flex gap-1">
+                          <div className="w-3 h-3 rounded-full bg-gray-400"></div>
+                          <div className="w-3 h-3 rounded-full bg-gray-400"></div>
+                          <div className="w-3 h-3 rounded-full bg-gray-400"></div>
+                        </div>
+                      </div>
+                    )}
+                    {layout.value === 'right-left' && (
+                      <div className="flex items-center justify-between w-full gap-2">
+                        <div className="flex gap-1">
+                          <div className="w-3 h-3 rounded-full bg-gray-400"></div>
+                          <div className="w-3 h-3 rounded-full bg-gray-400"></div>
+                          <div className="w-3 h-3 rounded-full bg-gray-400"></div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-full bg-gray-400"></div> 
+                        </div>
+                      </div>
+                    )}
+                    {layout.value === 'center' && (
+                      <div className="flex flex-col items-center w-full gap-2">
+                        <div className="w-8 h-8 rounded-full bg-gray-400"></div>
+                        <div className="flex gap-1">
+                          <div className="w-3 h-3 rounded-full bg-gray-400"></div>
+                          <div className="w-3 h-3 rounded-full bg-gray-400"></div>
+                          <div className="w-3 h-3 rounded-full bg-gray-400"></div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Label */}
+                  <div className="text-center">
+                    <p className={`text-xs sm:text-sm font-medium ${
+                      formData.headerLayout === layout.value
+                        ? 'text-primary-700'
+                        : 'text-gray-700'
+                    }`}>
+                      {layout.label}
+                    </p>
+                  </div>
+
+                  {/* Selected Indicator */}
+                  {formData.headerLayout === layout.value && (
+                    <div className="absolute top-2 right-2 w-5 h-5 bg-primary-600 rounded-full flex items-center justify-center">
+                      <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                  )}
+                </button>
               ))}
-            </select>
+            </div>
           </div>
         </div>
       </div>
