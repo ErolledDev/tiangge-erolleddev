@@ -205,7 +205,7 @@ export default function StoreSettingsPage() {
     }));
   };
 
-  const handleImageUpload = async (file: File, type: 'avatar' | 'banner' | 'widget' | 'subscription') => {
+  const handleImageUpload = async (file: File, type: 'avatar' | 'banner' | 'widget' | 'subscription' | 'seo') => {
     if (!user) throw new Error('User not authenticated');
 
     // Validate file size (5MB limit)
@@ -219,10 +219,10 @@ export default function StoreSettingsPage() {
       throw new Error('Invalid file type. Please select an image file (JPG, PNG, GIF, WebP).');
     }
     let imageUrl: string;
-    
+
     if (type === 'widget') {
       imageUrl = await uploadWidgetImage(user.uid, file);
-    } else if (type === 'avatar' || type === 'banner') {
+    } else if (type === 'avatar' || type === 'banner' || type === 'seo') {
       imageUrl = await uploadStoreImage(user.uid, file, type);
     } else {
       throw new Error(`Unsupported image upload type: ${type}`);
@@ -235,12 +235,14 @@ export default function StoreSettingsPage() {
       handleInputChange('avatar', imageUrl);
     } else if (type === 'banner') {
       handleInputChange('bannerImage', imageUrl);
+    } else if (type === 'seo') {
+      handleSeoChange('ogImage', imageUrl);
     }
 
     return imageUrl;
   };
 
-  const handleImageDelete = async (type: 'avatar' | 'banner' | 'widget' | 'subscription') => {
+  const handleImageDelete = async (type: 'avatar' | 'banner' | 'widget' | 'subscription' | 'seo') => {
     let currentImageUrl: string = '';
 
     if (type === 'widget') {
@@ -249,6 +251,8 @@ export default function StoreSettingsPage() {
       currentImageUrl = formData.avatar;
     } else if (type === 'banner') {
       currentImageUrl = formData.bannerImage;
+    } else if (type === 'seo') {
+      currentImageUrl = formData.seoSettings.ogImage;
     }
 
     if (currentImageUrl) {
@@ -266,6 +270,8 @@ export default function StoreSettingsPage() {
       handleInputChange('avatar', '');
     } else if (type === 'banner') {
       handleInputChange('bannerImage', '');
+    } else if (type === 'seo') {
+      handleSeoChange('ogImage', '');
     }
   };
 
@@ -941,19 +947,15 @@ export default function StoreSettingsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-900 mb-2">
-                  Open Graph Image URL
-                </label>
-                <input
-                  type="url"
-                  value={formData.seoSettings.ogImage}
-                  onChange={(e) => handleSeoChange('ogImage', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  placeholder="https://example.com/image.jpg (leave empty to use avatar)"
+                <ImageUploadWithDelete
+                  label="Open Graph Image"
+                  description="This image appears when your store is shared on social media. Upload a custom image or leave empty to use your store avatar."
+                  currentImageUrl={formData.seoSettings.ogImage}
+                  onImageUpload={(file) => handleImageUpload(file, 'seo')}
+                  onImageDelete={() => handleImageDelete('seo')}
+                  maxSizeText="Recommended: 1200x630px, Max: 5MB"
+                  accept="image/png,image/jpeg,image/jpg,image/webp"
                 />
-                <p className="mt-1 text-sm text-gray-500">
-                  This image appears when your store is shared on social media. Recommended size: 1200x630px. Leave empty to use your store avatar.
-                </p>
               </div>
             </div>
           )}
