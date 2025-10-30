@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { Suspense, useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { signIn, signUp, resetPassword } from '@/lib/auth';
 import { checkSlugAvailability } from '@/lib/store';
 import { useAuth } from '@/hooks/useAuth';
 import { Store, Package, TrendingUp, Users, Eye, EyeOff, MousePointer, ArrowRight, Star, StarHalf, RefreshCw, AtSign, CircleAlert as AlertCircle, CircleCheck as CheckCircle } from 'lucide-react';
 
-export default function AuthPage() {
+function AuthPageContent() {
   const [isLogin, setIsLogin] = useState(true);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [email, setEmail] = useState('');
@@ -28,15 +28,23 @@ export default function AuthPage() {
     storeSlug: false
   });
   const [showPassword, setShowPassword] = useState(false);
-  
+
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { user } = useAuth();
 
   useEffect(() => {
     if (user) {
       router.push('/dashboard');
     }
-  }, [user, router]);
+
+    const resetSuccess = searchParams.get('reset');
+    if (resetSuccess === 'success') {
+      setIsLogin(true);
+      setIsForgotPassword(false);
+      setSuccess('Password reset successful! You can now log in with your new password.');
+    }
+  }, [user, router, searchParams]);
 
   const validateEmail = (email: string): string => {
     if (!email) return 'Email is required';
@@ -612,5 +620,22 @@ export default function AuthPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AuthPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
+        <div className="w-full max-w-6xl min-h-[500px] flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading...</p>
+          </div>
+        </div>
+      </div>
+    }>
+      <AuthPageContent />
+    </Suspense>
   );
 }
